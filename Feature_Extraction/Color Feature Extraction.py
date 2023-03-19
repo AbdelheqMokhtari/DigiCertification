@@ -342,3 +342,4 @@ LL, (LH, HL, HH) = coefficient
 # Take the mean of the LL coefficients
 mean_LL = np.mean(LL)
 print('Mean of wavelet transform: {:.2f}'.format(mean_LL))
+
