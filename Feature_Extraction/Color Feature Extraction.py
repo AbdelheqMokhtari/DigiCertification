@@ -1,6 +1,6 @@
 import cv2 as cv
 import numpy as np
-from scipy.stats import skew, kurtosis
+from scipy.stats import skew, kurtosis, entropy
 
 
 img = cv.imread("Wheat_1.jpg")
@@ -49,6 +49,25 @@ print('\nkurtosis R: {:.2f}'.format(kurtosis_Red))
 print('kurtosis G: {:.2f}'.format(kurtosis_Green))
 print('kurtosis B: {:.2f}'.format(kurtosis_Blue))
 
+# Compute the probability distribution of each color channel
+hist_b = cv.calcHist([b], [0], None, [256], [0, 256]) / (img.shape[0] * img.shape[1])
+hist_g = cv.calcHist([g], [0], None, [256], [0, 256]) / (img.shape[0] * img.shape[1])
+hist_r = cv.calcHist([r], [0], None, [256], [0, 256]) / (img.shape[0] * img.shape[1])
+
+# Compute the entropy of each color channel
+entropy_B = entropy(hist_b, base=2)
+entropy_G = entropy(hist_g, base=2)
+entropy_R = entropy(hist_r, base=2)
+
+entropy_Blue = float(entropy_B[0])
+entropy_Green = float(entropy_G[0])
+entropy_Red = float(entropy_R[0])
+
+
+print('\nentropy R: {:.2f}'.format(entropy_Red))
+print('entropy G: {:.2f}'.format(entropy_Green))
+print('entropy B: {:.2f}'.format(entropy_Blue))
+
 print("--------------------------------------------------------------------------------------------------------------\n"
       "HSV Color Feature Extraction :\n")
 
@@ -58,6 +77,7 @@ hsv_array = np.array(hsv_img)
 # Split the image into color channels
 h, s, v = cv.split(hsv_img)
 
+# Calculate the mean of each color component (HSV)
 mean_hsv = np.mean(hsv_array, axis=(0, 1))
 MeanH = mean_hsv[0]
 MeanS = mean_hsv[1]
@@ -91,9 +111,29 @@ kurtosis_Hue = kurtosis(h.flatten())
 kurtosis_Saturation = kurtosis(s.flatten())
 kurtosis_Value = kurtosis(v.flatten())
 
-print('\nSkewness R: {:.2f}'.format(kurtosis_Hue))
-print('Skewness G: {:.2f}'.format(kurtosis_Saturation))
-print('Skewness B: {:.2f}'.format(kurtosis_Value))
+print('\nKurtosis Hue: {:.2f}'.format(kurtosis_Hue))
+print('Kurtosis Saturation: {:.2f}'.format(kurtosis_Saturation))
+print('Kurtosis Value: {:.2f}'.format(kurtosis_Value))
+
+# Compute the probability distribution of each color channel
+hist_h = cv.calcHist([h], [0], None, [180], [0, 180]) / (img.shape[0] * img.shape[1])
+hist_s = cv.calcHist([s], [0], None, [256], [0, 256]) / (img.shape[0] * img.shape[1])
+hist_v = cv.calcHist([v], [0], None, [256], [0, 256]) / (img.shape[0] * img.shape[1])
+
+# Compute the entropy of each color channel
+entropy_h = entropy(hist_h, base=2)
+entropy_s = entropy(hist_s, base=2)
+entropy_v = entropy(hist_v, base=2)
+
+entropy_Hue = float(entropy_h[0])
+entropy_Saturation = float(entropy_s[0])
+entropy_Value = float(entropy_v[0])
+
+
+print('\nentropy Hue: {:.2f}'.format(entropy_Hue))
+print('entropy Saturation: {:.2f}'.format(entropy_Saturation))
+print('entropy Value: {:.2f}'.format(entropy_Value))
+
 
 print("--------------------------------------------------------------------------------------------------------------\n"
       "LAB Color Feature Extraction :\n")
@@ -101,6 +141,10 @@ print("-------------------------------------------------------------------------
 LAB_img = cv.cvtColor(img, cv.COLOR_BGR2Lab)
 LAB_array = np.array(LAB_img)
 
+# Split the image into LAB color channels
+l, a, b = cv.split(LAB_img)
+
+# Calculate the mean of each color component (LAB)
 mean_LAB = np.mean(LAB_array, axis=(0, 1))
 MeanL = mean_LAB[0]
 MeanA = mean_LAB[1]
@@ -110,20 +154,118 @@ print('Mean L: {:.2f}'.format(MeanL))
 print('Mean A: {:.2f}'.format(MeanA))
 print('Mean B: {:.2f}'.format(MeanB))
 
+# Calculate the standard deviation of each color component (LAB)
+std_dev = np.std(LAB_array, axis=(0, 1))
+std_L = std_dev[0]
+std_A = std_dev[1]
+std_B = std_dev[2]
+
+print('\nStandard Deviation Hue: {:.2f}'.format(std_L))
+print('Standard Deviation Saturation: {:.2f}'.format(std_A))
+print('Standard Deviation Value: {:.2f}'.format(std_B))
+
+# Calculate the skewness of each color component (LAB)
+skew_L = skew(l.flatten())
+skew_A = skew(a.flatten())
+skew_B = skew(b.flatten())
+
+print('\nSkewness L: {:.2f}'.format(skew_L))
+print('Skewness A: {:.2f}'.format(skew_A))
+print('Skewness B: {:.2f}'.format(skew_B))
+
+# Calculate the kurtosis of each color component (LAB)
+kurtosis_L = kurtosis(l.flatten())
+kurtosis_A = kurtosis(a.flatten())
+kurtosis_B = kurtosis(b.flatten())
+
+print('\nKurtosis L: {:.2f}'.format(kurtosis_L))
+print('Kurtosis A: {:.2f}'.format(kurtosis_A))
+print('Kurtosis B: {:.2f}'.format(kurtosis_B))
+
+# Compute the probability distribution of each color channel
+hist_l = cv.calcHist([l], [0], None, [256], [0, 256]) / (img.shape[0] * img.shape[1])
+hist_a = cv.calcHist([a], [0], None, [256], [0, 256]) / (img.shape[0] * img.shape[1])
+hist_b = cv.calcHist([b], [0], None, [256], [0, 256]) / (img.shape[0] * img.shape[1])
+
+# Compute the entropy of each color channel
+entropy_l = entropy(hist_l, base=2)
+entropy_a = entropy(hist_a, base=2)
+entropy_b = entropy(hist_b, base=2)
+
+entropy_L = float(entropy_l[0])
+entropy_A = float(entropy_a[0])
+entropy_B = float(entropy_b[0])
+
+
+print('\nentropy L: {:.2f}'.format(entropy_L))
+print('entropy A: {:.2f}'.format(entropy_A))
+print('entropy B: {:.2f}'.format(entropy_B))
+
 print("--------------------------------------------------------------------------------------------------------------\n"
       "YCC Color Feature Extraction :\n")
 
 YCC_img = cv.cvtColor(img, cv.COLOR_BGR2YCR_CB)
 YCC_array = np.array(YCC_img)
 
+# Split the image into color channels
+yb, cb, cr = cv.split(YCC_img)
+
+# Calculate the mean of each color component (YCC)
 mean_YCC = np.mean(YCC_array, axis=(0, 1))
-MeanY = mean_YCC[0]
+MeanYB = mean_YCC[0]
 MeanCR = mean_YCC[1]
 MeanCB = mean_YCC[2]
 
-print('Mean L: {:.2f}'.format(MeanY))
-print('Mean A: {:.2f}'.format(MeanCR))
-print('Mean B: {:.2f}'.format(MeanCB))
+print('Mean Y: {:.2f}'.format(MeanYB))
+print('Mean CR: {:.2f}'.format(MeanCR))
+print('Mean CB: {:.2f}'.format(MeanCB))
+
+# Calculate the standard deviation of each color component (YCC)
+std_dev = np.std(YCC_array, axis=(0, 1))
+std_YB = std_dev[0]
+std_CB = std_dev[1]
+std_CR = std_dev[2]
+
+print('\nStandard Deviation Y: {:.2f}'.format(std_YB))
+print('Standard Deviation CB: {:.2f}'.format(std_CB))
+print('Standard Deviation CR: {:.2f}'.format(std_CR))
+
+# Calculate the skewness of each color component (YCC)
+skew_YB = skew(yb.flatten())
+skew_CB = skew(cb.flatten())
+skew_CR = skew(cr.flatten())
+
+print('\nSkewness Y: {:.2f}'.format(skew_YB))
+print('Skewness Cb: {:.2f}'.format(skew_A))
+print('Skewness Cr: {:.2f}'.format(skew_B))
+
+# Calculate the kurtosis of each color component (YCC)
+kurtosis_YB = kurtosis(yb.flatten())
+kurtosis_CB = kurtosis(cb.flatten())
+kurtosis_CR = kurtosis(cr.flatten())
+
+print('\nKurtosis Y: {:.2f}'.format(kurtosis_YB))
+print('Kurtosis Cb: {:.2f}'.format(kurtosis_CB))
+print('Kurtosis Cr: {:.2f}'.format(kurtosis_CR))
+
+# Compute the probability distribution of each color channel
+hist_yb = cv.calcHist([yb], [0], None, [256], [0, 256]) / (img.shape[0] * img.shape[1])
+hist_cb = cv.calcHist([cb], [0], None, [256], [0, 256]) / (img.shape[0] * img.shape[1])
+hist_cr = cv.calcHist([cr], [0], None, [256], [0, 256]) / (img.shape[0] * img.shape[1])
+
+# Compute the entropy of each color channel
+entropy_yb = entropy(hist_yb, base=2)
+entropy_cb = entropy(hist_cb, base=2)
+entropy_cr = entropy(hist_cr, base=2)
+
+entropy_YB = float(entropy_yb[0])
+entropy_CB = float(entropy_cb[0])
+entropy_CR = float(entropy_cr[0])
+
+
+print('\nentropy Y: {:.2f}'.format(entropy_YB))
+print('entropy CB: {:.2f}'.format(entropy_CB))
+print('entropy CR: {:.2f}'.format(entropy_CR))
 
 print("--------------------------------------------------------------------------------------------------------------\n"
       "XYZ Color Feature Extraction :\n")
@@ -131,11 +273,61 @@ print("-------------------------------------------------------------------------
 XYZ_img = cv.cvtColor(img, cv.COLOR_BGR2XYZ)
 XYZ_array = np.array(XYZ_img)
 
+# Split the image into color channels
+x, y, z = cv.split(XYZ_img)
+
 mean_XYZ = np.mean(XYZ_array, axis=(0, 1))
 MeanX = mean_XYZ[0]
-MeanY2 = mean_XYZ[1]
+MeanY = mean_XYZ[1]
 MeanZ = mean_XYZ[2]
 
 print('Mean X: {:.2f}'.format(MeanX))
-print('Mean Y: {:.2f}'.format(MeanY2))
+print('Mean Y: {:.2f}'.format(MeanY))
 print('Mean Z: {:.2f}'.format(MeanZ))
+
+# Calculate the standard deviation of each color component (XYZ)
+std_dev = np.std(XYZ_array, axis=(0, 1))
+std_X = std_dev[0]
+std_Y = std_dev[1]
+std_Z = std_dev[2]
+
+print('\nStandard Deviation X: {:.2f}'.format(std_X))
+print('Standard Deviation Y: {:.2f}'.format(std_Y))
+print('Standard Deviation Z: {:.2f}'.format(std_Z))
+
+# Calculate the skewness of each color component (XYZ)
+skew_X = skew(x.flatten())
+skew_Y = skew(y.flatten())
+skew_Z = skew(z.flatten())
+
+print('\nSkewness X: {:.2f}'.format(skew_X))
+print('Skewness Y: {:.2f}'.format(skew_Y))
+print('Skewness Z: {:.2f}'.format(skew_Z))
+
+# Calculate the kurtosis of each color component (YCC)
+kurtosis_X = kurtosis(x.flatten())
+kurtosis_Y = kurtosis(y.flatten())
+kurtosis_Z = kurtosis(z.flatten())
+
+print('\nKurtosis X: {:.2f}'.format(kurtosis_X))
+print('Kurtosis Y: {:.2f}'.format(kurtosis_Y))
+print('Kurtosis Z: {:.2f}'.format(kurtosis_Z))
+
+# Compute the probability distribution of each color channel
+hist_x = cv.calcHist([x], [0], None, [256], [0, 256]) / (img.shape[0] * img.shape[1])
+hist_y = cv.calcHist([y], [0], None, [256], [0, 256]) / (img.shape[0] * img.shape[1])
+hist_z = cv.calcHist([z], [0], None, [256], [0, 256]) / (img.shape[0] * img.shape[1])
+
+# Compute the entropy of each color channel
+entropy_x = entropy(hist_x, base=2)
+entropy_y = entropy(hist_y, base=2)
+entropy_z = entropy(hist_z, base=2)
+
+entropy_X = float(entropy_x[0])
+entropy_Y = float(entropy_y[0])
+entropy_Z = float(entropy_z[0])
+
+
+print('\nentropy X: {:.2f}'.format(entropy_X))
+print('entropy Y: {:.2f}'.format(entropy_Y))
+print('entropy Z: {:.2f}'.format(entropy_Z))
