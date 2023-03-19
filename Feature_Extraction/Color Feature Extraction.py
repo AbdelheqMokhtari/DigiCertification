@@ -1,6 +1,7 @@
 import cv2 as cv
 import numpy as np
 from scipy.stats import skew, kurtosis, entropy
+import pywt
 
 
 img = cv.imread("Wheat_1.jpg")
@@ -331,3 +332,13 @@ entropy_Z = float(entropy_z[0])
 print('\nentropy X: {:.2f}'.format(entropy_X))
 print('entropy Y: {:.2f}'.format(entropy_Y))
 print('entropy Z: {:.2f}'.format(entropy_Z))
+
+print("--------------------------------------------------------------------------------------------------------------\n"
+      "Wavelet transform 1 Level db4 :\n")
+coefficient = pywt.dwt2(yb, 'db4')
+
+# Get the approximation coefficients (LL)
+LL, (LH, HL, HH) = coefficient
+# Take the mean of the LL coefficients
+mean_LL = np.mean(LL)
+print('Mean of wavelet transform: {:.2f}'.format(mean_LL))
