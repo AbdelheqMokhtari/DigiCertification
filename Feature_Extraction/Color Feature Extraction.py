@@ -43,8 +43,13 @@ for filename in files:
     MeanG = mean[1]
     MeanR = mean[2]
 
+    Features.append(MeanR)
     print('Mean R: {:.2f}'.format(MeanR))
+
+    Features.append(MeanG)
     print('Mean G: {:.2f}'.format(MeanG))
+
+    Features.append(MeanB)
     print('Mean B: {:.2f}'.format(MeanB))
 
     # Calculate the standard deviation of each color component (RGB)
@@ -53,8 +58,13 @@ for filename in files:
     std_Green = std_dev[1]
     std_Red = std_dev[2]
 
+    Features.append(std_Red)
     print('\nStandard Deviation R: {:.2f}'.format(std_Red))
+
+    Features.append(std_Green)
     print('Standard Deviation G: {:.2f}'.format(std_Green))
+
+    Features.append(std_Blue)
     print('Standard Deviation B: {:.2f}'.format(std_Blue))
 
     # Calculate the skewness of each color component (RGB)
@@ -62,8 +72,13 @@ for filename in files:
     skew_Green = skew(g.flatten())
     skew_Red = skew(r.flatten())
 
+    Features.append(skew_Red)
     print('\nSkewness R: {:.2f}'.format(skew_Red))
+
+    Features.append(skew_Green)
     print('Skewness G: {:.2f}'.format(skew_Green))
+
+    Features.append(skew_Blue)
     print('Skewness B: {:.2f}'.format(skew_Blue))
 
     # Calculate the kurtosis of each color component (RGB)
@@ -71,8 +86,13 @@ for filename in files:
     kurtosis_Green = kurtosis(g.flatten())
     kurtosis_Red = kurtosis(r.flatten())
 
+    Features.append(kurtosis_Red)
     print('\nkurtosis R: {:.2f}'.format(kurtosis_Red))
+
+    Features.append(kurtosis_Green)
     print('kurtosis G: {:.2f}'.format(kurtosis_Green))
+
+    Features.append(kurtosis_Blue)
     print('kurtosis B: {:.2f}'.format(kurtosis_Blue))
 
     # Compute the probability distribution of each color channel
@@ -89,8 +109,13 @@ for filename in files:
     entropy_Green = float(entropy_G[0])
     entropy_Red = float(entropy_R[0])
 
+    Features.append(entropy_Red)
     print('\nentropy R: {:.2f}'.format(entropy_Red))
+
+    Features.append(entropy_Green)
     print('entropy G: {:.2f}'.format(entropy_Green))
+
+    Features.append(entropy_Blue)
     print('entropy B: {:.2f}'.format(entropy_Blue))
 
     # HSV space Color
@@ -110,8 +135,13 @@ for filename in files:
     MeanSaturation = mean_hsv[1]
     MeanValue = mean_hsv[2]
 
+    Features.append(MeanHue)
     print('Mean H: {:.2f}'.format(MeanHue))
+
+    Features.append(MeanSaturation)
     print('Mean S: {:.2f}'.format(MeanSaturation))
+
+    Features.append(MeanValue)
     print('Mean V: {:.2f}'.format(MeanValue))
 
     # Calculate the standard deviation of each color component (HSV)
@@ -120,8 +150,13 @@ for filename in files:
     std_Saturation = std_dev[1]
     std_Value = std_dev[2]
 
+    Features.append(std_Hue)
     print('\nStandard Deviation Hue: {:.2f}'.format(std_Hue))
+
+    Features.append(std_Saturation)
     print('Standard Deviation Saturation: {:.2f}'.format(std_Saturation))
+
+    Features.append(std_Value)
     print('Standard Deviation Value: {:.2f}'.format(std_Value))
 
     # Calculate the skewness of each color component (HSV)
@@ -129,8 +164,13 @@ for filename in files:
     skew_Saturation = skew(s.flatten())
     skew_Value = skew(v.flatten())
 
+    Features.append(skew_Hue)
     print('\nSkewness Hue: {:.2f}'.format(skew_Hue))
+
+    Features.append(skew_Saturation)
     print('Skewness Saturation: {:.2f}'.format(skew_Saturation))
+
+    Features.append(skew_Value)
     print('Skewness Value: {:.2f}'.format(skew_Value))
 
     # Calculate the kurtosis of each color component (HSV)
@@ -138,8 +178,13 @@ for filename in files:
     kurtosis_Saturation = kurtosis(s.flatten())
     kurtosis_Value = kurtosis(v.flatten())
 
+    Features.append(kurtosis_Hue)
     print('\nKurtosis Hue: {:.2f}'.format(kurtosis_Hue))
+
+    Features.append(kurtosis_Saturation)
     print('Kurtosis Saturation: {:.2f}'.format(kurtosis_Saturation))
+
+    Features.append(kurtosis_Value)
     print('Kurtosis Value: {:.2f}'.format(kurtosis_Value))
 
     # Compute the probability distribution of each color channel
@@ -156,8 +201,13 @@ for filename in files:
     entropy_Saturation = float(entropy_s[0])
     entropy_Value = float(entropy_v[0])
 
+    Features.append(entropy_Hue)
     print('\nentropy Hue: {:.2f}'.format(entropy_Hue))
+
+    Features.append(entropy_Saturation)
     print('entropy Saturation: {:.2f}'.format(entropy_Saturation))
+
+    Features.append(entropy_Value)
     print('entropy Value: {:.2f}'.format(entropy_Value))
 
     # LAB Space Color
@@ -177,8 +227,13 @@ for filename in files:
     MeanA = mean_LAB[1]
     MeanB = mean_LAB[2]
 
+    Features.append(MeanL)
     print('Mean L: {:.2f}'.format(MeanL))
+
+    Features.append(MeanA)
     print('Mean A: {:.2f}'.format(MeanA))
+
+    Features.append(MeanB)
     print('Mean B: {:.2f}'.format(MeanB))
 
     # Calculate the standard deviation of each color component (LAB)
@@ -187,8 +242,13 @@ for filename in files:
     std_A = std_dev[1]
     std_B = std_dev[2]
 
+    Features.append(std_L)
     print('\nStandard Deviation Hue: {:.2f}'.format(std_L))
+
+    Features.append(std_A)
     print('Standard Deviation Saturation: {:.2f}'.format(std_A))
+
+    Features.append(std_B)
     print('Standard Deviation Value: {:.2f}'.format(std_B))
 
     # Calculate the skewness of each color component (LAB)
@@ -196,8 +256,13 @@ for filename in files:
     skew_A = skew(a.flatten())
     skew_B = skew(b.flatten())
 
+    Features.append(skew_L)
     print('\nSkewness L: {:.2f}'.format(skew_L))
+
+    Features.append(skew_A)
     print('Skewness A: {:.2f}'.format(skew_A))
+
+    Features.append(skew_B)
     print('Skewness B: {:.2f}'.format(skew_B))
 
     # Calculate the kurtosis of each color component (LAB)
@@ -205,8 +270,13 @@ for filename in files:
     kurtosis_A = kurtosis(a.flatten())
     kurtosis_B = kurtosis(b.flatten())
 
+    Features.append(kurtosis_L)
     print('\nKurtosis L: {:.2f}'.format(kurtosis_L))
+
+    Features.append(kurtosis_A)
     print('Kurtosis A: {:.2f}'.format(kurtosis_A))
+
+    Features.append(kurtosis_B)
     print('Kurtosis B: {:.2f}'.format(kurtosis_B))
 
     # Compute the probability distribution of each color channel
@@ -223,8 +293,13 @@ for filename in files:
     entropy_A = float(entropy_a[0])
     entropy_B = float(entropy_b[0])
 
+    Features.append(entropy_L)
     print('\nentropy L: {:.2f}'.format(entropy_L))
+
+    Features.append(entropy_A)
     print('entropy A: {:.2f}'.format(entropy_A))
+
+    Features.append(entropy_B)
     print('entropy B: {:.2f}'.format(entropy_B))
 
     # YCC space Color
@@ -244,8 +319,13 @@ for filename in files:
     MeanCB = mean_YCC[1]
     MeanCR = mean_YCC[2]
 
+    Features.append(MeanYB)
     print('Mean Y: {:.2f}'.format(MeanYB))
+
+    Features.append(MeanCB)
     print('Mean CR: {:.2f}'.format(MeanCB))
+
+    Features.append(MeanCR)
     print('Mean CB: {:.2f}'.format(MeanCR))
 
     # Calculate the standard deviation of each color component (YCC)
@@ -254,8 +334,13 @@ for filename in files:
     std_CB = std_dev[1]
     std_CR = std_dev[2]
 
+    Features.append(std_YB)
     print('\nStandard Deviation Y: {:.2f}'.format(std_YB))
+
+    Features.append(std_CB)
     print('Standard Deviation CB: {:.2f}'.format(std_CB))
+
+    Features.append(std_CR)
     print('Standard Deviation CR: {:.2f}'.format(std_CR))
 
     # Calculate the skewness of each color component (YCC)
@@ -263,17 +348,27 @@ for filename in files:
     skew_CB = skew(cb.flatten())
     skew_CR = skew(cr.flatten())
 
+    Features.append(skew_YB)
     print('\nSkewness Y: {:.2f}'.format(skew_YB))
-    print('Skewness Cb: {:.2f}'.format(skew_A))
-    print('Skewness Cr: {:.2f}'.format(skew_B))
+
+    Features.append(skew_CB)
+    print('Skewness Cb: {:.2f}'.format(skew_CB))
+
+    Features.append(skew_CR)
+    print('Skewness Cr: {:.2f}'.format(skew_CR))
 
     # Calculate the kurtosis of each color component (YCC)
     kurtosis_YB = kurtosis(yb.flatten())
     kurtosis_CB = kurtosis(cb.flatten())
     kurtosis_CR = kurtosis(cr.flatten())
 
+    Features.append(kurtosis_YB)
     print('\nKurtosis Y: {:.2f}'.format(kurtosis_YB))
+
+    Features.append(kurtosis_CB)
     print('Kurtosis Cb: {:.2f}'.format(kurtosis_CB))
+
+    Features.append(kurtosis_CR)
     print('Kurtosis Cr: {:.2f}'.format(kurtosis_CR))
 
     # Compute the probability distribution of each color channel
@@ -290,8 +385,13 @@ for filename in files:
     entropy_CB = float(entropy_cb[0])
     entropy_CR = float(entropy_cr[0])
 
+    Features.append(entropy_YB)
     print('\nentropy Y: {:.2f}'.format(entropy_YB))
+
+    Features.append(entropy_CB)
     print('entropy CB: {:.2f}'.format(entropy_CB))
+
+    Features.append(entropy_CR)
     print('entropy CR: {:.2f}'.format(entropy_CR))
 
     # XYZ Space Color
@@ -310,8 +410,13 @@ for filename in files:
     MeanY = mean_XYZ[1]
     MeanZ = mean_XYZ[2]
 
+    Features.append(MeanX)
     print('Mean X: {:.2f}'.format(MeanX))
+
+    Features.append(MeanY)
     print('Mean Y: {:.2f}'.format(MeanY))
+
+    Features.append(MeanZ)
     print('Mean Z: {:.2f}'.format(MeanZ))
 
     # Calculate the standard deviation of each color component (XYZ)
@@ -320,8 +425,13 @@ for filename in files:
     std_Y = std_dev[1]
     std_Z = std_dev[2]
 
+    Features.append(std_X)
     print('\nStandard Deviation X: {:.2f}'.format(std_X))
+
+    Features.append(std_Y)
     print('Standard Deviation Y: {:.2f}'.format(std_Y))
+
+    Features.append(std_Z)
     print('Standard Deviation Z: {:.2f}'.format(std_Z))
 
     # Calculate the skewness of each color component (XYZ)
@@ -329,8 +439,13 @@ for filename in files:
     skew_Y = skew(y.flatten())
     skew_Z = skew(z.flatten())
 
+    Features.append(skew_X)
     print('\nSkewness X: {:.2f}'.format(skew_X))
+
+    Features.append(skew_Y)
     print('Skewness Y: {:.2f}'.format(skew_Y))
+
+    Features.append(skew_Z)
     print('Skewness Z: {:.2f}'.format(skew_Z))
 
     # Calculate the kurtosis of each color component (YCC)
@@ -338,8 +453,13 @@ for filename in files:
     kurtosis_Y = kurtosis(y.flatten())
     kurtosis_Z = kurtosis(z.flatten())
 
+    Features.append(kurtosis_X)
     print('\nKurtosis X: {:.2f}'.format(kurtosis_X))
+
+    Features.append(kurtosis_Y)
     print('Kurtosis Y: {:.2f}'.format(kurtosis_Y))
+
+    Features.append(kurtosis_Z)
     print('Kurtosis Z: {:.2f}'.format(kurtosis_Z))
 
     # Compute the probability distribution of each color channel
@@ -356,8 +476,13 @@ for filename in files:
     entropy_Y = float(entropy_y[0])
     entropy_Z = float(entropy_z[0])
 
+    Features.append(entropy_X)
     print('\nentropy X: {:.2f}'.format(entropy_X))
+
+    Features.append(entropy_Y)
     print('entropy Y: {:.2f}'.format(entropy_Y))
+
+    Features.append(entropy_Z)
     print('entropy Z: {:.2f}'.format(entropy_Z))
 
     print(
@@ -369,7 +494,14 @@ for filename in files:
     LL, (LH, HL, HH) = coefficient
     # Take the mean of the LL coefficients
     mean_LL = np.mean(LL)
+
+    Features.append(mean_LL)
     print('Mean of wavelet transform: {:.2f}'.format(mean_LL))
 
     print(
-          "*******************************************************************************************************\n")
+        "*******************************************************************************************************\n")
+
+    df.loc[len(df)] = Features
+
+print(df)
+df.to_csv('Feature.csv', index=False)
