@@ -80,13 +80,13 @@ h, s, v = cv.split(hsv_img)
 
 # Calculate the mean of each color component (HSV)
 mean_hsv = np.mean(hsv_array, axis=(0, 1))
-MeanH = mean_hsv[0]
-MeanS = mean_hsv[1]
-MeanV = mean_hsv[2]
+MeanHue = mean_hsv[0]
+MeanSaturation = mean_hsv[1]
+MeanValue = mean_hsv[2]
 
-print('Mean H: {:.2f}'.format(MeanH))
-print('Mean S: {:.2f}'.format(MeanS))
-print('Mean V: {:.2f}'.format(MeanV))
+print('Mean H: {:.2f}'.format(MeanHue))
+print('Mean S: {:.2f}'.format(MeanSaturation))
+print('Mean V: {:.2f}'.format(MeanValue))
 
 # Calculate the standard deviation of each color component (HSV)
 std_dev = np.std(hsv_array, axis=(0, 1))
@@ -214,12 +214,12 @@ yb, cb, cr = cv.split(YCC_img)
 # Calculate the mean of each color component (YCC)
 mean_YCC = np.mean(YCC_array, axis=(0, 1))
 MeanYB = mean_YCC[0]
-MeanCR = mean_YCC[1]
-MeanCB = mean_YCC[2]
+MeanCB = mean_YCC[1]
+MeanCR = mean_YCC[2]
 
 print('Mean Y: {:.2f}'.format(MeanYB))
-print('Mean CR: {:.2f}'.format(MeanCR))
-print('Mean CB: {:.2f}'.format(MeanCB))
+print('Mean CR: {:.2f}'.format(MeanCB))
+print('Mean CB: {:.2f}'.format(MeanCR))
 
 # Calculate the standard deviation of each color component (YCC)
 std_dev = np.std(YCC_array, axis=(0, 1))
