@@ -57,12 +57,17 @@ for filename in files:
     ASM = graycoprops(glrlm, 'ASM')
 
     # Print the texture measures
-    print("Contrast: ", contrast)
-    print("Dissimilarity: ", dissimilarity)
-    print("Homogeneity: ", homogeneity)
-    print("Energy: ", energy)
-    print("Correlation: ", correlation)
-    print("ASM: ", ASM)
+    # print("Contrast: ", contrast)
+    for elements in contrast:
+        for element in elements:
+            print("Contrast: ", element)
+    # print("Contrast: ", contrast[0][0])
+    # print("Dissimilarity: ", dissimilarity)
+    # print("Homogeneity: ", homogeneity)
+    # print("Energy: ", energy)
+    # print("Correlation: ", correlation)
+    # print("ASM: ", ASM)
+    break
 
 
 
