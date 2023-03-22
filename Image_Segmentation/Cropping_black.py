@@ -1,7 +1,7 @@
 import cv2
 
 # Load the image
-img = cv2.imread('Scanner02.jpg')
+img = cv2.imread('WheatPicture.jpeg')
 
 # Convert to grayscale
 gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -23,5 +23,5 @@ for i in range(1, ret):
     if area > 1000:  # filter out small noise
         print("x =", x, "y =", y, "w =", w, "h =", h)
         crop_img = img[(y-40):(y+h+40), (x-40):(x+w+40)]
-        cv2.imwrite(f'Data_black/Wheat_{j}.jpg', crop_img)
+        cv2.imwrite(f'Wheat_Crop/Wheat_{j}.jpg', crop_img)
         j += 1
