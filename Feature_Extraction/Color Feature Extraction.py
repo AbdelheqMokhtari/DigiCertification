@@ -7,14 +7,16 @@ import pywt
 
 columns = ["MeanB", "MeanG", "MeanR", "std_Blue", "std_Green", "std_Red", "skew_Blue", "skew_Green", "skew_Red",
            "kurtosis_Blue", "kurtosis_Green", "kurtosis_Red", "entropy_Blue", "entropy_Green", "entropy_Red",
-           "MeanHue", "MeanSaturation", "MeanValue", "std_Hue", "std_Saturation", "std_Value", "skew_Hue",
-           "skew_Saturation", "skew_Value", "kurtosis_Hue", "kurtosis_Saturation", "kurtosis_Value", "entropy_Hue",
-           "entropy_Saturation", "entropy_Value", "MeanL", "MeanA", "MeanB", "std_L", "std_A", "std_B", "skew_L",
-           "skew_A", "skew_B", "kurtosis_L", "kurtosis_A", "kurtosis_B", "entropy_L", "entropy_A", "entropy_B",
-           "MeanYB", "MeanCB", "MeanCR", "std_YB", "std_CB", "std_CR", "skew_YB", "skew_CB", "skew_CR", "kurtosis_YB",
-           "kurtosis_CB", "kurtosis_CR", "entropy_YB", "entropy_CB", "entropy_CR", "MeanX", "MeanY", "MeanZ", "std_X",
+           "Wavelet_Blue", "Wavelet_Green", "Wavelet_Red", "MeanHue", "MeanSaturation", "MeanValue", "std_Hue",
+           "std_Saturation", "std_Value", "skew_Hue", "skew_Saturation", "skew_Value", "kurtosis_Hue",
+           "kurtosis_Saturation", "kurtosis_Value", "entropy_Hue", "entropy_Saturation", "entropy_Value",
+           "Wavelet_Hue", "Wavelet_Saturation", "Wavelet_Value", "MeanL", "MeanA", "MeanB", "std_L", "std_A", "std_B",
+           "skew_L", "skew_A", "skew_B", "kurtosis_L", "kurtosis_A", "kurtosis_B", "entropy_L", "entropy_A",
+           "entropy_B", "Wavelet_L", "Wavelet_A", "Wavelet_B", "MeanYB", "MeanCB", "MeanCR", "std_YB", "std_CB",
+           "std_CR", "skew_YB", "skew_CB", "skew_CR", "kurtosis_YB", "kurtosis_CB", "kurtosis_CR", "entropy_YB",
+           "entropy_CB", "entropy_CR", "Wavelet_YB", "Wavelet_CB", "Wavelet_CR", "MeanX", "MeanY", "MeanZ", "std_X",
            "std_Y", "std_Z", "skew_X", "skew_Y", "skew_Z", "kurtosis_X", "kurtosis_Y", "kurtosis_Z", "entropy_X",
-           "entropy_Y", "entropy_Z", "mean_LL"]
+           "entropy_Y", "entropy_Z", "Wavelet_X", "Wavelet_Y", "Wavelet_Z"]
 
 df = pd.DataFrame(columns=columns)
 
@@ -118,6 +120,30 @@ for filename in files:
     Features.append(entropy_Blue)
     print('entropy B: {:.2f}'.format(entropy_Blue))
 
+    # Perform one-level DWT using db4 wavelet for the three component
+    coefficient_b = pywt.dwt2(b, 'db4')
+    coefficient_g = pywt.dwt2(g, 'db4')
+    coefficient_r = pywt.dwt2(r, 'db4')
+
+    # Get the approximation coefficients (LL) and Take the mean of the LL coefficients
+    LL, (LH, HL, HH) = coefficient_b
+    Wavelet_Blue = np.mean(LL)
+
+    LL, (LH, HL, HH) = coefficient_g
+    Wavelet_Green = np.mean(LL)
+
+    LL, (LH, HL, HH) = coefficient_r
+    Wavelet_Red = np.mean(LL)
+
+    Features.append(Wavelet_Blue)
+    print('\nWavelet_Blue R: {:.2f}'.format(Wavelet_Blue))
+
+    Features.append(Wavelet_Green)
+    print('\nWavelet_Green R: {:.2f}'.format(Wavelet_Green))
+
+    Features.append(Wavelet_Red)
+    print('\nWavelet_Red R: {:.2f}'.format(Wavelet_Red))
+
     # HSV space Color
     print(
         "-----------------------------------------------------------------------------------------------------------\n"
@@ -209,6 +235,30 @@ for filename in files:
 
     Features.append(entropy_Value)
     print('entropy Value: {:.2f}'.format(entropy_Value))
+
+    # Perform one-level DWT using db4 wavelet for the three component
+    coefficient_h = pywt.dwt2(h, 'db4')
+    coefficient_s = pywt.dwt2(s, 'db4')
+    coefficient_v = pywt.dwt2(v, 'db4')
+
+    # Get the approximation coefficients (LL) and Take the mean of the LL coefficients for the three component
+    LL, (LH, HL, HH) = coefficient_h
+    Wavelet_Hue = np.mean(LL)
+
+    LL, (LH, HL, HH) = coefficient_s
+    Wavelet_Saturation = np.mean(LL)
+
+    LL, (LH, HL, HH) = coefficient_v
+    Wavelet_Value = np.mean(LL)
+
+    Features.append(Wavelet_Hue)
+    print('\nWavelet_Hue : {:.2f}'.format(Wavelet_Hue))
+
+    Features.append(Wavelet_Saturation)
+    print('\nWavelet_Saturation : {:.2f}'.format(Wavelet_Saturation))
+
+    Features.append(Wavelet_Value)
+    print('\nWavelet_Value : {:.2f}'.format(Wavelet_Value))
 
     # LAB Space Color
     print(
@@ -302,6 +352,30 @@ for filename in files:
     Features.append(entropy_B)
     print('entropy B: {:.2f}'.format(entropy_B))
 
+    # Perform one-level DWT using db4 wavelet for the three component
+    coefficient_l = pywt.dwt2(l, 'db4')
+    coefficient_a = pywt.dwt2(a, 'db4')
+    coefficient_b = pywt.dwt2(b, 'db4')
+
+    # Get the approximation coefficients (LL) and Take the mean of the LL coefficients for the three component
+    LL, (LH, HL, HH) = coefficient_l
+    Wavelet_Lab = np.mean(LL)
+
+    LL, (LH, HL, HH) = coefficient_a
+    Wavelet_Saturation = np.mean(LL)
+
+    LL, (LH, HL, HH) = coefficient_b
+    Wavelet_Value = np.mean(LL)
+
+    Features.append(Wavelet_Hue)
+    print('\nWavelet_Blue R: {:.2f}'.format(Wavelet_Hue))
+
+    Features.append(Wavelet_Saturation)
+    print('\nWavelet_Blue R: {:.2f}'.format(Wavelet_Saturation))
+
+    Features.append(Wavelet_Value)
+    print('\nWavelet_Blue R: {:.2f}'.format(Wavelet_Value))
+
     # YCC space Color
     print(
         "-----------------------------------------------------------------------------------------------------------\n"
@@ -394,6 +468,30 @@ for filename in files:
     Features.append(entropy_CR)
     print('entropy CR: {:.2f}'.format(entropy_CR))
 
+    # Perform one-level DWT using db4 wavelet for the three component
+    coefficient_yb = pywt.dwt2(yb, 'db4')
+    coefficient_cb = pywt.dwt2(cb, 'db4')
+    coefficient_cr = pywt.dwt2(cr, 'db4')
+
+    # Get the approximation coefficients (LL) and Take the mean of the LL coefficients for the three component
+    LL, (LH, HL, HH) = coefficient_yb
+    Wavelet_YB = np.mean(LL)
+
+    LL, (LH, HL, HH) = coefficient_cb
+    Wavelet_CB = np.mean(LL)
+
+    LL, (LH, HL, HH) = coefficient_cr
+    Wavelet_CR = np.mean(LL)
+
+    Features.append(Wavelet_YB)
+    print('\nWavelet_yb: {:.2f}'.format(Wavelet_YB))
+
+    Features.append(Wavelet_CB)
+    print('\nWavelet_cb: {:.2f}'.format(Wavelet_CB))
+
+    Features.append(Wavelet_CR)
+    print('\nWavelet_cr: {:.2f}'.format(Wavelet_CR))
+
     # XYZ Space Color
     print(
         "-----------------------------------------------------------------------------------------------------------\n"
@@ -485,18 +583,29 @@ for filename in files:
     Features.append(entropy_Z)
     print('entropy Z: {:.2f}'.format(entropy_Z))
 
-    print(
-        "-----------------------------------------------------------------------------------------------------------\n"
-        "Wavelet transform 1 Level db4 :\n")
-    coefficient = pywt.dwt2(yb, 'db4')
+    # Perform one-level DWT using db4 wavelet for the three component
+    coefficient_x = pywt.dwt2(x, 'db4')
+    coefficient_y = pywt.dwt2(y, 'db4')
+    coefficient_z = pywt.dwt2(z, 'db4')
 
-    # Get the approximation coefficients (LL)
-    LL, (LH, HL, HH) = coefficient
-    # Take the mean of the LL coefficients
-    mean_LL = np.mean(LL)
+    # Get the approximation coefficients (LL) and Take the mean of the LL coefficients for the three component
+    LL, (LH, HL, HH) = coefficient_x
+    Wavelet_X = np.mean(LL)
 
-    Features.append(mean_LL)
-    print('Mean of wavelet transform: {:.2f}'.format(mean_LL))
+    LL, (LH, HL, HH) = coefficient_y
+    Wavelet_Y = np.mean(LL)
+
+    LL, (LH, HL, HH) = coefficient_z
+    Wavelet_Z = np.mean(LL)
+
+    Features.append(Wavelet_YB)
+    print('\nWavelet_X: {:.2f}'.format(Wavelet_X))
+
+    Features.append(Wavelet_CB)
+    print('\nWavelet_Y: {:.2f}'.format(Wavelet_Y))
+
+    Features.append(Wavelet_CR)
+    print('\nWavelet_Z: {:.2f}'.format(Wavelet_Z))
 
     print(
         "*******************************************************************************************************\n")

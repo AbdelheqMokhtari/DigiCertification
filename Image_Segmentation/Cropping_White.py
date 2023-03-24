@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 
 # Load the image and convert it to grayscale
-img = cv2.imread("test01.jpg")
+img = cv2.imread("imane.jpeg")
 gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
 # Apply thresholding to segment the seeds
@@ -29,7 +29,7 @@ for i, c in enumerate(seed_contours):
     crop_img = img[y:y+h, x:x+w]
     cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
     # cv2.imshow("Data/Seed {}".format(i+1), crop_img)
-    cv2.imwrite(f'data/seed_{j}.png', crop_img)
+    cv2.imwrite(f'test/seed_{j}.png', crop_img)
     j += 1
 
 # Display the original image with detected seeds and bounding boxes

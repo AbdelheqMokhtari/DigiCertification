@@ -17,3 +17,8 @@
 /Testing/WLD.py
 /Testing/Morphological Feature.py
 /Testing/Basics.py
+/Testing/ResNet.py
+/Testing/Keras_ResNet18.py
+/Testing/VGG16.py
+/Testing/test.py
+/Image_Segmentation/imane.jpeg
