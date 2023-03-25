@@ -6,6 +6,7 @@ from tensorflow.keras.optimizers import Adam
 # Load the seed dataset and preprocess the data
 
 # Build the ResNet50 model
+num_classes = 5
 base_model = ResNet50(weights='imagenet', include_top=False, input_shape=(224, 224, 3))
 x = base_model.output
 x = GlobalAveragePooling2D()(x)
