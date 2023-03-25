@@ -21,7 +21,7 @@ columns = ["MeanB", "MeanG", "MeanR", "std_Blue", "std_Green", "std_Red", "skew_
 df = pd.DataFrame(columns=columns)
 
 # Define Image Path
-image_dir = "Data"
+image_dir = "White_image"
 files = os.listdir(image_dir)
 for filename in files:
     # Loading image
@@ -613,4 +613,4 @@ for filename in files:
     df.loc[len(df)] = Features
 
 print(df)
-df.to_csv('Color Feature.csv', index=False)
+df.to_csv('Color Feature White 02.csv', index=False)
