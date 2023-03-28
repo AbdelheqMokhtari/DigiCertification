@@ -27,3 +27,6 @@
 /Image_Segmentation/black.jpeg
 /Image_Segmentation/White_image.jpeg
 /Testing/Fine tuning.py
+/Testing/SVM.py
+/Testing/Evaluating.py
+/Testing/Confusion Matrix.py
