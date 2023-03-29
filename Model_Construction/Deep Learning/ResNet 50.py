@@ -8,6 +8,8 @@ train_datagen = ImageDataGenerator(rescale=1./255)
 
 test_datagen = ImageDataGenerator(rescale=1./255)
 
+validation_datagen = ImageDataGenerator(rescale=1./255)
+
 train_data = train_datagen.flow_from_directory(
     'Data/train',
     target_size=(224, 224),
@@ -21,10 +23,16 @@ test_data = test_datagen.flow_from_directory(
     batch_size=32,
     class_mode='categorical'
 )
+validation_data = validation_datagen.flow_from_directory(
+    'Data/validation',
+    target_size=(224, 224),
+    batch_size=32,
+    class_mode='categorical'
+)
 
 # Build the ResNet50 model
-num_classes = 2
-num_epochs = 32
+num_classes = 3
+num_epochs = 20
 base_model = ResNet50(weights='imagenet', include_top=False, input_shape=(224, 224, 3))
 x = base_model.output
 x = GlobalAveragePooling2D()(x)
@@ -37,10 +45,10 @@ model.compile(optimizer=Adam(lr=0.0001), loss='categorical_crossentropy', metric
 model.layers[0].trainable = False
 
 # Train the model
-model.fit(train_data, epochs=num_epochs)
+model.fit(train_data, epochs=num_epochs, validation_data=validation_data, verbose=1)
 
 # Evaluate the model
 model.evaluate(test_data)
 
 # Save the model
-model.save('Model/my_model.h5')
+model.save('Model/my_model02.h5')
