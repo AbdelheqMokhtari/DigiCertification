@@ -4,7 +4,8 @@ from keras.models import Model
 from keras.optimizers import Adam
 from keras.preprocessing.image import ImageDataGenerator
 
-train_datagen = ImageDataGenerator(rescale=1./255)
+train_datagen = ImageDataGenerator(rescale=1./255,
+                                   rotation_range=45)
 
 test_datagen = ImageDataGenerator(rescale=1./255)
 
@@ -31,7 +32,7 @@ validation_data = validation_datagen.flow_from_directory(
 )
 
 # Build the ResNet50 model
-num_classes = 3
+num_classes = 7
 num_epochs = 20
 base_model = ResNet50(weights='imagenet', include_top=False, input_shape=(224, 224, 3))
 x = base_model.output
@@ -51,4 +52,4 @@ model.fit(train_data, epochs=num_epochs, validation_data=validation_data, verbos
 model.evaluate(test_data)
 
 # Save the model
-model.save('Model/my_model02.h5')
+model.save('Model/my_model03/.h5')

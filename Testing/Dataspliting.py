@@ -6,7 +6,7 @@ import shutil
 path_to_images = 'Data'
 
 # Define the list of classes
-classes = ['Bousselam', 'Oued_el_bared', 'soft wheat']
+classes = ['Soft Wheat', 'Bousselam', 'Metadine', 'Mouchten', 'Oued_el_bared', "Vitron", "Maigres"]
 
 # Create the directories for train and test data
 os.makedirs('train')

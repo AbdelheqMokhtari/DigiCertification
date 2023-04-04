@@ -2,7 +2,7 @@ import os
 from PIL import Image
 
 j = 0
-image_dir = "Vitro_org"
+image_dir = "Vitron org"
 files = os.listdir(image_dir)
 for filename in files:
     filepath = os.path.join(image_dir, filename)
@@ -34,5 +34,5 @@ for filename in files:
 
     # Save the new image
     print(j)
-    new_img.save(f'Vitro_Size/Vitro_{j}.png')
+    new_img.save(f'Vitron size/Vitron_{j}.png')
     j += 1
