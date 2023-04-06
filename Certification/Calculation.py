@@ -58,5 +58,5 @@ class Seed:
 
 
 seed = Seed(SeedCategory.CATEGORY_1, 195, 200)
-print(seed.purity_percentage)  # Output: 95.0
-print(seed.seed_category.value)  # Output: Category 1
+print(seed.purity_percentage)  # Output: 97.5
+print(seed.seed_category.value)  # Output: Ordinary
