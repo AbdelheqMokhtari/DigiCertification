@@ -14,7 +14,7 @@ def set_poid_specific():
     elif ps < 74:
         observation = "refuser"
 
-    return ps, observation
+    return ps
 
 
 def set_humidite():
@@ -34,7 +34,7 @@ def set_grain_nuisibles():
         obesrvation = "accepter"
     else:
         observation = "refuse"
-    return gn, obesrvation
+    return gn
 
 
 def set_ergot():
@@ -47,7 +47,7 @@ def set_ergot():
     else:
         observation = "refuse"
 
-    return ergot, observation
+    return ergot
 
 
 def set_debris_vegetaux():
@@ -76,7 +76,7 @@ def set_grains_casse():
         observation = "sans bonification ni réfaction"
     else:
         observation = "réfaction"
-    return gcs, observation
+    return gcs
 
 
 def set_grains_maigres():
@@ -110,7 +110,7 @@ def set_grain_boute():
         observation = "sans bonification ni réfaction"
     else:
         observation = "refaction"
-    return gb, observation
+    return gb
 
 
 def set_grain_punaises():
@@ -137,7 +137,7 @@ def set_ble_tendre():
     elif blt > 5:
         observation = "Prix a dépattre "
 
-    return blt, observation
+    return blt
 
 
 def bonification(ps, gn, dv, mi, gsv, gcr, gcs, gm, gech, geb, groux, gfm, gb, gp, gpq, inm, blt):
@@ -288,6 +288,8 @@ def bonification(ps, gn, dv, mi, gsv, gcr, gcs, gm, gech, geb, groux, gfm, gb, g
         print(vps)
     elif ps > 85.75:
         vps = +3.35
+    else:
+        vps = 0.00
 
     if 0.051 <= gn <= 0.1:
         vgn = -0.05
@@ -301,6 +303,9 @@ def bonification(ps, gn, dv, mi, gsv, gcr, gcs, gm, gech, geb, groux, gfm, gb, g
     elif 0.201 <= gn <= 0.25:
         vgn = -0.2
         print(vgn)
+    else:
+        vgn = 0.00
+
     if 0.999 >= total_premier_category >= 0.75:
         vt1 = +0.15
         print(vt1)
@@ -336,6 +341,8 @@ def bonification(ps, gn, dv, mi, gsv, gcr, gcs, gm, gech, geb, groux, gfm, gb, g
         print(vt1)
     elif 2.76 <= total_premier_category <= 3:
         vt1 = -1.2
+    else:
+        vt1 = 0
 
     if 3.01 <= gcs <= 3.25:
         vgcs = -0.05
@@ -397,6 +404,8 @@ def bonification(ps, gn, dv, mi, gsv, gcr, gcs, gm, gech, geb, groux, gfm, gb, g
     elif 7.76 <= gcs <= 8:
         vgcs: -1.3
         print(vgcs)
+    else :
+        vgcs = 0.00
 
     if 4.01 <= gb <= 5:
         vgb = -0.05
@@ -529,6 +538,8 @@ def bonification(ps, gn, dv, mi, gsv, gcr, gcs, gm, gech, geb, groux, gfm, gb, g
         print("Prix a dépattre ")
     elif blt < 2.5:
         vblt = 0
+    else:
+        vblt = 0.00
 
     if 11 >= total_metadines >= 10.01:
         vt3 = +0.13
@@ -645,6 +656,8 @@ def bonification(ps, gn, dv, mi, gsv, gcr, gcs, gm, gech, geb, groux, gfm, gb, g
     elif 3.76 >= total_metadines >= 4:
         vt3 = -0.15
         print(vt3)
+    else:
+        vt3 = 0.00
 
     total_value = vps + vgn + vt1 + vgcs + vt2 + vgb + vblt + vt3
     return total_value, vps, vgn, vt1, vgcs, vt2, vt3, vblt, vgb
