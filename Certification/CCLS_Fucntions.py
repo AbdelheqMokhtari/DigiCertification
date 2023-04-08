@@ -704,6 +704,14 @@ def observation(p_specifique, humidite, nuisible, ergot, debris_vegetaux, matier
     return my_dict
 
 
+def final_price(quantity, sell_price):
+    return quantity * sell_price
+
+
+def total_bonification(quantity, total):
+    return quantity * total
+
+
 poid_specifique = set_poid_specifique()
 humidite = set_humidite()
 g_nuisibles = set_grain_nuisibles()
@@ -749,3 +757,11 @@ observation = observation(poid_specifique, humidite, g_nuisibles, ergot, debris_
 
 for key in observation:
     print(f"{key}: {observation[key]}")
+
+ble_quantity = set_poid()
+price = set_price()
+total_price = final_price(ble_quantity, price)
+print("Final Price = ", total_price)
+bonification = total_bonification(ble_quantity, bon_total)
+print("Final bonification", bonification)
+
