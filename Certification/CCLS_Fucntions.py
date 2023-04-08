@@ -10,45 +10,21 @@ def set_price():
 
 def set_poid_specifique():
     p_specifique = float(input("Poid spécifique kg/hl:"))
-    if p_specifique == 78:
-        observation = "sans bonification ni réfaction"
-    elif p_specifique > 78:
-        observation = "bonification"
-    elif 74 < p_specifique < 78:
-        observation = "refaction"
-    elif p_specifique < 74:
-        observation = "refuser"
-
     return p_specifique
 
 
 def set_humidite():
     humidite = float(input("Humidité %:"))
-    if humidite <= 17:
-        observation = "accpter"
-    else:
-        observation = "refuser"
     return humidite
 
 
 def set_grain_nuisibles():
     g_nuisibles = float(input("Grains nuisibles  %:"))
-    if 0.25 >= g_nuisibles > 0.05:
-        observation = "refaction"
-    elif g_nuisibles <= 0.05:
-        observation = "accepter"
-    else:
-        observation = "refuse"
     return g_nuisibles
 
 
 def set_ergot():
     ergot = float(input("ergot  %:"))
-    if ergot < 0.001:
-        observation = "accepter"
-    else:
-        observation = "refuse"
-
     return ergot
 
 
@@ -74,10 +50,6 @@ def set_grains_caries():
 
 def set_grains_casse():
     g_casse = float(input("Grains cassés  %:"))
-    if g_casse <= 3:
-        observation = "sans bonification ni réfaction"
-    else:
-        observation = "réfaction"
     return g_casse
 
 
@@ -108,10 +80,6 @@ def set_grains_mouchetes():
 
 def set_grain_boute():
     g_boute = float(input("Grains bouté  %:"))
-    if g_boute <= 4:
-        observation = "sans bonification ni réfaction"
-    else:
-        observation = "refaction"
     return g_boute
 
 
@@ -132,13 +100,6 @@ def set_indice_notin():
 
 def set_ble_tendre():
     ble_tendre = float(input("Blé Tendre dans Blé Dur   %:"))
-    if 5 >= ble_tendre > 2.5:
-        observation = "réfaction"
-    elif ble_tendre < 2.5:
-        observation = "Classé comme Graines mitadinès "
-    elif ble_tendre > 5:
-        observation = "Prix a dépattre "
-
     return ble_tendre
 
 
@@ -406,7 +367,7 @@ def bonification(p_specifique, nuisibles, debris_vegetaux, matiers_ineretes, san
         bon_casse = -1.225
         print(bon_casse)
     elif 7.76 <= g_casse <= 8:
-        bon_casse: -1.3
+        bon_casse = -1.3
         print(bon_casse)
     else:
         bon_casse = 0.00
@@ -663,10 +624,84 @@ def bonification(p_specifique, nuisibles, debris_vegetaux, matiers_ineretes, san
     else:
         bon_metadines_category = 0.00
 
-    bon_total = bon_p_specifique + bon_g_nuisibles + bon_premier_category + bon_casse + bon_dexieum_category +\
+    bon_total = bon_p_specifique + bon_g_nuisibles + bon_premier_category + bon_casse + bon_dexieum_category + \
                 bon_boute + bon_ble_tendre + bon_metadines_category
-    return bon_total, bon_p_specifique, bon_g_nuisibles, bon_premier_category, bon_casse, bon_dexieum_category,\
-         bon_ble_tendre, bon_metadines_category, bon_boute
+    return bon_total, bon_p_specifique, bon_g_nuisibles, bon_premier_category, bon_casse, bon_dexieum_category, \
+        bon_ble_tendre, bon_metadines_category, bon_boute
+
+
+def observation(p_specifique, humidite, nuisible, ergot, debris_vegetaux, matiers_inertes, sans_valeur, caries, casse,
+                maigres, echaudes, etranders, roux, mouchetes, boute, punaises, pique, indice_notin, ble_tendre):
+    observation_list = []
+    total_premier_category = debris_vegetaux + matiers_inertes + sans_valeur + caries
+    total_dexieum_category = casse + maigres + echaudes + etranders + roux + mouchetes + boute + punaises + pique
+    total_metadine_category = indice_notin + ble_tendre
+
+    if p_specifique == 78:
+        observation_list.append("sans bonification ni réfaction")
+    elif p_specifique > 78:
+        observation_list.append("bonification")
+    elif 74 < p_specifique < 78:
+        observation_list.append("refaction")
+    elif p_specifique < 74:
+        observation_list.append("refuser")
+
+    if humidite <= 17:
+        observation_list.append("accepter")
+    else:
+        observation_list.append("refuser")
+
+    if 0.25 >= nuisible > 0.05:
+        observation_list.append("refaction")
+    elif nuisible <= 0.05:
+        observation_list.append("accepter")
+    else:
+        observation_list.append("refuse")
+
+    if ergot < 0.001:
+        observation_list.append("accepter")
+    else:
+        observation_list.append("refuse")
+
+    if total_premier_category <= 1:
+        observation_list.append("sans bonification ni réfaction")
+    else:
+        observation_list.append("réfaction")
+
+    if casse <= 3:
+        observation_list.append("sans bonification ni réfaction")
+    else:
+        observation_list.append("réfaction")
+
+    if boute <= 4:
+        observation_list.append("sans bonification ni réfaction")
+    else:
+        observation_list.append("refaction")
+
+    if total_dexieum_category <= 10:
+        observation_list.append("sans bonification ni réfaction")
+    else:
+        observation_list.append("refaction")
+
+    if 5 >= ble_tendre > 2.5:
+        observation_list.append("réfaction")
+    elif ble_tendre < 2.5:
+        observation_list.append("Classé comme Graines mitadinès ")
+    elif ble_tendre > 5:
+        observation_list.append("Prix a dépattre ")
+
+    if 12 >= total_metadine_category >= 11.1:
+        observation_list.append("sans bonification ni réfaction")
+    elif total_metadine_category <= 11:
+        observation_list.append("bonification")
+    elif total_metadine_category > 12:
+        observation_list.append("réfaction")
+
+    keys = ["Poids specifique", "humidité", "Grain nuisible", "ergot", "Total premiere category", "Grain casse",
+            "Grain boute", "Total Dexieum category", "ble tendre", "Total metadine category"]
+
+    my_dict = dict(zip(keys, observation_list))
+    return my_dict
 
 
 poid_specifique = set_poid_specifique()
@@ -689,8 +724,8 @@ g_piques = set_grains_piques()
 indice_notin = set_indice_notin()
 ble_tendre = set_ble_tendre()
 
-bon_total, bon_p_specifique, bon_g_nuisibles, bon_premier_category, bon_casse, bon_dexieum_category,\
-bon_ble_tendre, bon_metadines_category, bon_boute = bonification(poid_specifique, g_nuisibles, debris_vegetaux,
+bon_total, bon_p_specifique, bon_g_nuisibles, bon_premier_category, bon_casse, bon_dexieum_category, \
+    bon_ble_tendre, bon_metadines_category, bon_boute = bonification(poid_specifique, g_nuisibles, debris_vegetaux,
                                                                      matiere_inertes, sans_valeur, g_caries, g_casse,
                                                                      g_maigres, g_echaudes, g_etranders, g_roux,
                                                                      g_mouchetes, g_boute, g_punaises, g_piques,
@@ -706,10 +741,11 @@ print("bonification ble tendre ", bon_ble_tendre)
 print("bonification grain metadine ", bon_metadines_category)
 print("bonification total ", bon_total)
 
+print("*************************************************************************************************************")
 
+observation = observation(poid_specifique, humidite, g_nuisibles, ergot, debris_vegetaux, matiere_inertes, sans_valeur,
+                          g_caries, g_casse, g_maigres, g_echaudes, g_etranders, g_roux, g_mouchetes, g_boute,
+                          g_punaises, g_piques, indice_notin, ble_tendre)
 
-
-
-
-
-
+for key in observation:
+    print(f"{key}: {observation[key]}")
