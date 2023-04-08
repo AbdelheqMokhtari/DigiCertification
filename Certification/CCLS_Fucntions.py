@@ -5,6 +5,7 @@ def set_poid():
 
 def set_price():
     price = float(input("Le prix de vente/q: "))
+    return price
 
 
 def set_poid_specifique():
