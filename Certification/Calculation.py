@@ -9,15 +9,15 @@ class SeedCategory(Enum):
 
 
 class Seed:
-    def __init__(self, category, pure_seeds, total_seeds):
+    def __init__(self, category):
         if isinstance(category, SeedCategory):
             self.category = category
         else:
             raise ValueError("Invalid color")
 
         # self.seed_category = seed_category
-        self.pure_seeds = pure_seeds
-        self.total_seeds = total_seeds
+        self.pure_seeds = None
+        self.total_seeds = None
         # self.seed_category = SeedCategory.CATEGORY_1
 
     @property
@@ -25,7 +25,7 @@ class Seed:
         return (self.pure_seeds / self.total_seeds) * 100
 
     @property
-    def seed_category(self):
+    def seed_category_update(self):
 
         purity = self.purity_percentage
         category = self.category
@@ -56,7 +56,21 @@ class Seed:
         else:
             return SeedCategory.CATEGORY_4
 
+    def pure_seeds(self):
+        return self.pure_seeds
 
-seed = Seed(SeedCategory.CATEGORY_1, 195, 200)
+    def pure_seeds(self, value):
+        self.pure_seeds = value
+
+    def total_seeds(self):
+        return self.total_seeds
+
+    def total_seeds(self, value):
+        self.total_seeds = value
+
+
+seed = Seed(SeedCategory.CATEGORY_2)
+seed.total_seeds = 200
+seed.pure_seeds = 200
 print(seed.purity_percentage)  # Output: 97.5
-print(seed.seed_category.value)  # Output: Ordinary
+print(seed.seed_category_update.value)  # Output: Ordinary
