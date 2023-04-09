@@ -13,7 +13,7 @@ class Seed:
         if isinstance(category, SeedCategory):
             self.category = category
         else:
-            raise ValueError("Invalid color")
+            raise ValueError("Invalid Category")
 
         # self.seed_category = seed_category
         self.pure_seeds = None
@@ -32,29 +32,30 @@ class Seed:
 
         if self.category == SeedCategory.CATEGORY_1:
             if purity >= 99:
-                return SeedCategory.CATEGORY_1
+                self.category = SeedCategory.CATEGORY_1
             elif purity >= 98:
-                return SeedCategory.CATEGORY_2
+                self.category = SeedCategory.CATEGORY_2
             elif purity >= 97:
-                return SeedCategory.CATEGORY_3
+                self.category = SeedCategory.CATEGORY_3
             else:
-                return SeedCategory.CATEGORY_4
+                self.category = SeedCategory.CATEGORY_4
 
         elif category == SeedCategory.CATEGORY_2:
             if purity >= 98:
-                return SeedCategory.CATEGORY_2
+                self.category = SeedCategory.CATEGORY_2
             elif purity >= 97:
-                return SeedCategory.CATEGORY_3
+                self.category = SeedCategory.CATEGORY_3
             else:
-                return SeedCategory.CATEGORY_4
+                self.category = SeedCategory.CATEGORY_4
 
         elif category == SeedCategory.CATEGORY_3:
             if purity >= 97:
-                return SeedCategory.CATEGORY_3
+                self.category = SeedCategory.CATEGORY_3
             else:
-                return SeedCategory.CATEGORY_4
+                self.category = SeedCategory.CATEGORY_4
+
         else:
-            return SeedCategory.CATEGORY_4
+            self.category = SeedCategory.CATEGORY_4
 
     def pure_seeds(self):
         return self.pure_seeds
@@ -68,9 +69,15 @@ class Seed:
     def total_seeds(self, value):
         self.total_seeds = value
 
+    def seed_category(self):
+        return self.category
+
 
 seed = Seed(SeedCategory.CATEGORY_2)
 seed.total_seeds = 200
-seed.pure_seeds = 200
+seed.pure_seeds = 195
+print(seed.seed_category().value)
 print(seed.purity_percentage)  # Output: 97.5
-print(seed.seed_category_update.value)  # Output: Ordinary
+seed.seed_category_update
+# print(seed.seed_category_update.value)  # Output: Ordinary
+print(seed.seed_category().value)
