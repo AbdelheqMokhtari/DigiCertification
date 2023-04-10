@@ -121,9 +121,21 @@ class Seed:
         self.inert_matter = self.sum_inert_mater
 
     @property
-    def purity_percentage(self):
+    def sum_total_seed(self):
         seed.calculate_sum_and_set_inert_matter()
-        self.total_seeds = self.pure_seeds + self.other_species + self.inert_matter
+        addition = self.pure_seeds + self.other_species + self.inert_matter
+        return addition
+
+    @sum_total_seed.setter
+    def sum_total_seed(self, value):
+        pass  # do nothing when trying to set sum_attr1_attr2
+
+    def calculate_sum_and_set_total_seed(self):
+        self.total_seeds = self.sum_total_seed
+
+    @property
+    def purity_percentage(self):
+        seed.calculate_sum_and_set_total_seed()
         if self.total_seeds == 0:
             return 0
         return (self.pure_seeds / self.total_seeds) * 100
@@ -181,4 +193,3 @@ print(seed.purity_percentage)  # Output: 97.5
 seed.seed_category_update
 # print(seed.seed_category_update.value)  # Output: Ordinary
 print(seed.seed_category)
-
