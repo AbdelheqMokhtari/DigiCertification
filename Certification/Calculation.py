@@ -24,16 +24,17 @@ class Seed:
         self._gravies = None
         self._other_im = None
         self._inert_matter = None
-        self._winter_wheat = None
+        self._winter_wheat = 0
         self._winter_wheat_weight = None
-        self._barely = None
+        self._barely = 0
         self._barely_weight = None
-        self._oats = None
+        self._oats = 0
         self._oats_weight = None
-        self._triticale = None
+        self._triticale = 0
         self._triticale_weight = None
         self._other_species = None
         self._total_seeds = None
+        self.total = self.calculate_total()
         # self.seed_category = SeedCategory.CATEGORY_1
 
     @property
@@ -98,7 +99,7 @@ class Seed:
 
     @winter_wheat.setter
     def winter_wheat(self, value):
-        self._winter_wheat = value
+        self._winter_wheat += value
 
     @property
     def winter_wheat_weight(self):
@@ -114,7 +115,7 @@ class Seed:
 
     @barely.setter
     def barely(self, value):
-        self._barely = value
+        self._barely += value
 
     @property
     def barely_weight(self):
@@ -130,7 +131,7 @@ class Seed:
 
     @oats.setter
     def oats(self, value):
-        self._oats = value
+        self._oats += value
 
     @property
     def oats_weight(self):
@@ -146,7 +147,7 @@ class Seed:
 
     @triticale.setter
     def triticale(self, value):
-        self._triticale = value
+        self._triticale += value
 
     @property
     def triticale_weight(self):
@@ -262,10 +263,24 @@ class Seed:
     def seed_category(self):
         return self.category.value
 
+    def calculate_total(self):
+        total = 0
+        for attribute in [self._winter_wheat, self._oats, self._barely, self._triticale]:
+            if isinstance(attribute, int):
+                total += attribute
+        return total
+
 
 seed = Seed(SeedCategory.CATEGORY_1)
+
+print("the initial category of this simple :", seed.seed_category)
+
+print("\n** 120g Analyse **\n")
+
+print("--Pure seeds--\n")
 seed.pure_seeds = float(input("semences pures (g) :"))
-print("--matiere inertes--")
+
+print("\n--matiere inertes--\n")
 seed.grains_multees = float(input("Grains mutilées (g) :"))
 seed.debris_vegeteux = float(input("Debris vegéteux (g) :"))
 seed.balles = float(input("balles (g) :"))
@@ -273,22 +288,37 @@ seed.terres = float(input("Terres (g) :"))
 seed.gravies = float(input("Gravies (g) :"))
 seed.other_im = float(input("autres (g) :"))
 
-print("--other species--")
+print("\n--other species--\n")
 
-seed.winter_wheat = int(input("winter wheat # :"))
+seed.winter_wheat = int(input("Number of winter wheat in 120g sample size # :"))
 seed.winter_wheat_weight = float(input("winter wheat (g) :"))
 
-seed.barely = int(input("barely # :"))
+seed.barely = int(input("Number of barely in 120g sample size # :"))
 seed.barely_weight = float(input("barely (g) :"))
 
-seed.oats = float(input("oats # :"))
+seed.oats = int(input("Number of oats in 120g sample size # :"))
 seed.oats_weight = float(input("oats (g) :"))
 
-seed.triticale_weight = float(input("triticale # :"))
+seed.triticale = int(input("Number of triticale in 120g sample size # :"))
 seed.triticale_weight = float(input("triticale (g) :"))
 
-print(seed.seed_category)
-print(seed.purity_percentage)  # Output: 97.5
+print("\n** 120g Results **\n")
+print("semences pures % :", seed.purity_percentage)  # Output: 97.5
 seed.seed_category_update
 # print(seed.seed_category_update.value)  # Output: Ordinary
-print(seed.seed_category)
+print("The category of this sample after the 120 G analyse : ", seed.seed_category)
+
+print("\n** enumeration in 380g  **\n")
+
+seed.winter_wheat = int(input("Number of winter wheat in 380g sample size # :"))
+seed.barely = int(input("Number of barely in 380g sample size # :"))
+seed.oats = int(input("Number of oats in 380g sample size # :"))
+seed.triticale = int(input("Number of triticale in 380g sample size # :"))
+
+print("\n** 500g Results **\n")
+
+print("Number total of winter wheat in 500g : ", seed.winter_wheat)
+print("Number total of oats in 500g : ", seed.oats)
+print("Number total of barely in 500g : ", seed.barely)
+print("Number total of triticale in 500g : ", seed.triticale)
+print("total number of other species in the sample : ", seed.calculate_total())
