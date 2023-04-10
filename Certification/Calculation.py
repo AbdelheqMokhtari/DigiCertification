@@ -207,8 +207,6 @@ class Seed:
 
     @property
     def sum_total_seed(self):
-        seed.calculate_sum_and_set_inert_matter()
-        seed.calculate_sum_and_set_other_species()
         addition = self.pure_seeds + self.other_species + self.inert_matter
         return addition
 
@@ -221,7 +219,6 @@ class Seed:
 
     @property
     def purity_percentage(self):
-        seed.calculate_sum_and_set_total_seed()
         if self.total_seeds == 0:
             return 0
         return (self.pure_seeds / self.total_seeds) * 100
@@ -270,6 +267,14 @@ class Seed:
                 total += attribute
         return total
 
+    def calculate_purity(self):
+        self.calculate_sum_and_set_other_species()
+        self.calculate_sum_and_set_inert_matter()
+        self.calculate_sum_and_set_total_seed()
+        purity = self.purity_percentage
+        self.seed_category_update
+        return purity
+
 
 seed = Seed(SeedCategory.CATEGORY_1)
 
@@ -303,8 +308,8 @@ seed.triticale = int(input("Number of triticale in 120g sample size # :"))
 seed.triticale_weight = float(input("triticale (g) :"))
 
 print("\n** 120g Results **\n")
-print("semences pures % :", seed.purity_percentage)  # Output: 97.5
-seed.seed_category_update
+print("semences pures % :", seed.calculate_purity())  # Output: 97.5
+# seed.seed_category_update
 # print(seed.seed_category_update.value)  # Output: Ordinary
 print("The category of this sample after the 120 G analyse : ", seed.seed_category)
 
@@ -318,7 +323,7 @@ seed.triticale = int(input("Number of triticale in 380g sample size # :"))
 print("\n** 500g Results **\n")
 
 print("Number total of winter wheat in 500g : ", seed.winter_wheat)
-print("Number total of oats in 500g : ", seed.oats)
 print("Number total of barely in 500g : ", seed.barely)
+print("Number total of oats in 500g : ", seed.oats)
 print("Number total of triticale in 500g : ", seed.triticale)
-print("total number of other species in the sample : ", seed.calculate_total())
+print("\ntotal number of other species in the sample : ", seed.calculate_total())
