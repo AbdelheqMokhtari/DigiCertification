@@ -34,8 +34,13 @@ class Seed:
         self._triticale_weight = None
         self._other_species = None
         self._total_seeds = None
+        self._percentage = []
         self.total = self.calculate_total()
         # self.seed_category = SeedCategory.CATEGORY_1
+
+    @property
+    def percentage(self):
+        return self._percentage
 
     @property
     def pure_seeds(self):
@@ -224,6 +229,94 @@ class Seed:
         return (self.pure_seeds / self.total_seeds) * 100
 
     @property
+    def inert_matter_percentage(self):
+        if self.total_seeds == 0:
+            return 0
+        return (self.inert_matter / self.total_seeds) * 100
+
+    @property
+    def other_species_percentage(self):
+        if self.total_seeds == 0:
+            return 0
+        return (self.other_species / self.total_seeds) * 100
+
+    @property
+    def grains_multees_percentage(self):
+        if self.total_seeds == 0:
+            return 0
+        return (self.grains_multees / self.total_seeds) * 100
+
+    @property
+    def debris_vegeteux_percentage(self):
+        if self.total_seeds == 0:
+            return 0
+        return (self.debris_vegeteux / self.total_seeds) * 100
+
+    @property
+    def balles_percentage(self):
+        if self.total_seeds == 0:
+            return 0
+        return (self.balles / self.total_seeds) * 100
+
+    @property
+    def terres_percentage(self):
+        if self.total_seeds == 0:
+            return 0
+        return (self.terres / self.total_seeds) * 100
+
+    @property
+    def gravies_percentage(self):
+        if self.total_seeds == 0:
+            return 0
+        return (self.gravies / self.total_seeds) * 100
+
+    @property
+    def other_im_percentage(self):
+        if self.total_seeds == 0:
+            return 0
+        return (self.other_im / self.total_seeds) * 100
+
+    @property
+    def winter_wheat_percentage(self):
+        if self.total_seeds == 0:
+            return 0
+        return (self.winter_wheat_weight / self.total_seeds) * 100
+
+    @property
+    def barely_percentage(self):
+        if self.total_seeds == 0:
+            return 0
+        return (self.barely_weight / self.total_seeds) * 100
+
+    @property
+    def oats_percentage(self):
+        if self.total_seeds == 0:
+            return 0
+        return (self.oats_weight / self.total_seeds) * 100
+
+    @property
+    def triticale_percentage(self):
+        if self.total_seeds == 0:
+            return 0
+        return (self.triticale_weight / self.total_seeds) * 100
+
+    @property
+    def percentage(self):
+        self._percentage.append(self.purity_percentage)
+        self._percentage.append(self.inert_matter_percentage)
+        self._percentage.append(self.gravies_percentage)
+        self._percentage.append(self.debris_vegeteux_percentage)
+        self._percentage.append(self.balles_percentage)
+        self._percentage.append(self.terres_percentage)
+        self._percentage.append(self.gravies_percentage)
+        self._percentage.append(self.other_im_percentage)
+        self._percentage.append(self.other_species_percentage)
+        self._percentage.append(self.winter_wheat_percentage)
+        self._percentage.append(self.barely_percentage)
+        self._percentage.append(self.oats_percentage)
+        self._percentage.append(self.triticale_percentage)
+
+    @property
     def seed_category_update(self):
 
         purity = self.purity_percentage
@@ -267,13 +360,14 @@ class Seed:
                 total += attribute
         return total
 
-    def calculate_purity(self):
+    @property
+    def calculate_purity_specific(self):
         self.calculate_sum_and_set_other_species()
         self.calculate_sum_and_set_inert_matter()
         self.calculate_sum_and_set_total_seed()
-        purity = self.purity_percentage
+        self.percentage
         self.seed_category_update
-        return purity
+        return self._percentage
 
 
 seed = Seed(SeedCategory.CATEGORY_1)
@@ -308,7 +402,7 @@ seed.triticale = int(input("Number of triticale in 120g sample size # :"))
 seed.triticale_weight = float(input("triticale (g) :"))
 
 print("\n** 120g Results **\n")
-print("semences pures % :", seed.calculate_purity())  # Output: 97.5
+print("semences pures % :", seed.calculate_purity_specific[0])  # Output: 97.5
 # seed.seed_category_update
 # print(seed.seed_category_update.value)  # Output: Ordinary
 print("The category of this sample after the 120 G analyse : ", seed.seed_category)
