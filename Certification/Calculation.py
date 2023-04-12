@@ -429,7 +429,9 @@ successes = seed.calculate_purity_specific
 print("semences pures % :", seed.percentage[0])  # Output: 97.5
 # seed.seed_category_update
 # print(seed.seed_category_update.value)  # Output: Ordinary
-print("total = ", seed.output_weight[2])
+print("total weight for inert matter = ", seed.output_weight[0])
+print("total weight for other species plants = ", seed.output_weight[1])
+print("total weight for analyse of specific purity = ", seed.output_weight[2])
 print("The category of this sample after the 120 G analyse : ", seed.seed_category)
 
 print("\n** enumeration in 380g  **\n")
