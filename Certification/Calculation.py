@@ -35,8 +35,13 @@ class Seed:
         self._other_species = None
         self._total_seeds = None
         self._percentage = []
+        self._output_weight = []
         self.total = self.calculate_total()
         # self.seed_category = SeedCategory.CATEGORY_1
+
+    @property
+    def output_weight(self):
+        return self._output_weight
 
     @property
     def percentage(self):
@@ -300,11 +305,10 @@ class Seed:
             return 0
         return (self.triticale_weight / self.total_seeds) * 100
 
-    @property
-    def percentage(self):
+    def calculate_percentage(self):
         self._percentage.append(self.purity_percentage)
         self._percentage.append(self.inert_matter_percentage)
-        self._percentage.append(self.gravies_percentage)
+        self._percentage.append(self.grains_multees_percentage)
         self._percentage.append(self.debris_vegeteux_percentage)
         self._percentage.append(self.balles_percentage)
         self._percentage.append(self.terres_percentage)
@@ -316,7 +320,6 @@ class Seed:
         self._percentage.append(self.oats_percentage)
         self._percentage.append(self.triticale_percentage)
 
-    @property
     def seed_category_update(self):
 
         purity = self.purity_percentage
@@ -361,12 +364,29 @@ class Seed:
         return total
 
     @property
+    def output_inert_matter(self):
+        self._output_weight.append(self.grains_multees + self.debris_vegeteux + self.balles + self.terres + self.gravies
+                                   + self.other_im)
+        return self.grains_multees + self.debris_vegeteux + self.balles + self.terres + self.gravies + self.other_im
+
+    @property
+    def output_other_species(self):
+        self._output_weight.append(self.winter_wheat_weight + self.barely_weight + self.oats_weight
+                                   + self.triticale_weight)
+        return self.winter_wheat_weight + self.barely_weight + self.oats_weight + self.triticale_weight
+
+    @property
+    def output_total_specific_purity(self):
+        self._output_weight.append(self.pure_seeds + self.output_inert_matter + self.output_other_species)
+
+    @property
     def calculate_purity_specific(self):
         self.calculate_sum_and_set_other_species()
         self.calculate_sum_and_set_inert_matter()
         self.calculate_sum_and_set_total_seed()
-        self.percentage
-        self.seed_category_update
+        self.calculate_percentage()
+        self.output_total_specific_purity
+        self.seed_category_update()
         return self._percentage
 
 
@@ -405,6 +425,7 @@ print("\n** 120g Results **\n")
 print("semences pures % :", seed.calculate_purity_specific[0])  # Output: 97.5
 # seed.seed_category_update
 # print(seed.seed_category_update.value)  # Output: Ordinary
+print("total = ", seed.output_weight)
 print("The category of this sample after the 120 G analyse : ", seed.seed_category)
 
 print("\n** enumeration in 380g  **\n")
