@@ -8,6 +8,13 @@ class SeedCategory(Enum):
     CATEGORY_4 = "Refused"
 
 
+class Decision(Enum):
+    DECISION_1 = "Accepté"
+    DECISION_2 = "déclassé"
+    DECISION_3 = "Refusé"
+    DECISION_4 = "retiré"
+
+
 class Seed:
     def __init__(self, category):
         if isinstance(category, SeedCategory):
@@ -16,6 +23,7 @@ class Seed:
             raise ValueError("Invalid Category")
 
         # self.seed_category = seed_category
+        self._decision = None
         self._pure_seeds = None
         self._grains_multees = None
         self._debris_vegeteux = None
@@ -39,6 +47,14 @@ class Seed:
         self._state = True
         self.total = self.calculate_total()
         # self.seed_category = SeedCategory.CATEGORY_1
+
+    @property
+    def decision(self):
+        return self._decision
+
+    @decision.setter
+    def decision(self, value):
+        self._decision = value
 
     @property
     def output_weight(self):
@@ -322,6 +338,31 @@ class Seed:
         self._percentage.append(self.triticale_percentage)
         self._percentage.append(self.purity_percentage + self.inert_matter_percentage + self.other_species_percentage)
 
+    def take_decision(self):
+        purity = self.purity_percentage
+        category = self.category
+        if category == SeedCategory.CATEGORY_1:
+            if purity >= 99:
+                self.decision = Decision.DECISION_1
+            elif 99 > purity >= 97:
+                self.decision = Decision.DECISION_2
+            else:
+                self.decision = Decision.DECISION_3
+
+        elif category == SeedCategory.CATEGORY_2:
+            if purity >= 98:
+                self.decision = Decision.DECISION_1
+            elif 98 > category >= 97:
+                self.decision = Decision.DECISION_2
+            else:
+                self.decision = Decision.DECISION_3
+
+        elif category == SeedCategory.CATEGORY_3:
+            if purity >= 97:
+                self.decision = Decision.DECISION_1
+            else:
+                self.decision = Decision.DECISION_3
+
     def seed_category_update(self):
 
         purity = self.purity_percentage
@@ -358,6 +399,10 @@ class Seed:
     def seed_category(self):
         return self.category.value
 
+    @property
+    def seed_decision(self):
+        return self.decision.value
+
     def calculate_total(self):
         total = 0
         for attribute in [self._winter_wheat, self._oats, self._barely, self._triticale]:
@@ -389,6 +434,7 @@ class Seed:
         self.calculate_sum_and_set_total_seed()
         self.calculate_percentage()
         self._state = self.output_total_specific_purity
+        self.take_decision()
         self.seed_category_update()
         return self._state
         # return self._percentage
@@ -433,7 +479,7 @@ if successes:
     print("\tSemences pures (g) = {:.2f} g".format(seed.pure_seeds))
     print("\tSemences pures % = {:.2f} %".format(seed.percentage[0]))
     print("\n2) Matiers inertes :")
-    print("\n\t\tMatiers inertes (g) = {:.2f} g".format(seed.output_weight[1]))
+    print("\n\t\tMatiers inertes (g) = {:.2f} g".format(seed.output_weight[0]))
     print("\t\tMatiers inertes % = {:.2f} %".format(seed.percentage[1]))
     print("\n\t\t\tGrains Multées (g) = {:.2f} g".format(seed.grains_multees))
     print("\t\t\tGrains Multées % = {:.2f} %".format(seed.percentage[2]))
@@ -466,6 +512,7 @@ if successes:
     print("\t\tTotal weight for analyse of specific purity = {:.2f} g".format(seed.output_weight[2]))
     print("\t\tTotal Percentage = ", int(seed.percentage[13]), "%")
     print("\n\t\tThe category of this sample after the 120 G analyse : ", seed.seed_category)
+    print("\n\t\tThe Decision of this sample after the 120 G analyse : ", seed.seed_decision )
 
 print("\n** enumeration in 380g  **\n")
 
