@@ -36,6 +36,7 @@ class Seed:
         self._total_seeds = None
         self._percentage = []
         self._output_weight = []
+        self._state = True
         self.total = self.calculate_total()
         # self.seed_category = SeedCategory.CATEGORY_1
 
@@ -378,6 +379,7 @@ class Seed:
     @property
     def output_total_specific_purity(self):
         self._output_weight.append(self.pure_seeds + self.output_inert_matter + self.output_other_species)
+        return True
 
     @property
     def calculate_purity_specific(self):
@@ -385,9 +387,10 @@ class Seed:
         self.calculate_sum_and_set_inert_matter()
         self.calculate_sum_and_set_total_seed()
         self.calculate_percentage()
-        self.output_total_specific_purity
+        self._state = self.output_total_specific_purity
         self.seed_category_update()
-        return self._percentage
+        return self._state
+        # return self._percentage
 
 
 seed = Seed(SeedCategory.CATEGORY_1)
@@ -422,10 +425,11 @@ seed.triticale = int(input("Number of triticale in 120g sample size # :"))
 seed.triticale_weight = float(input("triticale (g) :"))
 
 print("\n** 120g Results **\n")
-print("semences pures % :", seed.calculate_purity_specific[0])  # Output: 97.5
+successes = seed.calculate_purity_specific
+print("semences pures % :", seed.percentage[0])  # Output: 97.5
 # seed.seed_category_update
 # print(seed.seed_category_update.value)  # Output: Ordinary
-print("total = ", seed.output_weight)
+print("total = ", seed.output_weight[2])
 print("The category of this sample after the 120 G analyse : ", seed.seed_category)
 
 print("\n** enumeration in 380g  **\n")
