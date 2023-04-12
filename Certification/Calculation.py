@@ -320,6 +320,7 @@ class Seed:
         self._percentage.append(self.barely_percentage)
         self._percentage.append(self.oats_percentage)
         self._percentage.append(self.triticale_percentage)
+        self._percentage.append(self.purity_percentage + self.inert_matter_percentage + self.other_species_percentage)
 
     def seed_category_update(self):
 
@@ -426,13 +427,45 @@ seed.triticale_weight = float(input("triticale (g) :"))
 
 print("\n** 120g Results **\n")
 successes = seed.calculate_purity_specific
-print("semences pures % :", seed.percentage[0])  # Output: 97.5
-# seed.seed_category_update
-# print(seed.seed_category_update.value)  # Output: Ordinary
-print("total weight for inert matter = ", seed.output_weight[0])
-print("total weight for other species plants = ", seed.output_weight[1])
-print("total weight for analyse of specific purity = ", seed.output_weight[2])
-print("The category of this sample after the 120 G analyse : ", seed.seed_category)
+
+if successes:
+    print("1) Semences pure :")
+    print("\tSemences pures (g) = {:.2f} g".format(seed.pure_seeds))
+    print("\tSemences pures % = {:.2f} %".format(seed.percentage[0]))
+    print("\n2) Matiers inertes :")
+    print("\n\t\tMatiers inertes (g) = {:.2f} g".format(seed.output_weight[1]))
+    print("\t\tMatiers inertes % = {:.2f} %".format(seed.percentage[1]))
+    print("\n\t\t\tGrains Multées (g) = {:.2f} g".format(seed.grains_multees))
+    print("\t\t\tGrains Multées % = {:.2f} %".format(seed.percentage[2]))
+    print("\n\t\t\tDebris vegetaux (g) = {:.2f} g".format(seed.debris_vegeteux))
+    print("\t\t\tDebris vegetaux % = {:.2f} %".format(seed.percentage[3]))
+    print("\n\t\t\tBalles (g) = {:.2f} g".format(seed.balles))
+    print("\t\t\tBalles % = {:.2f} %".format(seed.percentage[4]))
+    print("\n\t\t\tTerres (g) = {:.2f} g".format(seed.terres))
+    print("\t\t\tTerres % = {:.2f} %".format(seed.percentage[5]))
+    print("\n\t\t\tGravies (g) = {:.2f} g".format(seed.gravies))
+    print("\t\t\tGravies % = {:.2f} %".format(seed.percentage[6]))
+    print("\n\t\t\tAutres (g) = {:.2f} g".format(seed.other_im))
+    print("\t\t\tAutres % = {:.2f} %".format(seed.percentage[7]))
+    print("\n3) Semences d'autres plantes:")
+    print("\n\t\tSemences d'autres plantes (g) = {:.2f} g".format(seed.output_weight[1]))
+    print("\t\tSemences d'autres plantes % = {:.2f} %".format(seed.percentage[8]))
+    print("\n\t\t\tBle tendre (g) = {:.2f} g".format(seed.winter_wheat_weight))
+    print("\t\t\tBle tendre = ", seed.winter_wheat)
+    print("\t\t\tBle tendre % = {:.2f} %".format(seed.percentage[9]))
+    print("\n\t\t\tOrge (g) = {:.2f} g".format(seed.barely_weight))
+    print("\t\t\tOrge = ", seed.barely)
+    print("\t\t\tOrge % = {:.2f} %".format(seed.percentage[10]))
+    print("\n\t\t\tAvoine (g) = {:.2f} g".format(seed.oats_weight))
+    print("\t\t\tAvoine = ", seed.oats)
+    print("\t\t\tAvoine % = {:.2f} % ".format(seed.percentage[11]))
+    print("\n\t\t\tTriticale (g) = {:.2f} g".format(seed.triticale_weight))
+    print("\t\t\tTriticale = ", seed.triticale)
+    print("\t\t\tTriticale % = {:.2f} %".format(seed.percentage[12]))
+    print("\nTotal :")
+    print("\t\tTotal weight for analyse of specific purity = {:.2f} g".format(seed.output_weight[2]))
+    print("\t\tTotal Percentage = ", int(seed.percentage[13]), "%")
+    print("\n\t\tThe category of this sample after the 120 G analyse : ", seed.seed_category)
 
 print("\n** enumeration in 380g  **\n")
 
