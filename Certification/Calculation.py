@@ -46,30 +46,11 @@ class Seed:
         self._output_weight = []
         self._state = True
         self._total = 0
-        self._plantules_normmales = 0
-        self._plantules_anormmales = 0
         self._graines_fraiches = 0
         self._graines_dures = 0
         self._graines_mortes = 0
         self._germenation_percentage = 0
-        self._germenation_percentage2 = 0
         # self.seed_category = SeedCategory.CATEGORY_1
-
-    @property
-    def plantules_normmales(self):
-        return self._plantules_normmales
-
-    @plantules_normmales.setter
-    def plantules_normmales(self, value):
-        self._plantules_normmales = value
-
-    @property
-    def plantules_anormmales(self):
-        return self._plantules_anormmales
-
-    @plantules_anormmales.setter
-    def plantules_anormmales(self, value):
-        self._plantules_anormmales = value
 
     @property
     def graines_fraiches(self):
@@ -102,14 +83,6 @@ class Seed:
     @germenation_percentage.setter
     def germenation_percentage(self, value):
         self._germenation_percentage = value
-
-    @property
-    def germenation_percentage2(self):
-        return self._germenation_percentage2
-
-    @germenation_percentage2.setter
-    def germenation_percentage2(self, value):
-        self._germenation_percentage2 = value
 
     @property
     def total(self):
@@ -530,13 +503,8 @@ class Seed:
         return True
 
     def calculate_germenation_percentage(self):
-        plantules = self._plantules_normmales + self._plantules_anormmales
-        plantules_percentage = self._plantules_normmales / plantules
-        graines = self._graines_fraiches + self._graines_mortes + self._graines_dures
-        graines_percentage = self._graines_fraiches / graines
-        positive = self._plantules_normmales + self._graines_fraiches
-        total = self._plantules_anormmales + self._graines_dures + self._graines_mortes + positive
-        self.germenation_percentage2 = ((plantules_percentage + graines_percentage) / 2) * 100
+        positive = self._graines_fraiches
+        total = self._graines_fraiches + self._graines_mortes + self._graines_dures
         self.germenation_percentage = (positive / total) * 100
 
     @property
@@ -661,8 +629,6 @@ if successes:
     print("\t\tThe category of this sample after the 380 G enumeration analyse : ", seed.seed_category)
 
 print("\n** Test Germentation **\n")
-seed.plantules_normmales = int(input("Total Normal seedlings # : "))
-seed.plantules_anormmales = int(input("Total Abnormal seedlings # : "))
 seed.graines_fraiches = int(input("Total Fresh seeds # : "))
 seed.graines_dures = int(input("Total hard seeds # : "))
 seed.graines_mortes = int(input("Total dead seeds # : "))
@@ -670,6 +636,5 @@ seed.graines_mortes = int(input("Total dead seeds # : "))
 successes = seed.calculate_germenation
 if successes:
     print("\ntotal percentage of Germination analysis % : {:.2f} % ".format(seed.germenation_percentage))
-    print("total percentage of Germination analysis % : {:.2f} % ".format(seed.germenation_percentage2))
     print("\nThe Decision of this sample after Germination analysis: ", seed.seed_decision)
     print("The category of this sample after Germination analysis : ", seed.seed_category)
