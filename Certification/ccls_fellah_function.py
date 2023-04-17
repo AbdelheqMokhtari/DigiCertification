@@ -5,7 +5,6 @@ def set_poid():
 
 def set_poid_specific():
     poid_specifique = float(input("Poid spécifique kg/hl:"))
-
     return poid_specifique
 
 
@@ -42,9 +41,6 @@ def set_grains_sons_valour():
     return grains_sons_valours
 
 
-
-
-
 def set_grains_casse():
     grains_casse = float(input("Grains cassés  %:"))
 
@@ -54,6 +50,7 @@ def set_grains_casse():
 def set_grains_maigres():
     grains_maigres = float(input("Grains maigres  %:"))
     return grains_maigres
+
 
 def set_grains_mouchetes():
     grains_mouchetes = float(input("Grains fortemnt mouchetés  %:"))
@@ -84,9 +81,10 @@ def set_ble_tendre():
     ble_tendre_dans_ble_dur = float(input("Blé Tendre dans Blé Dur   %:"))
     return ble_tendre_dans_ble_dur
 
-def observation_(poid_specifique, humidite,grains_nuisible,ergot, grains_casse, grain_boute, ble_tendre_dans_ble_dur):
-    total_premier_category = debris_vegetaux + matiers_inertes + grains_sons_valours +ergot + debris_vegetaux
-    total_dexieum_category = grains_maigres  + grains_mouchetes + grains_casse + grain_boute + grain_punaise + grains_pique
+
+def observation_(poid_specifique, humidite, grains_nuisible, ergot, grains_casse, grain_boute, ble_tendre_dans_ble_dur):
+    total_premier_category = debris_vegetaux + matiers_inertes + grains_sons_valours + ergot + debris_vegetaux
+    total_dexieum_category = grains_maigres + grains_mouchetes + grains_casse + grain_boute + grain_punaise + grains_pique
     total_metadines = autres_cereales + ble_tendre_dans_ble_dur
     if 76 <= poid_specifique <= 80:
         print("sans bonification ni réfaction ")
@@ -96,7 +94,8 @@ def observation_(poid_specifique, humidite,grains_nuisible,ergot, grains_casse, 
         obsrvation_poid_sprcifique = "rèfaction"
     elif poid_specifique < 72:
         obsrvation_poid_sprcifique = "Refuse"
-    else:obsrvation_poid_sprcifique = "-"
+    else:
+        obsrvation_poid_sprcifique = "-"
 
     if humidite <= 17:
         obsrvation_humidite = "accepter"
@@ -104,14 +103,14 @@ def observation_(poid_specifique, humidite,grains_nuisible,ergot, grains_casse, 
         obsrvation_humidite = "refuser"
 
     if grains_nuisible <= 2.5:
-        obsrvation_grains_nuisible ="sans bonification ni rèfaction"
+        obsrvation_grains_nuisible = "sans bonification ni rèfaction"
     else:
-         obsrvation_grains_nuisible = "Refuser"
+        obsrvation_grains_nuisible = "Refuser"
 
     if ergot < 0.001:
         obsrvation_ergot = "accepter"
     else:
-        obsrvation_ergot ="refuser"
+        obsrvation_ergot = "refuser"
 
     if 1 <= total_premier_category <= 3:
         obsrvation_total_premier_category = "sans bonification ni rèfaction"
@@ -121,15 +120,13 @@ def observation_(poid_specifique, humidite,grains_nuisible,ergot, grains_casse, 
         obsrvation_total_premier_category = "rèfaction"
     elif total_premier_category >= 6:
         obsrvation_total_premier_category = "prix a débattue"
-    else: obsrvation_total_premier_category = "-"
-
-
-
+    else:
+        obsrvation_total_premier_category = "-"
 
     if grains_casse <= 5:
-        obsrvation_grains_casse =  "sans bonification ni réfaction"
+        obsrvation_grains_casse = "sans bonification ni réfaction"
     else:
-        obsrvation_grains_casse ="réfaction"
+        obsrvation_grains_casse = "réfaction"
 
     if grain_boute <= 5:
         obsrvation_grain_boute = "sans bonification ni réfaction"
@@ -144,40 +141,39 @@ def observation_(poid_specifique, humidite,grains_nuisible,ergot, grains_casse, 
         obsrvation_total_dexieum_category = "prix a débattre"
 
     if ble_tendre_dans_ble_dur <= 5:
-       obsrvation_ble_tendre_dans_ble_dur = "bonification "
+        obsrvation_ble_tendre_dans_ble_dur = "bonification "
     elif 5 < ble_tendre_dans_ble_dur <= 10:
         obsrvation_ble_tendre_dans_ble_dur = "rèfaction"
     elif ble_tendre_dans_ble_dur > 10:
         print("prix a débattue")
-    else: obsrvation_ble_tendre_dans_ble_dur = "-"
+    else:
+        obsrvation_ble_tendre_dans_ble_dur = "-"
 
     if total_metadines < 10:
-        obsrvation_total_metadines ="bonification"
+        obsrvation_total_metadines = "bonification"
     elif 10 <= total_metadines <= 20:
-        obsrvation_total_metadines ="sans bonification ni rèfaction"
+        obsrvation_total_metadines = "sans bonification ni rèfaction"
     elif 20 < total_metadines < 70:
-        obsrvation_total_metadines ="rèfaction"
+        obsrvation_total_metadines = "rèfaction"
     elif total_metadines >= 70:
-        obsrvation_total_metadines ="prix a débattue"
-    else:obsrvation_total_metadines = "-"
+        obsrvation_total_metadines = "prix a débattue"
+    else:
+        obsrvation_total_metadines = "-"
 
     return obsrvation_poid_sprcifique, obsrvation_humidite, obsrvation_grains_nuisible, obsrvation_ergot, \
-           obsrvation_total_premier_category , obsrvation_grains_casse, obsrvation_grain_boute,\
-           obsrvation_total_dexieum_category , obsrvation_ble_tendre_dans_ble_dur, obsrvation_total_metadines
+        obsrvation_total_premier_category, obsrvation_grains_casse, obsrvation_grain_boute, \
+        obsrvation_total_dexieum_category, obsrvation_ble_tendre_dans_ble_dur, obsrvation_total_metadines
 
 
-
-
-
-
-def bonification(poid_specifique,  matiers_inertes , debris_vegetaux, grains_nuisible , ergot , grains_sons_valours, grains_casse,
-                 grains_maigres, grains_mouchetes, grain_boute, grain_punaise,
-                 grains_pique, autres_cereales ,ble_tendre_dans_ble_dur):
-    total_premier_category = debris_vegetaux + matiers_inertes +grains_nuisible + ergot+ grains_sons_valours
+def bonification(poid_specifique, matiers_inertes, debris_vegetaux, grains_nuisible, ergot, grains_sons_valours,
+                 grains_casse, grains_maigres, grains_mouchetes, grain_boute, grain_punaise, grains_pique,
+                 autres_cereales, ble_tendre_dans_ble_dur):
+    total_premier_category = debris_vegetaux + matiers_inertes + grains_nuisible + ergot + grains_sons_valours
     if grains_casse <= 5:
 
-       total_dexieum_category = grains_maigres + grains_mouchetes + grains_casse + grain_boute + grain_punaise + grains_pique
-    else:total_dexieum_category = grains_maigres + grains_mouchetes + grain_boute + grain_punaise + grains_pique
+        total_dexieum_category = grains_maigres + grains_mouchetes + grains_casse + grain_boute + grain_punaise + grains_pique
+    else:
+        total_dexieum_category = grains_maigres + grains_mouchetes + grain_boute + grain_punaise + grains_pique
     total_metadines = autres_cereales + ble_tendre_dans_ble_dur
     total_value = 0.00
     if 80.001 <= poid_specifique <= 80.25:
@@ -209,7 +205,7 @@ def bonification(poid_specifique,  matiers_inertes , debris_vegetaux, grains_nui
     elif 83.251 <= poid_specifique <= 83.5:
         valeur_poid_specifique = +1.7
     elif 83.501 <= poid_specifique <= 83.75:
-        valeur_poid_specifique= +1.75
+        valeur_poid_specifique = +1.75
     elif 83.751 <= poid_specifique <= 84:
         valeur_poid_specifique = +1.8
     elif 74.999 >= poid_specifique >= 75.75:
@@ -249,10 +245,8 @@ def bonification(poid_specifique,  matiers_inertes , debris_vegetaux, grains_nui
     else:
         valeur_poid_specifique = 0.00
 
-
-
     if 0.999 >= total_premier_category >= 0.75:
-        bon_ref_total_premier_category= +0.125
+        bon_ref_total_premier_category = +0.125
     elif 0.749 >= total_premier_category >= 0.5:
         bon_ref_total_premier_category = +0.25
     elif 0.499 >= total_premier_category >= 0.25:
@@ -283,13 +277,10 @@ def bonification(poid_specifique,  matiers_inertes , debris_vegetaux, grains_nui
         bon_ref_total_premier_category = -1.375
     elif 5.751 <= total_premier_category <= 6:
         bon_ref_total_premier_category = -1.5
-    elif total_premier_category>6 :
+    elif total_premier_category > 6:
         print("Prix a débattue")
     else:
         bon_ref_total_premier_category = 0
-
-
-
 
     if 5.001 <= grains_casse <= 5.25:
         bon_ref_grains_casse = -0.075
@@ -309,7 +300,7 @@ def bonification(poid_specifique,  matiers_inertes , debris_vegetaux, grains_nui
         bon_ref_grains_casse = -0.6
     elif 5 >= grains_casse >= 0:
         bon_ref_grains_casse = 0
-    else :
+    else:
         bon_ref_grains_casse = 0.00
 
     if 5.001 <= grain_boute <= 6:
@@ -332,14 +323,12 @@ def bonification(poid_specifique,  matiers_inertes , debris_vegetaux, grains_nui
         bon_ref_grain_boute = -0.45
     elif 14.001 <= grain_boute <= 15:
         bon_ref_grain_boute = -0.5
-    elif grain_boute>15:
+    elif grain_boute > 15:
         bon_ref_grain_boute = 0.5
-    elif grain_boute<=5:
+    elif grain_boute <= 5:
         bon_ref_grain_boute = 0
     else:
         bon_ref_grain_boute = 0
-
-
 
     if 10.001 <= total_dexieum_category <= 11:
         bon_ref_total_dexieum_category = -0.5
@@ -361,9 +350,9 @@ def bonification(poid_specifique,  matiers_inertes , debris_vegetaux, grains_nui
         bon_ref_total_dexieum_category = -4.5
     elif 19.001 <= total_dexieum_category <= 20:
         bon_ref_total_dexieum_category = -5
-    elif total_dexieum_category>20:
+    elif total_dexieum_category > 20:
         print("prix a débattue")
-    elif total_dexieum_category<=10:
+    elif total_dexieum_category <= 10:
         bon_ref_total_dexieum_category = 0
     else:
         bon_ref_total_dexieum_category = 0
@@ -408,7 +397,7 @@ def bonification(poid_specifique,  matiers_inertes , debris_vegetaux, grains_nui
         bon_ref_ble_tendre_dans_ble_dur = -68.25
     elif 9.751 <= ble_tendre_dans_ble_dur <= 10:
         bon_ref_ble_tendre_dans_ble_dur = -70
-    elif ble_tendre_dans_ble_dur>10:
+    elif ble_tendre_dans_ble_dur > 10:
         bon_ref_ble_tendre_dans_ble_dur = 0
         print("prix de blé tendre")
     else:
@@ -524,8 +513,13 @@ def bonification(poid_specifique,  matiers_inertes , debris_vegetaux, grains_nui
     else:
         bon_ref_total_metadines = 0.00
 
-    total_value = valeur_poid_specifique + bon_ref_grains_nuisible + bon_ref_total_premier_category + bon_ref_grains_casse + bon_ref_total_dexieum_category + bon_ref_grain_boute + bon_ref_ble_tendre_dans_ble_dur + bon_ref_total_metadines
-    return total_value, valeur_poid_specifique, bon_ref_grains_nuisible, bon_ref_total_premier_category, bon_ref_grains_casse, bon_ref_total_dexieum_category, bon_ref_total_metadines, bon_ref_ble_tendre_dans_ble_dur, bon_ref_grain_boute
+    total_value = valeur_poid_specifique + bon_ref_grains_nuisible + bon_ref_total_premier_category + \
+                  bon_ref_grains_casse + bon_ref_total_dexieum_category + bon_ref_grain_boute + \
+                  bon_ref_ble_tendre_dans_ble_dur + bon_ref_total_metadines
+
+    return total_value, valeur_poid_specifique, bon_ref_grains_nuisible, bon_ref_total_premier_category, \
+        bon_ref_grains_casse, bon_ref_total_dexieum_category, bon_ref_total_metadines, bon_ref_ble_tendre_dans_ble_dur, \
+        bon_ref_grain_boute
 
 
 poid_specifique = set_poid_specific()
@@ -545,43 +539,31 @@ grains_pique = set_grains_piques()
 autres_cereales = set_autres_cereales()
 ble_tendre_dans_ble_dur = set_ble_tendre()
 
-
 obsrvation_poid_sprcifique, obsrvation_humidite, obsrvation_grains_nuisible, obsrvation_ergot, \
-           obsrvation_total_premier_category , obsrvation_grains_casse, obsrvation_grain_boute,\
-           obsrvation_total_dexieum_category , obsrvation_ble_tendre_dans_ble_dur, obsrvation_total_metadines\
-    = observation_(poid_specifique, humidite ,grains_nuisible, ergot, grains_casse, grain_boute, ble_tendre_dans_ble_dur)
+    obsrvation_total_premier_category, obsrvation_grains_casse, obsrvation_grain_boute, \
+    obsrvation_total_dexieum_category, obsrvation_ble_tendre_dans_ble_dur, obsrvation_total_metadines \
+    = observation_(poid_specifique, humidite, grains_nuisible, ergot, grains_casse, grain_boute,
+                   ble_tendre_dans_ble_dur)
 
+total_value, bon_poid_specifique, bon_grains_nuisible, bon_ref_total_premier_category, bon_ref_grains_casse, \
+    bon_ref_grain_boute, bon_ref_total_dexieum_category, bon_ref_ble_tendre_dans_ble_dur, bon_ref_total_metadines = \
+    bonification(poid_specifique, matiers_inertes, debris_vegetaux, grains_nuisible, ergot, grains_sons_valours,
+                 grains_casse, grains_maigres, grains_mouchetes, grain_boute, grain_punaise, grains_pique,
+                 autres_cereales, ble_tendre_dans_ble_dur)
 
-total_value, valeur_poid_specifique, bon_ref_grains_nuisible\
-    , bon_ref_total_premier_category, bon_ref_grains_casse ,bon_ref_grain_boute,bon_ref_total_dexieum_category\
-    , bon_ref_ble_tendre_dans_ble_dur, bon_ref_total_metadines = bonification(poid_specifique, grains_nuisible,
-                                                                              debris_vegetaux, matiers_inertes,
-                                                                              grains_sons_valours,
-                                                                              grains_casse, grains_maigres,
-                                                                               grains_mouchetes
-                                                                              , grain_boute, grain_punaise, grains_pique
-                                                                              , autres_cereales, ble_tendre_dans_ble_dur)
+print("observastion poids specific", obsrvation_poid_sprcifique)
+print("observastion humidite", obsrvation_humidite)
+print("observastion grains nuisible", obsrvation_grains_nuisible)
+print("observastion ergot", obsrvation_ergot)
+print("observastion total premier category", obsrvation_total_premier_category)
+print("observastion grains casse", obsrvation_grains_casse)
+print("observastion grain boute", obsrvation_grain_boute)
+print("observastion total dexieum category", obsrvation_total_dexieum_category)
+print("observastion poids specific", obsrvation_ble_tendre_dans_ble_dur)
+print("observastion total metadines", obsrvation_total_metadines)
 
-
-
-
-print("observastion poids specific",obsrvation_poid_sprcifique)
-print("observastion humidite",obsrvation_humidite)
-print("observastion grains nuisible",obsrvation_grains_nuisible)
-print("observastion ergot",obsrvation_ergot)
-print("observastion total premier category",obsrvation_total_premier_category)
-print("observastion grains casse",obsrvation_grains_casse)
-print("observastion grain boute",obsrvation_grain_boute)
-print("observastion total dexieum category",obsrvation_total_dexieum_category)
-print("observastion poids specific",obsrvation_ble_tendre_dans_ble_dur)
-print("observastion total metadines",obsrvation_total_metadines)
-
-
-
-
-
-print("bonification poids specific ", valeur_poid_specifique)
-print("bonification grain nuisible ", bon_ref_grains_nuisible)
+print("bonification poids specific ", bon_poid_specifique)
+print("bonification grain nuisible ", bon_grains_nuisible)
 print("bonification 1er category ", bon_ref_total_premier_category)
 
 print("bonification grain cassé ", bon_ref_grains_casse)
