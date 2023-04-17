@@ -1319,6 +1319,16 @@ class Ui_MainWindow(object):
         self.radio_no_insects.setText(_translate("MainWindow", "NO"))
         self.label_total.setText(_translate("MainWindow", "TOTAL"))
         self.input_seed_purity.setText("0")
+        self.input_graines_mutilees.setText("0")
+        self.input_debris_vegetaux.setText("0")
+        self.input_balles.setText("0")
+        self.input_terres.setText("0")
+        self.input_gravies.setText("0")
+        self.input_autres.setText("0")
+        self.input_winter_wheat.setText("0")
+        self.input_orge.setText("0")
+        self.input_avoine.setText("0")
+        self.input_triticale.setText("0")
         # self.output_total_percentage.setText(_translate("MainWindow", "100%"))
 
 
