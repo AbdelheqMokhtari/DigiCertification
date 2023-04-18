@@ -35,3 +35,6 @@
 /Testing/Break.py
 /UI/test.py
 /UI/CNCC/CNCC.ui
+/Feature_Extraction/Features.csv
+/Feature_Extraction/Features Final.csv
+/Feature_Extraction/Image_Resize.py
