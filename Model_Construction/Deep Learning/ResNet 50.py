@@ -3,11 +3,11 @@ from keras.layers import GlobalAveragePooling2D, Dense
 from keras.models import Model
 from keras.optimizers import Adam
 from keras.preprocessing.image import ImageDataGenerator
-# import tensorflow as tf
+import tensorflow as tf
 import matplotlib.pyplot as plt
 
-# physical_devices = tf.config.list_physical_devices('GPU')
-# tf.config.experimental.set_memory_growth(physical_devices[0], True)
+physical_devices = tf.config.list_physical_devices('GPU')
+tf.config.experimental.set_memory_growth(physical_devices[0], True)
 
 train_datagen = ImageDataGenerator(rescale=1./255,
                                    rotation_range=45)
@@ -38,7 +38,7 @@ validation_data = validation_datagen.flow_from_directory(
 
 # Build the ResNet50 model
 num_classes = 7
-num_epochs = 20
+num_epochs = 3
 base_model = ResNet50(weights='imagenet', include_top=False, input_shape=(224, 224, 3))
 x = base_model.output
 x = GlobalAveragePooling2D()(x)
