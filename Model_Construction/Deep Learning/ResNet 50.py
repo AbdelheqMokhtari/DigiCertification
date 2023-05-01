@@ -72,5 +72,6 @@ plt.ylabel('Accuracy')
 plt.legend(loc='lower right')
 plt.show()
 
+# Save the graph to a file using the savefig() function
 plt.savefig('plot/accuracy_graph.png')
 
