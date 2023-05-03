@@ -39,5 +39,5 @@
 /Feature_Extraction/Features Final.csv
 /Feature_Extraction/Image_Resize.py
 /Testing/Save Weights.py
-/Testing/Yolo.py
+/Image_Segmentation/Yolo.py
 /Testing/Learning Rate Schudel.py

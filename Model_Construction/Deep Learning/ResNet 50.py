@@ -3,6 +3,7 @@ from keras.layers import GlobalAveragePooling2D, Dense
 from keras.models import Model
 from keras.optimizers import Adam
 from keras.preprocessing.image import ImageDataGenerator
+import numpy as np
 import tensorflow as tf
 import matplotlib.pyplot as plt
 
@@ -38,7 +39,7 @@ validation_data = validation_datagen.flow_from_directory(
 
 # Build the ResNet50 model
 num_classes = 7
-num_epochs = 3
+num_epochs = 30
 base_model = ResNet50(weights='imagenet', include_top=False, input_shape=(224, 224, 3))
 x = base_model.output
 x = GlobalAveragePooling2D()(x)
@@ -63,15 +64,29 @@ model.save('Model/ResNet50.h5')
 
 train_accuracy = history.history['accuracy']
 test_accuracy = history.history['val_accuracy']
-
-plt.plot(train_accuracy, label='Training Accuracy')
-plt.plot(test_accuracy, label='Test Accuracy')
-plt.title('Accuracy vs Epoch')
-plt.xlabel('Epoch')
-plt.ylabel('Accuracy')
-plt.legend(loc='lower right')
+epoch_values = np.arange(1, num_epochs+1)
+# create a plot of training accuracy vs epoch values
+fig, ax = plt.subplots()
+ax.plot(epoch_values, train_accuracy, label='Training Accuracy')
+ax.plot(epoch_values, test_accuracy, label='Validation Accuracy')
+ax.set_xticks(np.arange(0, num_epochs+1, step=1))
+ax.set_xlabel('Epoch')
+ax.set_ylabel('Accuracy')
+ax.set_title('Training and Validation Accuracy vs Epoch')
+ax.legend(loc='lower right')
 plt.show()
+
+
+# plt.plot(train_accuracy, label='Training Accuracy')
+# plt.plot(test_accuracy, label='Test Accuracy')
+# plt.title('Accuracy vs Epoch')
+# plt.xlabel('Epoch')
+# plt.ylabel('Accuracy')
+# plt.legend(loc='lower right')
+# plt.show()
 
 # Save the graph to a file using the savefig() function
 plt.savefig('plot/accuracy_graph.png')
+
+
 
