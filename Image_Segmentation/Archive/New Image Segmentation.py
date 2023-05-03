@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 # Load image
-img = cv2.imread('GTA001.jpg')
+img = cv2.imread('Bousselam009.jpg')
 
 # Perform histogram equalization
 # img_eq = cv2.equalizeHist(img_blur)
@@ -65,13 +65,21 @@ j = 0
 # Filter out small contours and draw bounding box around the remaining contours
 for contour in contours:
     if cv2.contourArea(contour) > 100: # Minimum area threshold
-        # Get the bounding box coordinates
         x, y, w, h = cv2.boundingRect(contour)
-        # Draw a rectangle around the object
-        # cv2.rectangle(img, (x, y), (x+w, y+h), (0, 255, 0), 2) # Draw a rectangle
         print("Area =", cv2.contourArea(contour), "x =", x, "y =", y, "w =", w, "h =", h)
-        # crop_img = img[(y-40):(y+h+40), (x-40):(x+w+40)]
         crop_img = img[y:(y + h), x:(x + w)]
-        cv2.imwrite(f'Save/Crop/Vitron_{j}.jpeg', crop_img)
+        # Get the original height and width of the image
+        height, width = img.shape[:2]
+
+        # Set the desired output size
+        output_size = 224
+
+        # Calculate the amount of padding needed on each side
+        h_pad = max(0, (output_size - height) // 2)
+        w_pad = max(0, (output_size - width) // 2)
+
+        # Add the padding using copyMakeBorder() function
+        output_img = cv2.copyMakeBorder(img, h_pad, h_pad, w_pad, w_pad, cv2.BORDER_CONSTANT, value=(0, 0, 0))
+        cv2.imwrite(f'Save/Crop/Vitron_{j}.jpeg', output_img)
         j += 1
 
