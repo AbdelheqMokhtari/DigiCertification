@@ -198,6 +198,24 @@ class CCLS:
         else:
             return self.grains_mitadines + self.ble_tendre
 
+    def insects_checked(self):
+        self._insect = True
+
+    def insects_not_checked(self):
+        self._insect = False
+
+    def carie_checked(self):
+        self._insect = True
+
+    def carie_not_checked(self):
+        self._insect = False
+
+    def ancien_recolt_checked(self):
+        self._ancien_recolt = True
+
+    def ancien_recolt_not_checked(self):
+        self._ancien_recolt = True
+
     def decision(self):
         decision = Decision.DECISION_1
         # if self._insect:
@@ -218,6 +236,29 @@ class CCLS:
                 or self.grain_nuisibles >= 2.5 or self.ergot >= 0.001:
             decision = Decision.DECISION_2
         return decision
+
+    def bonification_calculation(self):
+        calculation = {"insects": None, "carie": None, "ancien recolt": None, "Poids specifique": None,
+                       "teneur en eau": None, "grain nuisibles": None, "ergot": None, "Debris vegeteux": None,
+                       "Matiers inertes": None, "Grains sans valeur": None, "Grains casse": None,
+                       "Grains maigres": None, "Grains Mouchtes": None, "Grains Punises": None, "Grains Piques": None,
+                       "Grain boute": None, "ble tendre": None, "Grains mitadines": None}
+        if self._insect:
+            calculation["insects"] = Observation.OBSERVATION_2
+        else:
+            calculation["insects"] = Observation.OBSERVATION_1
+
+        if self._carie:
+            calculation["carie"] = Observation.OBSERVATION_2
+        else:
+            calculation["carie"] = Observation.OBSERVATION_1
+
+        if self._ancien_recolt:
+            calculation["ancien recolt"] = Observation.OBSERVATION_2
+        else:
+            calculation["ancien recolt"] = Observation.OBSERVATION_1
+
+        return calculation
 
 
 fellah = CCLS()
@@ -256,11 +297,3 @@ print(fellah.total_dexieum_category())
 print("\n others")
 
 fellah.autres_cereales = float(input("autres cereales (%) : "))
-
-
-
-
-
-
-
-
