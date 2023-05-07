@@ -243,20 +243,37 @@ class CCLS:
                        "Matiers inertes": None, "Grains sans valeur": None, "Grains casse": None,
                        "Grains maigres": None, "Grains Mouchtes": None, "Grains Punises": None, "Grains Piques": None,
                        "Grain boute": None, "ble tendre": None, "Grains mitadines": None}
+
+        user_input = (self._insect, self._carie, self._ancien_recolt, self._poid_specifique, self._teneur_en_eau,
+                      self._grain_nuisibles, self._ergot, self._debris_vegetaux, self._matiers_inertes,
+                      self._grains_sans_valeur, self._grains_casse, self._grains_maigres, self._grains_mouchtes,
+                      self._grain_punises, self._grains_piques, self._grain_boute, self._ble_tendre,
+                      self._grains_mitadines)
+
+        for i, key in enumerate(calculation.keys()):
+            calculation[key] = user_input[i]
+
         if self._insect:
-            calculation["insects"] = Observation.OBSERVATION_2
+            self._observation.append(Observation.OBSERVATION_2)
+            self._bonification.append(None)
         else:
-            calculation["insects"] = Observation.OBSERVATION_1
+            self._observation.append(Observation.OBSERVATION_1)
+            self._bonification.append(None)
 
         if self._carie:
-            calculation["carie"] = Observation.OBSERVATION_2
+            # calculation["carie"] = Observation.OBSERVATION_2
+            self._observation.append(Observation.OBSERVATION_2)
+            self._bonification.append(None)
         else:
-            calculation["carie"] = Observation.OBSERVATION_1
+            self._observation.append(Observation.OBSERVATION_1)
+            self._bonification.append(None)
 
         if self._ancien_recolt:
-            calculation["ancien recolt"] = Observation.OBSERVATION_2
+            self._observation.append(Observation.OBSERVATION_2)
+            self._bonification.append(None)
         else:
-            calculation["ancien recolt"] = Observation.OBSERVATION_1
+            self._observation.append(Observation.OBSERVATION_1)
+            self._bonification.append(None)
 
         return calculation
 
