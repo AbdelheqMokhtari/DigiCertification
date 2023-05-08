@@ -30,7 +30,7 @@
 /Testing/SVM.py
 /Testing/Evaluating.py
 /Testing/Confusion Matrix.py
-/Testing/Dataspliting.py
+/Model_Construction/Deep Learning/ResNet50/Dataspliting.py
 /Testing/Augmentation.py
 /Testing/Break.py
 /UI/test.py
