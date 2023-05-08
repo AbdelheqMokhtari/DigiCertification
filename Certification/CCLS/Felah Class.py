@@ -5,7 +5,7 @@ class Decision(Enum):
     # DECISION_1 = "Accepté"
     # DECISION_2 = "Refusé"
     DECISION_1 = True
-    DECISION_1 = False
+    DECISION_2 = False
 
 
 class Observation(Enum):
