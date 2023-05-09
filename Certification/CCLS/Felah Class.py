@@ -19,7 +19,6 @@ class Observation(Enum):
 
 class CCLS:
     def __init__(self):
-        self._test = True
         self._insect = False  # decision
         self._carie = False  # decision
         self._ancien_recolt = False  # decision
