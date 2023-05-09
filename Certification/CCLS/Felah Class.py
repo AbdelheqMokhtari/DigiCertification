@@ -583,11 +583,11 @@ class CCLS:
 
         # Dexieum category observation
         if 0 <= self.total_dexieum_category() <= 10:
-            self._observation.append(Observation.OBSERVATION_5)
+            self._observation.append(Observation.OBSERVATION_5.value)
         elif 10 < self.total_dexieum_category() <= 20:
-            self._observation.append(Observation.OBSERVATION_3)
+            self._observation.append(Observation.OBSERVATION_3.value)
         elif self.total_dexieum_category() > 20:
-            self._observation.append(Observation.OBSERVATION_6)
+            self._observation.append(Observation.OBSERVATION_6.value)
 
         # Dexieum category bonification and refaction
         if 10.001 <= self.total_dexieum_category() <= 11:
@@ -621,11 +621,11 @@ class CCLS:
         if self.total_mitadines() < 10:
             self._observation.append(Observation.OBSERVATION_4.value)
         elif 10 <= self.total_mitadines() <= 20:
-            self._observation.append(Observation.OBSERVATION_5)
+            self._observation.append(Observation.OBSERVATION_5.value)
         elif 20 < self.total_mitadines() < 70:
-            self._observation.append(Observation.OBSERVATION_3)
+            self._observation.append(Observation.OBSERVATION_3.value)
         elif self.total_mitadines() >= 70:
-            self._observation.append(Observation.OBSERVATION_6)
+            self._observation.append(Observation.OBSERVATION_6.value)
 
         # Total mitadines bonification and refaction
         if 0 <= self.total_mitadines() <= 10:
@@ -738,7 +738,7 @@ class CCLS:
             self._bonification.append(0)
 
         self._observation.append(None)
-        if Observation.OBSERVATION_6 in self._observation:
+        if Observation.OBSERVATION_6.value in self._observation:
             self._bonification.append(float(input("Prix a débattre veuillez enter le prix de refaction : ")) * -1)
         else:
             total_bonification = 0
@@ -771,64 +771,66 @@ fellah.poid_specifique = float(input("Poids_specifique(g) :"))
 fellah.teneur_en_eau = float(input("teneur en eau (%) :"))
 fellah.grain_nuisibles = float(input("grain nuisibles (%) :"))
 fellah.ergot = float(input("ergot (%) :"))
+acceptation = fellah.decision()
 
-print("\n total mitadines ")
+if acceptation.value:
+    print("\n total mitadines ")
 
-fellah.ble_tendre = float(input("ble tendre (%) :"))
-fellah.grains_mitadines = float(input("grains mitadines (%) :"))
-print(fellah.total_mitadines())
+    fellah.ble_tendre = float(input("ble tendre (%) :"))
+    fellah.grains_mitadines = float(input("grains mitadines (%) :"))
+    print(fellah.total_mitadines())
 
-print("\n 1 st category ")
+    print("\n 1 st category ")
 
-fellah.matiers_inertes = float(input("matiers inertes (%) : "))
-fellah.debris_vegetaux = float(input("debris vegetaux (%) : "))
-fellah.grains_sans_valeur = float(input("grains sans valeur (%) : "))
-print(fellah.total_premier_category())
+    fellah.matiers_inertes = float(input("matiers inertes (%) : "))
+    fellah.debris_vegetaux = float(input("debris vegetaux (%) : "))
+    fellah.grains_sans_valeur = float(input("grains sans valeur (%) : "))
+    print(fellah.total_premier_category())
 
-print("\n 2 eme category ")
+    print("\n 2 eme category ")
 
-fellah.grains_casse = float(input("grains casse (%) : "))
-fellah.grains_maigres = float(input("grains maigres (%) : "))
-fellah.grains_mouchtes = float(input("grains mouchtes (%) : "))
-fellah.grain_punises = float(input("grains punises (%) : "))
-fellah.grains_piques = float(input("grains piques (%) : "))
-fellah.grain_boute = float(input("grain boute (%) : "))
-print(fellah.total_dexieum_category())
+    fellah.grains_casse = float(input("grains casse (%) : "))
+    fellah.grains_maigres = float(input("grains maigres (%) : "))
+    fellah.grains_mouchtes = float(input("grains mouchtes (%) : "))
+    fellah.grain_punises = float(input("grains punises (%) : "))
+    fellah.grains_piques = float(input("grains piques (%) : "))
+    fellah.grain_boute = float(input("grain boute (%) : "))
+    print(fellah.total_dexieum_category())
 
+    print("\n Start our Calculation... ")
+    Results = fellah.bonification_calculation()
+    print("\n")
 
-print("\n Start our Calculation... ")
-Results = fellah.bonification_calculation()
-print("\n")
+    # Print column headers
+    print("{:<30} {:<30} {:<40} {:<30}".format("Impurties", "Input", "Observation", "Bonification/refaction"))
+    print("-" * 130)
 
-# Print column headers
-print("{:<30} {:<30} {:<30} {:<30}".format("Impurtie", "Input", "Observation", "Bonification/refaction"))
-print("-" * 120)
+    # Print rows
+    # for i in range(len(my_dict["Name"])):
+    #     name = my_dict["Name"][i]
+    #     age = my_dict["Age"][i]
+    #     city = my_dict["City"][i]
+    #     print("{:<10} {:<10} {}".format(name, age, city))
 
-# Print rows
-# for i in range(len(my_dict["Name"])):
-#     name = my_dict["Name"][i]
-#     age = my_dict["Age"][i]
-#     city = my_dict["City"][i]
-#     print("{:<10} {:<10} {}".format(name, age, city))
+    for key, values in Results.items():
 
-for key, values in Results.items():
+        impurties = key
+        if values[0] is not None:
+            input_value = values[0]
+        else:
+            input_value = " "
 
-    impurties = key
-    if values[0] is not None:
-        input_value = values[0]
-    else:
-        input_value = " "
+        if values[1] is not None:
+            observation = values[1]
+        else:
+            observation = " "
 
-    if values[1] is not None:
-        observation = values[1]
-    else:
-        observation = " "
+        if values[2] is not None:
+            bonification = values[2]
+        else:
+            bonification = 0.00
 
-    if values[2] is not None:
-        bonification = values[2]
-    else:
-        bonification = 0.00
+        print("{:<30} {:<30} {:<40} {:<30.2f}".format(impurties, input_value, observation, bonification))
 
-    print("{:<30} {:<30} {:<30} {:<30.2f}".format(impurties, input_value, observation, bonification))
-
-
+else:
+    print("SAMPLE REFUSED")
