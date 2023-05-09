@@ -195,7 +195,7 @@ class CCLS:
                 self.grains_casse + self.grain_boute
 
     def total_mitadines(self):
-        if self.ble_tendre > 0.25:
+        if self.ble_tendre > 2.5:
             return self.grains_mitadines
         else:
             return self.grains_mitadines + self.ble_tendre
@@ -245,49 +245,50 @@ class CCLS:
                        "Matiers inertes": None, "Grains sans valeur": None, "Grains casse": None,
                        "Grains maigres": None, "Grains Mouchtes": None, "Grains Punises": None, "Grains Piques": None,
                        "Grain boute": None, "ble tendre": None, "Grains mitadines": None,
-                       "Total premier category": None, "Total dexieum category:": None, "Total mitadines": None}
+                       "Total premier category": None, "Total dexieum category:": None, "Total mitadines": None,
+                       "Total Bonification/refaction": None}
 
-        user_input = (self._insect, self._carie, self._ancien_recolt, self._poid_specifique, self._teneur_en_eau,
-                      self._grain_nuisibles, self._ergot, self._debris_vegetaux, self._matiers_inertes,
-                      self._grains_sans_valeur, self._grains_casse, self._grains_maigres, self._grains_mouchtes,
-                      self._grain_punises, self._grains_piques, self._grain_boute, self._ble_tendre,
-                      self._grains_mitadines, self.total_premier_category(), self.total_dexieum_category(),
-                      self.total_mitadines())
+        user_input = ([self._insect], [self._carie], [self._ancien_recolt], [self._poid_specifique],
+                      [self._teneur_en_eau], [self._grain_nuisibles], [self._ergot], [self._debris_vegetaux],
+                      [self._matiers_inertes], [self._grains_sans_valeur], [self._grains_casse], [self._grains_maigres],
+                      [self._grains_mouchtes], [self._grain_punises], [self._grains_piques], [self._grain_boute],
+                      [self._ble_tendre], [self._grains_mitadines], [self.total_premier_category()],
+                      [self.total_dexieum_category()], [self.total_mitadines()], [None])
 
-        for i, key in enumerate(calculation.keys()):
-            calculation[key] = user_input[i]
+        for i, impurtie in enumerate(calculation.keys()):
+            calculation[impurtie] = user_input[i]
 
         if self._insect:
-            self._observation.append(Observation.OBSERVATION_2)
+            self._observation.append(Observation.OBSERVATION_2.value)
             self._bonification.append(None)
         else:
-            self._observation.append(Observation.OBSERVATION_1)
+            self._observation.append(Observation.OBSERVATION_1.value)
             self._bonification.append(None)
 
         if self._carie:
             # calculation["carie"] = Observation.OBSERVATION_2
-            self._observation.append(Observation.OBSERVATION_2)
+            self._observation.append(Observation.OBSERVATION_2.value)
             self._bonification.append(None)
         else:
-            self._observation.append(Observation.OBSERVATION_1)
+            self._observation.append(Observation.OBSERVATION_1.value)
             self._bonification.append(None)
 
         if self._ancien_recolt:
-            self._observation.append(Observation.OBSERVATION_2)
+            self._observation.append(Observation.OBSERVATION_2.value)
             self._bonification.append(None)
         else:
-            self._observation.append(Observation.OBSERVATION_1)
+            self._observation.append(Observation.OBSERVATION_1.value)
             self._bonification.append(None)
 
         # Poid Specifique observation
         if 76 <= self._poid_specifique <= 80:
-            self._observation.append(Observation.OBSERVATION_5)
+            self._observation.append(Observation.OBSERVATION_5.value)
         elif self._poid_specifique > 80:
-            self._observation.append(Observation.OBSERVATION_4)
+            self._observation.append(Observation.OBSERVATION_4.value)
         elif 72 < self._poid_specifique < 76:
-            self._observation.append(Observation.OBSERVATION_3)
+            self._observation.append(Observation.OBSERVATION_3.value)
         elif self._poid_specifique <= 72:
-            self._observation.append(Observation.OBSERVATION_2)
+            self._observation.append(Observation.OBSERVATION_2.value)
 
         # Poid Specifique Bonification et refaction
         if 80.001 <= self._poid_specifique <= 80.25:
@@ -361,26 +362,26 @@ class CCLS:
 
         #  Humidity observation and None bonification
         if self._teneur_en_eau <= 17:
-            self._observation.append(Observation.OBSERVATION_1)
+            self._observation.append(Observation.OBSERVATION_1.value)
             self._bonification.append(None)
         else:
-            self._observation.append(Observation.OBSERVATION_2)
+            self._observation.append(Observation.OBSERVATION_2.value)
             self._bonification.append(None)
 
         # Grains nuisibles observation and None bonification
-        if self._grain_nuisibles <= 2.5:
-            self._observation.append(Observation.OBSERVATION_5)
+        if self._grain_nuisibles <= 0.25:
+            self._observation.append(Observation.OBSERVATION_5.value)
             self._bonification.append(None)
         else:
-            self._observation.append(Observation.OBSERVATION_2)
+            self._observation.append(Observation.OBSERVATION_2.value)
             self._bonification.append(None)
 
         # Ergot observation and None bonification
         if self._ergot < 0.001:
-            self._observation.append(Observation.OBSERVATION_1)
+            self._observation.append(Observation.OBSERVATION_1.value)
             self._bonification.append(None)
         else:
-            self._observation.append(Observation.OBSERVATION_2)
+            self._observation.append(Observation.OBSERVATION_2.value)
             self._bonification.append(None)
 
         # Debris vegeteux None observation and None bonification
@@ -397,9 +398,9 @@ class CCLS:
 
         # Grains casse observation
         if self._grains_casse <= 5:
-            self._observation.append(Observation.OBSERVATION_5)
+            self._observation.append(Observation.OBSERVATION_5.value)
         else:
-            self._observation.append(Observation.OBSERVATION_3)
+            self._observation.append(Observation.OBSERVATION_3.value)
 
         # Grains casse Bonification et refaction
         if 5.001 <= self._grains_casse <= 5.25:
@@ -441,9 +442,9 @@ class CCLS:
 
         # Grains boute observation
         if self._grain_boute <= 5:
-            self._observation.append(Observation.OBSERVATION_4)
+            self._observation.append(Observation.OBSERVATION_4.value)
         else:
-            self._observation.append(Observation.OBSERVATION_3)
+            self._observation.append(Observation.OBSERVATION_3.value)
 
         # Grains boute Bonification et refaction
         if 5.001 <= self._grain_boute <= 6:
@@ -475,11 +476,11 @@ class CCLS:
 
         # ble tendre observation
         if self._ble_tendre <= 5:
-            self._observation.append(Observation.OBSERVATION_5)
+            self._observation.append(Observation.OBSERVATION_5.value)
         elif 5 < self._ble_tendre <= 10:
-            self._observation.append(Observation.OBSERVATION_3)
+            self._observation.append(Observation.OBSERVATION_3.value)
         elif self._ble_tendre > 10:
-            self._observation.append(Observation.OBSERVATION_6)
+            self._observation.append(Observation.OBSERVATION_6.value)
 
         # ble tendre Bonification et refaction
         if 5.001 <= self._ble_tendre <= 5.25:
@@ -523,7 +524,8 @@ class CCLS:
         elif 9.751 <= self._ble_tendre <= 10:
             self._bonification.append(-70)
         elif self._ble_tendre > 10:
-            self._bonification.append(float(input("Prix a débattre veuillez enter le prix de refaction : ")) * -1)
+            # self._bonification.append(float(input("Prix a débattre veuillez enter le prix de refaction : ")) * -1)
+            self._bonification.append(0)
         else:
             self._bonification.append(0)
 
@@ -533,13 +535,13 @@ class CCLS:
 
         # Premier category observation
         if 1 <= self.total_premier_category() <= 3:
-            self._observation.append(Observation.OBSERVATION_5)
+            self._observation.append(Observation.OBSERVATION_5.value)
         elif self.total_premier_category() < 1:
-            self._observation.append(Observation.OBSERVATION_4)
+            self._observation.append(Observation.OBSERVATION_4.value)
         elif 3 < self.total_premier_category() < 6:
-            self._observation.append(Observation.OBSERVATION_3)
+            self._observation.append(Observation.OBSERVATION_3.value)
         elif self.total_premier_category() >= 6:
-            self._observation.append(Observation.OBSERVATION_6)
+            self._observation.append(Observation.OBSERVATION_6.value)
 
         # Premier category bonification refaction
         if 0.999 >= self.total_premier_category() >= 0.75:
@@ -575,7 +577,7 @@ class CCLS:
         elif 5.751 <= self.total_premier_category() <= 6:
             self._bonification.append(-1.5)
         elif self.total_premier_category() > 6:
-            self._bonification.append(float(input("Prix a débattre veuillez enter le prix de refaction : ")) * -1)
+            self._bonification.append(0)
         else:
             self._bonification.append(0)
 
@@ -611,13 +613,13 @@ class CCLS:
         elif self.total_dexieum_category() <= 10:
             self._bonification.append(0)
         elif self.total_dexieum_category() > 20:
-            self._bonification.append(float(input("Prix a débattre veuillez enter le prix de refaction : ")) * -1)
+            self._bonification.append(0)
         else:
             self._bonification.append(0)
 
         # Total mitadines Observation
         if self.total_mitadines() < 10:
-            self._observation.append(Observation.OBSERVATION_4)
+            self._observation.append(Observation.OBSERVATION_4.value)
         elif 10 <= self.total_mitadines() <= 20:
             self._observation.append(Observation.OBSERVATION_5)
         elif 20 < self.total_mitadines() < 70:
@@ -731,19 +733,30 @@ class CCLS:
         elif 69.001 <= self.total_mitadines() <= 70:
             self._bonification.append(-2.5)
         elif self.total_mitadines() > 70:
-            self._bonification.append(float(input("Prix a débattre veuillez enter le prix de refaction : ")) * -1)
+            self._bonification.append(0)
         else:
             self._bonification.append(0)
 
-        for i, key in enumerate(calculation.keys()):
-            calculation[key] = self._observation[i]
+        self._observation.append(None)
+        if Observation.OBSERVATION_6 in self._observation:
+            self._bonification.append(float(input("Prix a débattre veuillez enter le prix de refaction : ")) * -1)
+        else:
+            total_bonification = 0
+            for item in self._bonification:
+                if item is not None:
+                    total_bonification += item
+            self._bonification.append(total_bonification)
 
-        for i, key in enumerate(calculation.keys()):
-            calculation[key] = self._bonification[i]
+        for item, impurtie in zip(self._observation, calculation):
+            calculation[impurtie].append(item)
+
+        for item, impurtie in zip(self._bonification, calculation):
+            calculation[impurtie].append(item)
 
         print('the total number of observation :', len(self._observation))
         print('the total number of bonification :', len(self._bonification))
         print('the total number of input :', len(user_input))
+        print(calculation)
 
         return calculation
 
@@ -767,9 +780,9 @@ print(fellah.total_mitadines())
 
 print("\n 1 st category ")
 
-fellah.matiers_inertes = float(input("matiers inertes (%) :"))
-fellah.debris_vegetaux = float(input("debris vegetaux (%) :"))
-fellah.grains_sans_valeur = float(input("grains sans valeur (%) :"))
+fellah.matiers_inertes = float(input("matiers inertes (%) : "))
+fellah.debris_vegetaux = float(input("debris vegetaux (%) : "))
+fellah.grains_sans_valeur = float(input("grains sans valeur (%) : "))
 print(fellah.total_premier_category())
 
 print("\n 2 eme category ")
@@ -781,9 +794,41 @@ fellah.grain_punises = float(input("grains punises (%) : "))
 fellah.grains_piques = float(input("grains piques (%) : "))
 fellah.grain_boute = float(input("grain boute (%) : "))
 print(fellah.total_dexieum_category())
-print("\n others")
 
-fellah.autres_cereales = float(input("autres cereales (%) : "))
 
-print("\n Agreage ")
+print("\n Start our Calculation... ")
 Results = fellah.bonification_calculation()
+print("\n")
+
+# Print column headers
+print("{:<30} {:<30} {:<30} {:<30}".format("Impurtie", "Input", "Observation", "Bonification/refaction"))
+print("-" * 120)
+
+# Print rows
+# for i in range(len(my_dict["Name"])):
+#     name = my_dict["Name"][i]
+#     age = my_dict["Age"][i]
+#     city = my_dict["City"][i]
+#     print("{:<10} {:<10} {}".format(name, age, city))
+
+for key, values in Results.items():
+
+    impurties = key
+    if values[0] is not None:
+        input_value = values[0]
+    else:
+        input_value = " "
+
+    if values[1] is not None:
+        observation = values[1]
+    else:
+        observation = " "
+
+    if values[2] is not None:
+        bonification = values[2]
+    else:
+        bonification = 0.00
+
+    print("{:<30} {:<30} {:<30} {:<30.2f}".format(impurties, input_value, observation, bonification))
+
+
