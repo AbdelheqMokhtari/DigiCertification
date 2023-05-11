@@ -21,11 +21,12 @@ X_train = scaler.fit_transform(X_train)
 X_test = scaler.transform(X_test)
 
 # Create a KNN classifier object
-k = 7  # Set the value of K
+k = 6  # Set the value of K
 knn = KNeighborsClassifier(n_neighbors=k)
 
 # Train the classifier
 knn.fit(X_train, y_train)
+print(y_train)
 
 # Predict the class labels for the test set
 y_pred = knn.predict(X_test)
@@ -33,6 +34,8 @@ y_pred = knn.predict(X_test)
 # Evaluate the accuracy of the classifier
 accuracy = accuracy_score(y_test, y_pred)
 print("Accuracy:", accuracy)
+print(y_test)
+print(y_pred)
 
 # Calculate evaluation metrics
 accuracy = accuracy_score(y_test, y_pred)
@@ -54,6 +57,6 @@ print("AUC-ROC Score:", roc_auc)
 # with open('knn_classifier.pkl', 'wb') as file:
 #     pickle.dump(knn, file)
 
-joblib.dump(knn, 'knn_classifier_new.pkl')
+joblib.dump(knn, 'knn_classifier_new.joblib')
 
 

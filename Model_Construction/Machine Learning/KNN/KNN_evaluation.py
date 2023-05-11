@@ -4,7 +4,7 @@ from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_sc
 import joblib
 
 # Load the trained KNN classifier from a file
-knn = joblib.load('knn_classifier.pkl')
+knn = joblib.load('knn_classifier_new.joblib')
 
 # Load the testing dataset from a CSV file
 test_data = pd.read_csv('Features Final.csv')  # Replace 'testing_dataset.csv' with the actual filename
