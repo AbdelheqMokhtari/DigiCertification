@@ -41,3 +41,5 @@
 /Testing/Save Weights.py
 /Image_Segmentation/Yolo.py
 /Testing/Learning Rate Schudel.py
+/Model_Construction/Deep Learning/DenseNet/Model/DenseNet121epoch30.h5
+/Model_Construction/Deep Learning/DenseNet/Model/DenseNet169epoch30.h5
