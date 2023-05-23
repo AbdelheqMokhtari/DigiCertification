@@ -1,0 +1,1450 @@
+import tkinter
+import customtkinter as ctk
+from tkinter import messagebox
+import customtkinter
+import felah
+import moulin
+from tkinter import filedialog
+import pandas as pd
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_pdf import PdfPages
+import pickle
+import os
+from PIL import Image
+
+# Selecting GUI theme - dark, light , system (for system default)
+
+basedir = os.path.dirname(__file__)
+
+
+class Login(ctk.CTkFrame):
+    def __init__(self, parent, controller):
+        ctk.CTkFrame.__init__(self, parent, width=1500, height=750)
+
+
+# app = ctk.CTk()
+# app.geometry("400x400")
+# app.title("Modern Login UI using Customtkinter")
+
+        # self.label = ctk.CTkLabel(self, text="This is the main UI page")
+        # self.label.place(relx=0.5, rely=0.5)
+        # self.label.pack(pady=20)
+
+        # self.pack(fill='both', expand=True)
+
+        self.frame = ctk.CTkFrame(master=self)
+
+        self.frame.pack(pady=20, padx=40, fill='both', expand=True)
+        self.logo = customtkinter.CTkImage(light_image=Image.open(
+            os.path.join(basedir, "logo_seed.png")), size=(200, 100))
+        self.logo_label = ctk.CTkLabel(master=self.frame, image=self.logo)
+        self.logo_label.pack(pady=12, padx=10)
+
+        # self.logo.pack(pady=12, padx=10)
+
+        label = ctk.CTkLabel(master=self.frame, text='Se Connecter', font=(
+            "Lato", 18, "bold"), text_color="#2cc985")
+        label.pack(pady=12, padx=10)
+
+        self.user_entry = ctk.CTkEntry(
+            master=self.frame, placeholder_text="Nom de l'agréeur", width=300, height=40)
+        self.user_entry.pack(pady=12, padx=10)
+
+        self.user_pass = ctk.CTkEntry(
+            master=self.frame, placeholder_text="Prénom", width=300, height=40)
+        self.user_pass.pack(pady=12, padx=10)
+
+        self.code = ctk.CTkEntry(
+            master=self.frame, placeholder_text="Code IP", width=300, height=40)
+        self.code.pack(pady=12, padx=10)
+
+        def check_credentials(users):
+            if users.count({'nom': self.user_entry.get(
+            ), 'prénom': self.user_pass.get(), 'code': self.code.get()}) == 0:
+                messagebox.showwarning(
+                    'Erreur', "Compte n'existe pas")
+            else:
+                controller.show_frame(Welcome, Login)
+
+        def handle_login():
+            if self.user_entry.get() != '' and self.user_pass.get() != '' and self.code != '':
+                if not os.path.exists(os.path.join(basedir, "users")):
+                    messagebox.showwarning(
+                        'Erreur', 'Vous devez créer un compte')
+                else:
+                    with open(os.path.join(basedir, "users"), 'rb') as f:
+                        users = pickle.load(f)
+                    check_credentials(users)
+
+            else:
+                messagebox.showwarning(
+                    'Erreur', 'Assurez-vous de remplir tous les champs')
+
+        self.button = ctk.CTkButton(
+            master=self.frame, text='Se Connecter', command=handle_login)
+        #
+        self.button.pack(pady=12, padx=10)
+
+        label = ctk.CTkLabel(
+            master=self.frame, text="Vous n'avez pas un compte ?")
+        label.pack(pady=12, padx=10)
+
+        self.button = ctk.CTkButton(
+            master=self.frame, text="S'inscrire", command=lambda: controller.show_frame(Signup, Login))
+        #
+        self.button.pack(pady=12, padx=10)
+
+        # self.checkbox = ctk.CTkCheckBox(master=self.frame, text='Remember Me')
+        # self.checkbox.pack(pady=12, padx=10)
+
+
+class Signup(ctk.CTkFrame):
+    def __init__(self, parent, controller):
+        ctk.CTkFrame.__init__(self, parent, width=1500, height=750)
+
+
+# app = ctk.CTk()
+# app.geometry("400x400")
+# app.title("Modern Login UI using Customtkinter")
+
+        # self.label = ctk.CTkLabel(self, text="This is the main UI page")
+        # self.label.place(relx=0.5, rely=0.5)
+        # self.label.pack(pady=20)
+
+        # self.pack(fill='both', expand=True)
+
+        self.frame = ctk.CTkFrame(master=self)
+
+        self.frame.pack(pady=20, padx=40, fill='both', expand=True)
+
+        self.logo = customtkinter.CTkImage(light_image=Image.open(
+            os.path.join(basedir, "logo_seed.png")), size=(200, 100))
+        self.logo_label = ctk.CTkLabel(master=self.frame, image=self.logo)
+        self.logo_label.pack(pady=12, padx=10)
+
+        label = ctk.CTkLabel(master=self.frame, text='Inscription', font=(
+            "Lato", 18, "bold"), text_color="#2cc985")
+        label.pack(pady=12, padx=10)
+
+        self.user_entry = ctk.CTkEntry(
+            master=self.frame, placeholder_text="Nom de l'agréeur", width=300, height=40)
+        self.user_entry.pack(pady=12, padx=10)
+
+        self.user_pass = ctk.CTkEntry(
+            master=self.frame, placeholder_text="Prénom", width=300, height=40)
+        self.user_pass.pack(pady=12, padx=10)
+
+        self.code = ctk.CTkEntry(
+            master=self.frame, placeholder_text="Code IP", width=300, height=40)
+        self.code.pack(pady=12, padx=10)
+
+        def handle_signup():
+            if self.user_entry.get() != "" and self.user_pass.get() != "" and self.code.get() != "":
+                user = {'nom': self.user_entry.get(
+                ), 'prénom': self.user_pass.get(), 'code': self.code.get()}
+                if os.path.exists(os.path.join(basedir, "users")):
+                    with open(os.path.join(basedir, "users"), 'rb') as f:
+                        users = pickle.load(f)
+                    users.append(user)
+                    with open(os.path.join(basedir, "users"), 'wb') as f:
+                        pickle.dump(users, f)
+                else:
+                    users = [user]
+                    with open(os.path.join(basedir, "users"), 'wb') as f:
+                        pickle.dump(users, f)
+                controller.show_frame(Welcome, Signup)
+            else:
+                messagebox.showwarning(
+                    'Erreur', 'Assurez-vous de remplir tous les champs')
+
+        self.button = ctk.CTkButton(
+            master=self.frame, text="S'inscrire", command=handle_signup)
+        #
+        self.button.pack(pady=12, padx=10)
+
+        label = ctk.CTkLabel(master=self.frame, text="Vous avez un compte ?")
+        label.pack(pady=12, padx=10)
+
+        self.button = ctk.CTkButton(
+            master=self.frame, text="Se Connecter", command=lambda: controller.show_frame(Login, Signup))
+        #
+        self.button.pack(pady=12, padx=10)
+
+        # self.checkbox = ctk.CTkCheckBox(master=self.frame, text='Remember Me')
+        # self.checkbox.pack(pady=12, padx=10)
+
+
+# app.mainloop()
+
+class Welcome(ctk.CTkFrame):
+    def __init__(self, parent, controller):
+        ctk.CTkFrame.__init__(self, parent, width=1500, height=750)
+
+
+# app = ctk.CTk()
+# app.geometry("400x400")
+# app.title("Modern Login UI using Customtkinter")
+
+        # self.label = ctk.CTkLabel(self, text="This is the main UI page")
+        # self.label.place(relx=0.5, rely=0.5)
+        # self.label.pack(pady=20)
+
+        # self.pack(fill='both', expand=True)
+
+        self.frame = ctk.CTkFrame(master=self)
+
+        self.frame.pack(pady=20, padx=40, fill='both', expand=True)
+
+        label = ctk.CTkLabel(master=self.frame, text="Choisir l'interface", font=(
+            "Lato", 18, "bold"), text_color="#2cc985")
+        label.pack(pady=12, padx=10)
+
+        self.button = ctk.CTkButton(
+            master=self.frame, text='Fellah', command=lambda: controller.show_frame(Interface1, Welcome))
+        #
+        self.button.pack(pady=12, padx=10)
+
+        self.button2 = ctk.CTkButton(
+            master=self.frame, text='Moulin', command=lambda: controller.show_frame(Interface2, Welcome))
+        #
+        self.button2.pack(pady=12, padx=10)
+
+
+class Interface1(customtkinter.CTkFrame):
+    def __init__(self, parent, controller) -> None:
+        customtkinter.CTkFrame.__init__(self, parent, width=1500, height=750)
+
+        self.grid_columnconfigure(tuple(range(10)), weight=1)
+        self.grid_rowconfigure(tuple(range(17)), weight=1)
+        # self.pack(fill='both', expand=True)
+
+        # self.title("Seed TQ")
+        # self.geometry(f"{1500}x{750}")
+        # # self.attributes('-fullscreen', True)
+
+        # self.grid_columnconfigure(tuple(range(10)), weight=1)
+        # self.grid_rowconfigure(tuple(range(17)), weight=1)
+
+        # self.nature_analyse = customtkinter.CTkTextbox(
+        #     master=self, fg_color="transparent", width=180, height=20, font=("Lato", 18, "bold"), text_color="#2cc985")
+        self.nature_analyse = customtkinter.CTkLabel(
+            master=self, anchor='w', text="Nature d'analyse", font=("Lato", 18, "bold"), text_color="#2cc985")
+        self.nature_analyse.grid(row=0, column=0)
+
+        self.valeur_label = customtkinter.CTkLabel(
+            master=self,  anchor='w', text="valeur")
+        self.valeur_label.grid(row=0, column=1)
+
+        self.observation_label = customtkinter.CTkLabel(
+            master=self, text="observation", width=200)
+        self.observation_label.grid(row=0, column=2, columnspan=2)
+
+        self.bonification_label = customtkinter.CTkLabel(
+            master=self,  anchor='w', text="bonification/réfaction (DA)/q")
+        self.bonification_label.grid(row=0, column=4)
+
+        # self.nature_analyse.insert("end", "Nature d'analyse")
+        # self.nature_analyse.configure(state='disabled')
+
+        self.presence_insect = customtkinter.CTkLabel(
+            master=self, anchor="w", fg_color="transparent", width=180, height=10, font=("Lato", 14, "bold"), text="Présence d'un insect mort ou vivant"
+        )
+        self.presence_insect.grid(row=1, column=0)
+        # self.poids_spec.insert("end", "Poid spécifique (kg/hl)")
+        # self.poids_spec.configure(state='disabled')
+        self.presence_insect_entry1 = customtkinter.CTkEntry(
+            self, placeholder_text="")
+        self.presence_insect_entry1.grid(row=1, column=1)
+        self.presence_insect_entry2 = customtkinter.CTkEntry(
+            self, placeholder_text="", width=200, state='disabled')
+        self.presence_insect_entry2.grid(
+            row=1, column=2, columnspan=2)
+
+        self.ancien_recolt = customtkinter.CTkLabel(
+            master=self, anchor="w", fg_color="transparent", width=180, height=10, font=("Lato", 14, "bold"), text="Ancien récolte"
+        )
+        self.ancien_recolt.grid(row=2, column=0)
+        # self.poids_spec.insert("end", "Poid spécifique (kg/hl)")
+        # self.poids_spec.configure(state='disabled')
+        self.ancien_recolt_entry1 = customtkinter.CTkEntry(
+            self, placeholder_text="")
+        self.ancien_recolt_entry1.grid(row=2, column=1)
+        self.ancien_recolt_entry2 = customtkinter.CTkEntry(
+            self, placeholder_text="", width=200, state='disabled')
+        self.ancien_recolt_entry2.grid(
+            row=2, column=2, columnspan=2)
+
+        self.presence_carie = customtkinter.CTkLabel(
+            master=self, anchor="w", fg_color="transparent", width=180, height=10, font=("Lato", 14, "bold"), text="Présence de la carie"
+        )
+        self.presence_carie.grid(row=3, column=0)
+        # self.poids_spec.insert("end", "Poid spécifique (kg/hl)")
+        # self.poids_spec.configure(state='disabled')
+        self.presence_carie_entry1 = customtkinter.CTkEntry(
+            self, placeholder_text="")
+        self.presence_carie_entry1.grid(row=3, column=1)
+        self.presence_carie_entry2 = customtkinter.CTkEntry(
+            self, placeholder_text="", width=200, state='disabled')
+        self.presence_carie_entry2.grid(
+            row=3, column=2, columnspan=2)
+
+        self.ergot = customtkinter.CTkLabel(
+            master=self, width=180, anchor='w', text="Ergot (%)", font=("Lato", 14, "bold"))
+        self.ergot.grid(row=4, column=0)
+        self.ergot_entry1 = customtkinter.CTkEntry(
+            self, placeholder_text="")
+        self.ergot_entry1.grid(row=4, column=1)
+        self.ergot_entry2 = customtkinter.CTkEntry(
+            self, placeholder_text="", width=200, state='disabled')
+        self.ergot_entry2.grid(
+            row=4, column=2, columnspan=2)
+
+        self.grains_nui = customtkinter.CTkLabel(
+            master=self, width=180, anchor='w', text="Grains nuisibles (%)", font=("Lato", 14, "bold"))
+        self.grains_nui.grid(row=5, column=0)
+        self.grains_nui_entry1 = customtkinter.CTkEntry(
+            self, placeholder_text="")
+        self.grains_nui_entry1.grid(row=5, column=1)
+        self.grains_nui_entry2 = customtkinter.CTkEntry(
+            self, placeholder_text="", width=200, state='disabled')
+        self.grains_nui_entry2.grid(
+            row=5, column=2, columnspan=2)
+
+        self.teneur_eau = customtkinter.CTkLabel(
+            master=self, fg_color="transparent", width=180, anchor="w", height=10, font=("Lato", 14, "bold"), text="Humidité (%)"
+        )
+        self.teneur_eau.grid(row=6, column=0)
+
+        self.teneur_eau_entry1 = customtkinter.CTkEntry(
+            self, placeholder_text="")
+        self.teneur_eau_entry1.grid(row=6, column=1)
+        self.teneur_eau_entry2 = customtkinter.CTkEntry(
+            self, placeholder_text="", width=200, state='disabled')
+        self.teneur_eau_entry2.grid(row=6, column=2, columnspan=2)
+
+        self.poids_spec = customtkinter.CTkLabel(
+            master=self, anchor="w", fg_color="transparent", width=180, height=10, font=("Lato", 14, "bold"), text="Poid spécifique (kg/hl)"
+        )
+        self.poids_spec.grid(row=7, column=0)
+        # self.poids_spec.insert("end", "Poid spécifique (kg/hl)")
+        # self.poids_spec.configure(state='disabled')
+        self.poids_spec_entry1 = customtkinter.CTkEntry(
+            self, placeholder_text="")
+        self.poids_spec_entry1.grid(row=7, column=1)
+        self.poids_spec_entry2 = customtkinter.CTkEntry(
+            self, placeholder_text="", width=200, state='disabled')
+        self.poids_spec_entry2.grid(
+            row=7, column=2, columnspan=2)
+        self.poids_spec_entry3 = customtkinter.CTkEntry(
+            self, placeholder_text="", state='disabled')
+        self.poids_spec_entry3.grid(row=7, column=4)
+
+        self.decision1 = customtkinter.CTkLabel(
+            master=self, anchor="w", fg_color="transparent", width=180, height=10, font=("Lato", 14, "bold"), text="Décision 1"
+        )
+        self.decision1.grid(row=8, column=0)
+
+        self.decision1_entry2 = customtkinter.CTkEntry(
+            self, placeholder_text="", width=200)
+        self.decision1_entry2.grid(row=8, column=2, columnspan=2)
+
+        self.grains_md1 = customtkinter.CTkLabel(
+            master=self, width=180, anchor='w', text="Grains métadinès", font=("Lato", 14, "bold"))
+        self.grains_md1.grid(row=9, column=0)
+        self.grains_md1_entry1 = customtkinter.CTkEntry(
+            self, placeholder_text="", state='disabled')
+        self.grains_md1_entry1.grid(row=9, column=1)
+        self.grains_md1_entry2 = customtkinter.CTkEntry(
+            self, placeholder_text="", width=200, state='disabled')
+        self.grains_md1_entry2.grid(
+            row=9, column=2, columnspan=2)
+        self.grains_md1_entry3 = customtkinter.CTkEntry(
+            self, placeholder_text="", state='disabled')
+        self.grains_md1_entry3.grid(row=9, column=4)
+
+        self.pres_ble = customtkinter.CTkLabel(
+            master=self, width=180, anchor='w', text="Présence de blé tendre dans le blé dur", font=("Lato", 14, "bold"))
+        self.pres_ble.grid(row=10, column=0)
+        self.pres_ble_entry1 = customtkinter.CTkEntry(
+            self, placeholder_text="", state='disabled')
+        self.pres_ble_entry1.grid(row=10, column=1)
+        self.pres_ble_entry2 = customtkinter.CTkEntry(
+            self, placeholder_text="", width=200, state='disabled')
+        self.pres_ble_entry2.grid(
+            row=10, column=2, columnspan=2)
+        self.pres_ble_entry3 = customtkinter.CTkEntry(
+            self, placeholder_text="", state='disabled')
+        self.pres_ble_entry3.grid(row=10, column=4)
+
+        self.total1 = customtkinter.CTkLabel(
+            master=self, width=180, anchor='w', text="Total1 (%)", font=("Lato", 15, "bold"), text_color="#2cc985")
+        self.total1.grid(row=11, column=0)
+        self.total1_entry1 = customtkinter.CTkEntry(
+            self, placeholder_text="", state='disabled')
+        self.total1_entry1.grid(row=11, column=1)
+        self.total1_entry2 = customtkinter.CTkEntry(
+            self, placeholder_text="", width=200, state='disabled')
+        self.total1_entry2.grid(
+            row=11, column=2, columnspan=2)
+        self.total1_entry3 = customtkinter.CTkEntry(
+            self, placeholder_text="", state='disabled')
+        self.total1_entry3.grid(row=11, column=4)
+
+        self.grains_ca = customtkinter.CTkLabel(
+            master=self, width=180, anchor='w', text="Grains cassés (%)", font=("Lato", 14, "bold"))
+        self.grains_ca.grid(row=12, column=0)
+        self.grains_ca_entry1 = customtkinter.CTkEntry(
+            self, placeholder_text="", state='disabled')
+        self.grains_ca_entry1.grid(row=12, column=1)
+        self.grains_ca_entry2 = customtkinter.CTkEntry(
+            self, placeholder_text="", width=200, state='disabled')
+        self.grains_ca_entry2.grid(
+            row=12, column=2, columnspan=2)
+        self.grains_ca_entry3 = customtkinter.CTkEntry(
+            self, placeholder_text="", state='disabled')
+        self.grains_ca_entry3.grid(row=12, column=4)
+
+        self.grains_m = customtkinter.CTkLabel(
+            master=self, width=180, anchor='w', text="Grains maigres (%)", font=("Lato", 14, "bold"))
+        self.grains_m.grid(row=13, column=0)
+        self.grains_m_entry1 = customtkinter.CTkEntry(
+            self, placeholder_text="", state='disabled')
+        self.grains_m_entry1.grid(row=13, column=1)
+
+        self.grains_mo = customtkinter.CTkLabel(
+            master=self, width=180, anchor='w', text="Grains mouchetes (%)", font=("Lato", 14, "bold"))
+        self.grains_mo.grid(row=14, column=0)
+        self.grains_mo_entry1 = customtkinter.CTkEntry(
+            self, placeholder_text="", state='disabled')
+        self.grains_mo_entry1.grid(row=14, column=1)
+
+        self.grains_pu = customtkinter.CTkLabel(
+            master=self, width=180, anchor='w', text="Grains punaises (%)", font=("Lato", 14, "bold"))
+        self.grains_pu.grid(row=15, column=0)
+        self.grains_pu_entry1 = customtkinter.CTkEntry(
+            self, placeholder_text="", state='disabled')
+        self.grains_pu_entry1.grid(row=15, column=1)
+
+        self.bull = customtkinter.CTkLabel(
+            master=self, width=320, text="BULLETIN D'AGREAGE FELLAH", font=("Lato", 22, "bold"), text_color="#2cc985")
+        self.bull.grid(row=0, column=5, rowspan=3, columnspan=5)
+
+        self.grains_pq = customtkinter.CTkLabel(
+            master=self, width=180, anchor='w', text="Grains piques (%)", font=("Lato", 14, "bold"))
+        self.grains_pq.grid(row=3, column=5)
+        self.grains_pq_entry1 = customtkinter.CTkEntry(
+            self, placeholder_text="", state='disabled')
+        self.grains_pq_entry1.grid(row=3, column=6)
+
+        self.grains_bq = customtkinter.CTkLabel(
+            master=self, width=180, anchor='w', text="Grains boutés (%)", font=("Lato", 14, "bold"))
+        self.grains_bq.grid(row=4, column=5)
+        self.grains_bq_entry1 = customtkinter.CTkEntry(
+            self, placeholder_text="", state='disabled')
+        self.grains_bq_entry1.grid(row=4, column=6)
+        self.grains_bq_entry2 = customtkinter.CTkEntry(
+            self, placeholder_text="", state='disabled', width=200)
+        self.grains_bq_entry2.grid(
+            row=4, column=7, columnspan=2)
+        self.grains_bq_entry3 = customtkinter.CTkEntry(
+            self, placeholder_text="", state='disabled')
+        self.grains_bq_entry3.grid(row=4, column=9)
+
+        self.total2 = customtkinter.CTkLabel(
+            master=self, width=180, anchor='w', text="Total2 (%)", font=("Lato", 15, "bold"), text_color="#2cc985")
+        self.total2.grid(row=5, column=5)
+        self.total2_entry1 = customtkinter.CTkEntry(
+            self, placeholder_text="", state='disabled')
+        self.total2_entry1.grid(row=5, column=6)
+        self.total2_entry2 = customtkinter.CTkEntry(
+            self, placeholder_text="", state='disabled', width=200)
+        self.total2_entry2.grid(
+            row=5, column=7, columnspan=2)
+        self.total2_entry3 = customtkinter.CTkEntry(
+            self, placeholder_text="", state='disabled')
+        self.total2_entry3.grid(row=5, column=9)
+
+        self.matiere_inr = customtkinter.CTkLabel(
+            master=self, width=180, anchor='w', text="Matière inerte (%)", font=("Lato", 14, "bold"))
+        self.matiere_inr.grid(row=6, column=5)
+        self.matiere_inr_entry1 = customtkinter.CTkEntry(
+            self, placeholder_text="", state='disabled')
+        self.matiere_inr_entry1.grid(row=6, column=6)
+
+        self.debris_v = customtkinter.CTkLabel(
+            master=self, width=180, anchor='w', text="Débris végétaux (%)", font=("Lato", 14, "bold"))
+        self.debris_v.grid(row=7, column=5)
+        self.debris_v_entry1 = customtkinter.CTkEntry(
+            self, placeholder_text="", state='disabled')
+        self.debris_v_entry1.grid(row=7, column=6)
+
+        self.grains_sv = customtkinter.CTkLabel(
+            master=self, width=180, anchor='w', text="Grains sans valeur (%)", font=("Lato", 14, "bold"))
+        self.grains_sv.grid(row=8, column=5)
+        self.grains_sv_entry1 = customtkinter.CTkEntry(
+            self, placeholder_text="", state='disabled')
+        self.grains_sv_entry1.grid(row=8, column=6)
+
+        self.total3 = customtkinter.CTkLabel(
+            master=self, width=180, anchor='w', text="Total3 (%)", font=("Lato", 15, "bold"), text_color="#2cc985")
+        self.total3.grid(row=9, column=5)
+        self.total3_entry1 = customtkinter.CTkEntry(
+            self, placeholder_text="", state='disabled')
+        self.total3_entry1.grid(row=9, column=6)
+        self.total3_entry2 = customtkinter.CTkEntry(
+            self, placeholder_text="", state='disabled', width=200)
+        self.total3_entry2.grid(
+            row=9, column=7, columnspan=2)
+        self.total3_entry3 = customtkinter.CTkEntry(
+            self, placeholder_text="", state='disabled')
+        self.total3_entry3.grid(row=9, column=9)
+
+        self.decision2 = customtkinter.CTkLabel(
+            master=self, anchor="w", fg_color="transparent", width=180, height=10, font=("Lato", 14, "bold"), text="Décision 2"
+        )
+        self.decision2.grid(row=10, column=5)
+
+        self.decision2_entry2 = customtkinter.CTkEntry(
+            self, placeholder_text="", state='disabled', width=200)
+        self.decision2_entry2.grid(row=10, column=7, columnspan=2)
+
+        self.qte = customtkinter.CTkLabel(
+            master=self, width=180, anchor='w', text="Valeur", font=("Lato", 14, "bold"))
+        self.qte.grid(row=11, column=5)
+        self.qte_entry = customtkinter.CTkEntry(
+            self, placeholder_text="", state='disabled')
+        self.qte_entry.grid(row=11, column=6)
+        self.prix_f = customtkinter.CTkLabel(
+            master=self, width=200, text="Total bon/ref", font=("Lato", 14, "bold"))
+        self.prix_f.grid(row=11, column=7, columnspan=2)
+        self.prix_f_entry = customtkinter.CTkEntry(
+            self, placeholder_text="", state='disabled')
+        self.prix_f_entry.grid(
+            row=11, column=9)
+
+        self.qte2 = customtkinter.CTkLabel(
+            master=self, width=180, anchor='w', text="Quantité", font=("Lato", 14, "bold"))
+        self.qte2.grid(row=12, column=5)
+        self.qte2_entry = customtkinter.CTkEntry(
+            self, placeholder_text="")
+        self.qte2_entry.grid(row=12, column=6)
+
+        def convert_type(values):
+            try:
+                return [float(v) for v in values]
+            except:
+                messagebox.showwarning(
+                    'Erreur', 'Assurez-vous de remplir les cases avec des chiffres')
+
+        def create_pdf():
+            cols = ['', 'Valeur', 'Observation',
+                    'Bonification/Réfaction (DA)/q']
+            if self.decision1_entry2.get() == 'Refuse':
+                rows = [
+                    ["Présence d'un insect mort ou vivant", self.presence_insect_entry1.get(
+                    ), self.presence_insect_entry2.get(), ""],
+                    ["Ancient récolte", self.ancien_recolt_entry1.get(
+                    ), self.ancien_recolt_entry2.get(), ""],
+                    ["Présence de la carie", self.presence_carie_entry1.get(
+                    ), self.presence_carie_entry2.get(), ""],
+                    ["Ergot %", self.ergot_entry1.get(), self.ergot_entry2.get(), ""],
+                    ["Grains nuisibles %", self.grains_nui_entry1.get(),
+                     self.grains_nui_entry2.get(), ""],
+                    ["Humidité %", self.teneur_eau_entry1.get(
+                    ), self.teneur_eau_entry2.get(), ""],
+                    ["Poid spécifique", self.poids_spec_entry1.get(
+                    ), self.poids_spec_entry2.get(), self.poids_spec_entry3.get()]
+                ]
+
+            else:
+                rows = [
+                    ["Présence d'un insect mort ou vivant", self.presence_insect_entry1.get(
+                    ), self.presence_insect_entry2.get(), ""],
+                    ["Ancient récolte", self.ancien_recolt_entry1.get(
+                    ), self.ancien_recolt_entry2.get(), ""],
+                    ["Présence de la carie", self.presence_carie_entry1.get(
+                    ), self.presence_carie_entry2.get(), ""],
+                    ["Ergot %", self.ergot_entry1.get(), self.ergot_entry2.get(), ""],
+                    ["Grains nuisibles %", self.grains_nui_entry1.get(),
+                     self.grains_nui_entry2.get(), ""],
+                    ["Humidité %", self.teneur_eau_entry1.get(
+                    ), self.teneur_eau_entry2.get(), ""],
+                    ["Poid spécifique", self.poids_spec_entry1.get(
+                    ), self.poids_spec_entry2.get(), self.poids_spec_entry3.get()],
+                    ["Décision 1", '',  '', self.decision1_entry2.get()],
+                    ["Grains métadinés", self.grains_md1_entry1.get(
+                    ), self.grains_md1_entry2.get(), self.grains_md1_entry3.get()],
+                    ["Présence de blé tendre dans le blé dur", self.pres_ble_entry1.get(
+                    ), self.pres_ble_entry2.get(), self.pres_ble_entry3.get()],
+                    ["Total 1", self.total1_entry1.get(), self.total1_entry2.get(),
+                     self.total1_entry3.get()],
+                    ["Grains cassés", self.grains_ca_entry1.get(
+                    ), self.grains_ca_entry2.get(), self.grains_ca_entry3.get()],
+                    ["Grains maigres", self.grains_m_entry1.get(), '', ''],
+                    ["Grains mouchetes", self.grains_mo_entry1.get(), '', ''],
+                    ["Grains punaises", self.grains_pu_entry1.get(), '', ''],
+                    ["Grains piques", self.grains_pq_entry1.get(), '', ''],
+                    ["Grains boutes", self.grains_bq_entry1.get(
+                    ), self.grains_bq_entry2.get(), self.grains_bq_entry3.get()],
+                    ["Total 2", self.total2_entry1.get(), self.total2_entry2.get(),
+                     self.total2_entry3.get()],
+                    ["Matière inerte", self.matiere_inr_entry1.get(), '', ''],
+                    ["Débris végétaux", self.debris_v_entry1.get(), '', ''],
+                    ["Grains sans valeur", self.grains_sv_entry1.get(), '', ''],
+                    ["Total 3", self.total3_entry1.get(), self.total3_entry2.get(),
+                     self.total3_entry3.get()],
+                    ["Décision 2", '', '', self.decision2_entry2.get()],
+                    ["Valeur", self.qte_entry.get(), '', ''],
+                    ["Total bon/ref", self.prix_f_entry.get(), '', ''],
+                    ["Quantité", self.qte2_entry.get(), '', '']
+                ]
+
+            df = pd.DataFrame(rows, columns=cols)
+            pdfPath = filedialog.asksaveasfilename(
+                defaultextension="*.pdf", filetypes=(("PDF Files", "*.pdf"),))
+            if pdfPath:
+                fig, ax = plt.subplots(figsize=(14, 8))
+                # ax.axis('tight')
+                ax.axis('off')
+                the_table = ax.table(
+                    cellText=df.values, colLabels=df.columns, loc='center')
+
+                pp = PdfPages(pdfPath)
+                pp.savefig(fig)
+                pp.close()
+
+        def get_decision1():
+            inputs = [self.presence_insect_entry1.get(), self.presence_carie_entry1.get(), self.ancien_recolt_entry1.get(
+            ), self.ergot_entry1.get(), self.grains_nui_entry1.get(), self.teneur_eau_entry1.get(), self.poids_spec_entry1.get()]
+            pres_insect, pres_carie, recolt, ergot, grains_nui, humid, poids = convert_type(
+                inputs)
+            ob_insect = felah.existance_insecte_vivante(pres_insect)
+            ob_carie = felah.presence_carie(pres_carie)
+            ob_recolt = felah.ob_ancien_recolt_(recolt)
+            ob_ergot = felah.ergott(ergot)
+            ob_grains_nui = felah.grain_nuisibles(grains_nui)
+            ob_humid = felah.teneur_eau(humid)
+            ob_poids, bon_poids = felah.p_specific(poids)
+            decision = felah.decision(
+                poids, humid, grains_nui, ergot, pres_insect, pres_carie, recolt)
+            texts = [ob_insect, ob_carie, ob_recolt, ob_ergot,
+                     ob_grains_nui, ob_humid, bon_poids, ob_poids, decision]
+            nodes = [self.presence_insect_entry2, self.presence_carie_entry2, self.ancien_recolt_entry2,
+                     self.ergot_entry2, self.grains_nui_entry2, self.teneur_eau_entry2, self.poids_spec_entry2, self.poids_spec_entry3, self.decision1_entry2]
+
+            set_texts(nodes, texts)
+
+            # TODO add a condition to continue
+            nodes = [self.grains_md1_entry1, self.pres_ble_entry1, self.grains_ca_entry1, self.grains_m_entry1, self.grains_mo_entry1,
+                     self.grains_pq_entry1, self.grains_pu_entry1, self.grains_bq_entry1, self.matiere_inr_entry1, self.debris_v_entry1, self.grains_sv_entry1]
+            if decision == 'accepter':
+                for node in nodes:
+                    node.configure(state='normal')
+            else:
+                create_pdf()
+
+        self.decision1_btn = customtkinter.CTkButton(
+            master=self, text="Vérifier", command=get_decision1, height=38)
+        self.decision1_btn.grid(row=8, column=1)
+
+        def get_decision2():
+            inputs = [self.grains_md1_entry1.get(), self.pres_ble_entry1.get(), self.grains_ca_entry1.get(
+            ), self.grains_m_entry1.get(), self.grains_mo_entry1.get(), self.grains_pu_entry1.get(), self.grains_pq_entry1.get(), self.grains_bq_entry1.get(), self.matiere_inr_entry1.get(), self.debris_v_entry1.get(), self.grains_sv_entry1.get(), self.grains_nui_entry1.get()]
+            grains_md, pres_ble, granis_ca, grains_m, grains_mo, grains_pu, grains_pq, grains_bq, matier_inr, debris_v, grains_sv, grains_nui = convert_type(
+                inputs)
+            # get total3
+            total3 = felah.calcul_1er_category(
+                debris_v, matier_inr, grains_nui, grains_sv)
+            bon_total3, ob_total3 = felah.premier_category(total3)
+
+            # get bon/ref grain cassé
+            bon_gc, ob_gc = felah.grains_casse(granis_ca)
+
+            # get bon/ref grain boutés
+            bon_gb, ob_gb = felah.grain_boute(grains_bq)
+
+            # get bon/ref pres blé
+            bon_pb, ob_pb = felah.ble_tendre(pres_ble)
+
+            # get total 2
+            total2 = felah.calcul_2eme_category(
+                granis_ca, grains_m, grains_mo, grains_bq, grains_pu, grains_pq)
+            bon_total2, ob_total2 = felah.dexieum_category(total2)
+
+            # get total 1
+            total1 = felah.calcul_total_mitadines(pres_ble, grains_md)
+            bon_total1, ob_total1 = felah.total_mitadines_category(total1)
+
+            decision2 = felah.decision_prix_debbattre(
+                total3, total2, pres_ble, total1)
+
+            texts = [total3, bon_total3, ob_total3, bon_gc, ob_gc, bon_gb, ob_gb,
+                     bon_pb, ob_pb, total2, bon_total2, ob_total2, total1, bon_total1, ob_total1, decision2]
+
+            nodes = [self.total3_entry1, self.total3_entry3, self.total3_entry2, self.grains_ca_entry3, self.grains_ca_entry2, self.grains_bq_entry3, self.grains_bq_entry2,
+                     self.pres_ble_entry3, self.pres_ble_entry2, self.total2_entry1, self.total2_entry3, self.total2_entry2, self.total1_entry1, self.total1_entry3, self.total1_entry2, self.decision2_entry2]
+
+            set_texts(nodes, texts)
+
+            # TODO add condition to continue
+            if decision2 == 'prix a débattre':
+                self.qte_entry.configure(state='normal')
+
+        self.decision2_btn = customtkinter.CTkButton(
+            master=self, text="Vérifier", command=get_decision2, height=38)
+        self.decision2_btn.grid(row=10, column=6)
+
+        def sanity_check():
+            try:
+                ps = float(self.poids_spec_entry1.get())
+                tn = float(self.teneur_eau_entry1.get())
+                mi = float(self.matiere_inr_entry1.get())
+                dv = float(self.debris_v_entry1.get())
+                gn = float(self.grains_nui_entry1.get())
+                er = float(self.ergot_entry1.get())
+                gs = float(self.grains_sv_entry1.get())
+                gc = float(self.grains_ca_entry1.get())
+                gm = float(self.grains_m_entry1.get())
+                gmo = float(self.grains_mo_entry1.get())
+                gp = float(self.grains_pu_entry1.get())
+                gpi = float(self.grains_pq_entry1.get())
+                gb = float(self.grains_bq_entry1.get())
+                pb = float(self.pres_ble_entry1.get())
+                ac = float(self.autre_cer_entry1.get())
+                gmd = float(self.grains_md1_entry1.get())
+                qte = float(self.qte_entry.get())
+                pv = float(self.prix_v_entry.get())
+                return ps, tn, mi, dv, gn, er, gs, gc, gm, gmo, gp, gpi, gb, pb, ac, gmd
+            except:
+                # raise ValueError("Assurez-vous d'entrer des chiffres")
+                messagebox.showwarning(
+                    'Erreur', 'Assurez-vous de remplir les cases avec des numéros')
+
+        def reset():
+            entries = [self.children[k]
+                       for k in self.children if 'ctkentry' in k]
+            for node in entries:
+                if node.cget('state') == 'disabled':
+                    node.configure(state='normal')
+                    node.delete(0, tkinter.END)
+                    node.configure(state='disabled')
+                else:
+                    node.delete(0, tkinter.END)
+
+        def scan():
+            c = self.poids_spec_entry2.cget('state')
+            print(f'c {c}')
+
+        def set_texts(nodes, values):
+            for node, value in zip(nodes, values):
+                if node.cget('state') == 'disabled':
+                    node.configure(state='normal')
+                    node.delete(0, tkinter.END)
+                    node.insert(0, value)
+                    node.configure(state='disabled')
+                else:
+                    node.delete(0, tkinter.END)
+                    node.insert(0, value)
+
+        def get_total_finale():
+            text = ''
+            if self.qte_entry.cget('state') == 'disabled':
+                inputs = [self.poids_spec_entry3.get(), self.total3_entry3.get(), self.grains_ca_entry3.get(
+                ), self.total2_entry3.get(), self.grains_bq_entry3.get(), self.pres_ble_entry3.get(), self.total1_entry3.get()]
+                p_spec, total3, grains_ca, total2, grains_bq, pres_ble, total1 = convert_type(
+                    inputs)
+                text = felah.total_(p_spec, total3, grains_ca,
+                                    total2, grains_bq, pres_ble, total1)
+            else:
+                text = self.qte_entry.get()
+            node = self.prix_f_entry
+            set_texts([node], [text])
+
+        self.button_res = customtkinter.CTkButton(
+            master=self, text="Résultats", command=get_total_finale, width=200, height=38)
+        self.button_res.grid(row=13, column=7)
+        self.button_reset = customtkinter.CTkButton(
+            master=self, text="Reset", command=reset, height=38)
+        self.button_reset.grid(row=13, column=8)
+        self.button_impr = customtkinter.CTkButton(
+            master=self, text="Imprimer", command=create_pdf, height=38)
+        self.button_impr.grid(row=13, column=9)
+        self.button_scan = customtkinter.CTkButton(
+            master=self, text="Scan", command=scan, height=38)
+        self.button_scan.grid(row=13, column=10)
+
+
+class Interface2(customtkinter.CTkFrame):
+    def __init__(self, parent, controller) -> None:
+        customtkinter.CTkFrame.__init__(self, parent, width=1500, height=750)
+
+        self.grid_columnconfigure(tuple(range(10)), weight=1)
+        self.grid_rowconfigure(tuple(range(17)), weight=1)
+
+        # self.nature_analyse.insert("end", "Nature d'analyse")
+        # self.nature_analyse.configure(state='disabled')
+
+        self.valeur_label = customtkinter.CTkLabel(
+            master=self,  anchor='w', text="valeur")
+        self.valeur_label.grid(row=0, column=1)
+
+        self.observation_label = customtkinter.CTkLabel(
+            master=self, text="observation", width=200)
+        self.observation_label.grid(row=0, column=2, columnspan=2)
+
+        self.bonification_label = customtkinter.CTkLabel(
+            master=self,  anchor='w', text="bonification/réfaction (DA)/q")
+        self.bonification_label.grid(row=0, column=4)
+
+        self.poids_spec = customtkinter.CTkLabel(
+            master=self, anchor="w", fg_color="transparent", width=180, height=10, font=("Lato", 14, "bold"), text="Poid spécifique (kg/hl)"
+        )
+        self.poids_spec.grid(row=1, column=0)
+        # self.poids_spec.insert("end", "Poid spécifique (kg/hl)")
+        # self.poids_spec.configure(state='disabled')
+        self.poids_spec_entry1 = customtkinter.CTkEntry(
+            self, placeholder_text="")
+        self.poids_spec_entry1.grid(row=1, column=1)
+        self.poids_spec_entry2 = customtkinter.CTkEntry(
+            self, placeholder_text="", width=200, state='disabled')
+        self.poids_spec_entry2.grid(
+            row=1, column=2, columnspan=2)
+        self.poids_spec_entry3 = customtkinter.CTkEntry(
+            self, placeholder_text="", state='disabled')
+        self.poids_spec_entry3.grid(row=1, column=4)
+
+        self.humid = customtkinter.CTkLabel(
+            master=self, fg_color="transparent", width=180, anchor="w", height=10, font=("Lato", 14, "bold"), text="Humidité (%)"
+        )
+        self.humid.grid(row=2, column=0)
+
+        self.humid_entry1 = customtkinter.CTkEntry(
+            self, placeholder_text="")
+        self.humid_entry1.grid(row=2, column=1)
+        self.humid_entry2 = customtkinter.CTkEntry(
+            self, placeholder_text="", width=200, state='disabled')
+        self.humid_entry2.grid(row=2, column=2, columnspan=2)
+        self.humid_entry3 = customtkinter.CTkEntry(
+            self, placeholder_text="", state='disabled')
+        self.humid_entry3.grid(row=2, column=4)
+
+        self.grains_nu = customtkinter.CTkLabel(
+            master=self, fg_color="transparent", width=180, anchor="w", height=10, font=("Lato", 14, "bold"), text="Grains nuisibles (%)"
+        )
+        self.grains_nu.grid(row=3, column=0)
+
+        self.grains_nu_entry1 = customtkinter.CTkEntry(
+            self, placeholder_text="")
+        self.grains_nu_entry1.grid(row=3, column=1)
+        self.grains_nu_entry2 = customtkinter.CTkEntry(
+            self, placeholder_text="", width=200, state='disabled')
+        self.grains_nu_entry2.grid(row=3, column=2, columnspan=2)
+        self.grains_nu_entry3 = customtkinter.CTkEntry(
+            self, placeholder_text="", state='disabled')
+        self.grains_nu_entry3.grid(row=3, column=4)
+
+        self.ergot = customtkinter.CTkLabel(
+            master=self, fg_color="transparent", width=180, anchor="w", height=10, font=("Lato", 14, "bold"), text="Ergot (%)"
+        )
+        self.ergot.grid(row=4, column=0)
+
+        self.ergot_entry1 = customtkinter.CTkEntry(
+            self, placeholder_text="")
+        self.ergot_entry1.grid(row=4, column=1)
+        self.ergot_entry2 = customtkinter.CTkEntry(
+            self, placeholder_text="", width=200, state='disabled')
+        self.ergot_entry2.grid(row=4, column=2, columnspan=2)
+        self.ergot_entry3 = customtkinter.CTkEntry(
+            self, placeholder_text="", state='disabled')
+        self.ergot_entry3.grid(row=4, column=4)
+
+        self.decision1 = customtkinter.CTkLabel(
+            master=self, anchor="w", fg_color="transparent", width=180, height=10, font=("Lato", 14, "bold"), text="Décision 1"
+        )
+        self.decision1.grid(row=5, column=0)
+
+        self.decision1_entry2 = customtkinter.CTkEntry(
+            self, placeholder_text="", width=200)
+        self.decision1_entry2.grid(row=5, column=2, columnspan=2)
+
+        self.impurete_cat1 = customtkinter.CTkLabel(
+            master=self, width=320, anchor='w', text="Impuretés de 1ère catégories (%)", font=("Lato", 18, "bold"), text_color="#2cc985")
+        self.impurete_cat1.grid(row=6, column=0)
+
+        self.matiere_inr = customtkinter.CTkLabel(
+            master=self, width=180, anchor='w', text="Matière inerte (%)", font=("Lato", 14, "bold"))
+        self.matiere_inr.grid(row=8, column=0)
+        self.matiere_inr_entry1 = customtkinter.CTkEntry(
+            self, placeholder_text="", state='disabled')
+        self.matiere_inr_entry1.grid(row=8, column=1)
+        self.matiere_inr_entry2 = customtkinter.CTkEntry(
+            self, placeholder_text="", width=200, state='disabled')
+        self.matiere_inr_entry2.grid(
+            row=8, column=2, columnspan=2)
+        self.matiere_inr_entry3 = customtkinter.CTkEntry(
+            self, placeholder_text="", state='disabled')
+        self.matiere_inr_entry3.grid(row=8, column=4)
+
+        self.debris_v = customtkinter.CTkLabel(
+            master=self, width=180, anchor='w', text="Débris végétaux (%)", font=("Lato", 14, "bold"))
+        self.debris_v.grid(row=7, column=0)
+        self.debris_v_entry1 = customtkinter.CTkEntry(
+            self, placeholder_text="", state='disabled')
+        self.debris_v_entry1.grid(row=7, column=1)
+        self.debris_v_entry2 = customtkinter.CTkEntry(
+            self, placeholder_text="", width=200, state='disabled')
+        self.debris_v_entry2.grid(
+            row=7, column=2, columnspan=2)
+        self.debris_v_entry3 = customtkinter.CTkEntry(
+            self, placeholder_text="", state='disabled')
+        self.debris_v_entry3.grid(row=7, column=4)
+
+        self.grains_sv = customtkinter.CTkLabel(
+            master=self, width=180, anchor='w', text="Grains sans valeur (%)", font=("Lato", 14, "bold"))
+        self.grains_sv.grid(row=9, column=0)
+        self.grains_sv_entry1 = customtkinter.CTkEntry(
+            self, placeholder_text="", state='disabled')
+        self.grains_sv_entry1.grid(row=9, column=1)
+        self.grains_sv_entry2 = customtkinter.CTkEntry(
+            self, placeholder_text="", width=200, state='disabled')
+        self.grains_sv_entry2.grid(
+            row=9, column=2, columnspan=2)
+        self.grains_sv_entry3 = customtkinter.CTkEntry(
+            self, placeholder_text="", state='disabled')
+        self.grains_sv_entry3.grid(row=9, column=4)
+
+        self.grains_car = customtkinter.CTkLabel(
+            master=self, width=180, anchor='w', text="Grains cariés (%)", font=("Lato", 14, "bold"))
+        self.grains_car.grid(row=10, column=0)
+        self.grains_car_entry1 = customtkinter.CTkEntry(
+            self, placeholder_text="", state='disabled')
+        self.grains_car_entry1.grid(row=10, column=1)
+        self.grains_car_entry2 = customtkinter.CTkEntry(
+            self, placeholder_text="", width=200, state='disabled')
+        self.grains_car_entry2.grid(
+            row=10, column=2, columnspan=2)
+        self.grains_car_entry3 = customtkinter.CTkEntry(
+            self, placeholder_text="", state='disabled')
+        self.grains_car_entry3.grid(row=10, column=4)
+
+        self.total1 = customtkinter.CTkLabel(
+            master=self, width=180, anchor='w', text="Total (%)", font=("Lato", 15, "bold"), text_color="#2cc985")
+        self.total1.grid(row=11, column=0)
+        self.total1_entry1 = customtkinter.CTkEntry(
+            self, placeholder_text="", state='disabled')
+        self.total1_entry1.grid(row=11, column=1)
+        self.total1_entry2 = customtkinter.CTkEntry(
+            self, placeholder_text="", width=200, state='disabled')
+        self.total1_entry2.grid(
+            row=11, column=2, columnspan=2)
+        self.total1_entry3 = customtkinter.CTkEntry(
+            self, placeholder_text="", state='disabled')
+        self.total1_entry3.grid(row=11, column=4)
+
+        self.grains_md = customtkinter.CTkLabel(
+            master=self, width=320, anchor='w', text="Grains mitadinès (%)", font=("Lato", 18, "bold"), text_color="#2cc985")
+        self.grains_md.grid(row=12, column=0)
+
+        self.indice_not = customtkinter.CTkLabel(
+            master=self, width=180, anchor='w', text="Indice notin (mitadinès)", font=("Lato", 14, "bold"))
+        self.indice_not.grid(row=13, column=0)
+        self.indice_not_entry1 = customtkinter.CTkEntry(
+            self, placeholder_text="", state='disabled')
+        self.indice_not_entry1.grid(row=13, column=1)
+        self.indice_not_entry2 = customtkinter.CTkEntry(
+            self, placeholder_text="", width=200, state='disabled')
+        self.indice_not_entry2.grid(
+            row=13, column=2, columnspan=2)
+        self.indice_not_entry3 = customtkinter.CTkEntry(
+            self, placeholder_text="", state='disabled')
+        self.indice_not_entry3.grid(row=13, column=4)
+
+        self.pres_ble = customtkinter.CTkLabel(
+            master=self, width=180, anchor='w', text="Blé tendre dans Blé dur", font=("Lato", 14, "bold"))
+        self.pres_ble.grid(row=14, column=0)
+        self.pres_ble_entry1 = customtkinter.CTkEntry(
+            self, placeholder_text="", state='disabled')
+        self.pres_ble_entry1.grid(row=14, column=1)
+        self.pres_ble_entry2 = customtkinter.CTkEntry(
+            self, placeholder_text="", width=200, state='disabled')
+        self.pres_ble_entry2.grid(
+            row=14, column=2, columnspan=2)
+        self.pres_ble_entry3 = customtkinter.CTkEntry(
+            self, placeholder_text="", state='disabled')
+        self.pres_ble_entry3.grid(row=14, column=4)
+
+        self.total2 = customtkinter.CTkLabel(
+            master=self, width=180, anchor='w', text="Total (%)", font=("Lato", 15, "bold"), text_color="#2cc985")
+        self.total2.grid(row=15, column=0)
+        self.total2_entry1 = customtkinter.CTkEntry(
+            self, placeholder_text="", state='disabled')
+        self.total2_entry1.grid(row=15, column=1)
+        self.total2_entry2 = customtkinter.CTkEntry(
+            self, placeholder_text="", width=200, state='disabled')
+        self.total2_entry2.grid(
+            row=15, column=2, columnspan=2)
+        self.total2_entry3 = customtkinter.CTkEntry(
+            self, placeholder_text="", state='disabled')
+        self.total2_entry3.grid(row=15, column=4)
+
+        self.bull = customtkinter.CTkLabel(
+            master=self, width=320, text="BULLETIN D'AGREAGE MOULIN", font=("Lato", 22, "bold"), text_color="#2cc985")
+        self.bull.grid(row=0, column=5, rowspan=2, columnspan=5)
+
+        self.impurete_cat2 = customtkinter.CTkLabel(
+            master=self, width=320, anchor='w', text="Impuretés de 2ème catégories (%)", font=("Lato", 18, "bold"), text_color="#2cc985")
+        self.impurete_cat2.grid(row=2, column=5)
+
+        self.grains_ca = customtkinter.CTkLabel(
+            master=self, width=180, anchor='w', text="Grains cassés (%)", font=("Lato", 14, "bold"))
+        self.grains_ca.grid(row=3, column=5)
+        self.grains_ca_entry1 = customtkinter.CTkEntry(
+            self, placeholder_text="", state='disabled')
+        self.grains_ca_entry1.grid(row=3, column=6)
+        self.grains_ca_entry2 = customtkinter.CTkEntry(
+            self, placeholder_text="", width=200, state='disabled')
+        self.grains_ca_entry2.grid(
+            row=3, column=7, columnspan=2)
+        self.grains_ca_entry3 = customtkinter.CTkEntry(
+            self, placeholder_text="", state='disabled')
+        self.grains_ca_entry3.grid(row=3, column=9)
+
+        self.grains_m = customtkinter.CTkLabel(
+            master=self, width=180, anchor='w', text="Grains maigres (%)", font=("Lato", 14, "bold"))
+        self.grains_m.grid(row=4, column=5)
+        self.grains_m_entry1 = customtkinter.CTkEntry(
+            self, placeholder_text="", state='disabled')
+        self.grains_m_entry1.grid(row=4, column=6)
+        self.grains_m_entry2 = customtkinter.CTkEntry(
+            self, placeholder_text="", width=200, state='disabled')
+        self.grains_m_entry2.grid(
+            row=4, column=7, columnspan=2)
+        self.grains_m_entry3 = customtkinter.CTkEntry(
+            self, placeholder_text="", state='disabled')
+        self.grains_m_entry3.grid(row=4, column=9)
+
+        self.grains_ech = customtkinter.CTkLabel(
+            master=self, width=180, anchor='w', text="Grains échaudés (%)", font=("Lato", 14, "bold"))
+        self.grains_ech.grid(row=5, column=5)
+        self.grains_ech_entry1 = customtkinter.CTkEntry(
+            self, placeholder_text="", state='disabled')
+        self.grains_ech_entry1.grid(row=5, column=6)
+        self.grains_ech_entry2 = customtkinter.CTkEntry(
+            self, placeholder_text="", width=200, state='disabled')
+        self.grains_ech_entry2.grid(
+            row=5, column=7, columnspan=2)
+        self.grains_ech_entry3 = customtkinter.CTkEntry(
+            self, placeholder_text="", state='disabled')
+        self.grains_ech_entry3.grid(row=5, column=9)
+
+        self.grains_etr = customtkinter.CTkLabel(
+            master=self, width=180, anchor='w', text="Grains etranders utilisable pour le bétail (%)", font=("Lato", 14, "bold"))
+        self.grains_etr.grid(row=6, column=5)
+        self.grains_etr_entry1 = customtkinter.CTkEntry(
+            self, placeholder_text="", state='disabled')
+        self.grains_etr_entry1.grid(row=6, column=6)
+        self.grains_etr_entry2 = customtkinter.CTkEntry(
+            self, placeholder_text="", width=200, state='disabled')
+        self.grains_etr_entry2.grid(
+            row=6, column=7, columnspan=2)
+        self.grains_etr_entry3 = customtkinter.CTkEntry(
+            self, placeholder_text="", state='disabled')
+        self.grains_etr_entry3.grid(row=6, column=9)
+
+        self.grains_ble = customtkinter.CTkLabel(
+            master=self, width=180, anchor='w', text="Grains de blé dur roux (%)", font=("Lato", 14, "bold"))
+        self.grains_ble.grid(row=7, column=5)
+        self.grains_ble_entry1 = customtkinter.CTkEntry(
+            self, placeholder_text="", state='disabled')
+        self.grains_ble_entry1.grid(row=7, column=6)
+        self.grains_ble_entry2 = customtkinter.CTkEntry(
+            self, placeholder_text="", width=200, state='disabled')
+        self.grains_ble_entry2.grid(
+            row=7, column=7, columnspan=2)
+        self.grains_ble_entry3 = customtkinter.CTkEntry(
+            self, placeholder_text="", state='disabled')
+        self.grains_ble_entry3.grid(row=7, column=9)
+
+        self.grains_mou = customtkinter.CTkLabel(
+            master=self, width=180, anchor='w', text="Grains mouchetes", font=("Lato", 14, "bold"))
+        self.grains_mou.grid(row=8, column=5)
+        self.grains_mou_entry1 = customtkinter.CTkEntry(
+            self, placeholder_text="", state='disabled')
+        self.grains_mou_entry1.grid(row=8, column=6)
+        self.grains_mou_entry2 = customtkinter.CTkEntry(
+            self, placeholder_text="", width=200, state='disabled')
+        self.grains_mou_entry2.grid(
+            row=8, column=7, columnspan=2)
+        self.grains_mou_entry3 = customtkinter.CTkEntry(
+            self, placeholder_text="", state='disabled')
+        self.grains_mou_entry3.grid(row=8, column=9)
+
+        self.grains_pu = customtkinter.CTkLabel(
+            master=self, width=180, anchor='w', text="Grains punaises (%)", font=("Lato", 14, "bold"))
+        self.grains_pu.grid(row=10, column=5)
+        self.grains_pu_entry1 = customtkinter.CTkEntry(
+            self, placeholder_text="", state='disabled')
+        self.grains_pu_entry1.grid(row=10, column=6)
+        self.grains_pu_entry2 = customtkinter.CTkEntry(
+            self, placeholder_text="", width=200, state='disabled')
+        self.grains_pu_entry2.grid(
+            row=10, column=7, columnspan=2)
+        self.grains_pu_entry3 = customtkinter.CTkEntry(
+            self, placeholder_text="", state='disabled')
+        self.grains_pu_entry3.grid(row=10, column=9)
+
+        self.grains_pq = customtkinter.CTkLabel(
+            master=self, width=180, anchor='w', text="Grains piques (%)", font=("Lato", 14, "bold"))
+        self.grains_pq.grid(row=11, column=5)
+        self.grains_pq_entry1 = customtkinter.CTkEntry(
+            self, placeholder_text="", state='disabled')
+        self.grains_pq_entry1.grid(row=11, column=6)
+        self.grains_pq_entry2 = customtkinter.CTkEntry(
+            self, placeholder_text="", width=200, state='disabled')
+        self.grains_pq_entry2.grid(
+            row=11, column=7, columnspan=2)
+        self.grains_pq_entry3 = customtkinter.CTkEntry(
+            self, placeholder_text="", state='disabled')
+        self.grains_pq_entry3.grid(row=11, column=9)
+
+        self.grains_bq = customtkinter.CTkLabel(
+            master=self, width=180, anchor='w', text="Grains boutés (%)", font=("Lato", 14, "bold"))
+        self.grains_bq.grid(row=9, column=5)
+        self.grains_bq_entry1 = customtkinter.CTkEntry(
+            self, placeholder_text="", state='disabled')
+        self.grains_bq_entry1.grid(row=9, column=6)
+        self.grains_bq_entry2 = customtkinter.CTkEntry(
+            self, placeholder_text="", width=200, state='disabled')
+        self.grains_bq_entry2.grid(
+            row=9, column=7, columnspan=2)
+        self.grains_bq_entry3 = customtkinter.CTkEntry(
+            self, placeholder_text="", state='disabled')
+        self.grains_bq_entry3.grid(row=9, column=9)
+
+        self.total3 = customtkinter.CTkLabel(
+            master=self, width=180, anchor='w', text="Total (%)", font=("Lato", 15, "bold"), text_color="#2cc985")
+        self.total3.grid(row=12, column=5)
+        self.total3_entry1 = customtkinter.CTkEntry(
+            self, placeholder_text="", state='disabled')
+        self.total3_entry1.grid(row=12, column=6)
+        self.total3_entry2 = customtkinter.CTkEntry(
+            self, placeholder_text="", width=200, state='disabled')
+        self.total3_entry2.grid(
+            row=12, column=7, columnspan=2)
+        self.total3_entry3 = customtkinter.CTkEntry(
+            self, placeholder_text="", state='disabled')
+        self.total3_entry3.grid(row=12, column=9)
+
+        self.decision2 = customtkinter.CTkLabel(
+            master=self, anchor="w", fg_color="transparent", width=180, height=10, font=("Lato", 14, "bold"), text="Décision 2"
+        )
+        self.decision2.grid(row=13, column=5)
+
+        self.decision2_entry2 = customtkinter.CTkEntry(
+            self, placeholder_text="", width=200)
+        self.decision2_entry2.grid(row=13, column=7, columnspan=2)
+
+        self.total4 = customtkinter.CTkLabel(
+            master=self, width=180, anchor='e', text="Total (DA)", font=("Lato", 15, "bold"), text_color="#2cc985"
+        )
+        self.total4.grid(row=14, column=8)
+        self.total4_entry3 = customtkinter.CTkEntry(
+            self, placeholder_text="", state='disabled')
+        self.total4_entry3.grid(row=14, column=9)
+
+        self.qte = customtkinter.CTkLabel(
+            master=self, width=180, anchor='w', text="Quantité Q", font=("Lato", 14, "bold"))
+        self.qte.grid(row=15, column=5)
+        self.qte_entry = customtkinter.CTkEntry(
+            self, placeholder_text="")
+        self.qte_entry.grid(row=15, column=6)
+        self.prix_f = customtkinter.CTkLabel(
+            master=self, width=180, text="Le Prix finale (DA)", font=("Lato", 14, "bold"))
+        self.prix_f.grid(row=15, column=7, columnspan=2)
+        self.prix_f_entry = customtkinter.CTkEntry(
+            self, placeholder_text="", state='disabled')
+        self.prix_f_entry.grid(
+            row=15, column=9)
+
+        self.prix_v = customtkinter.CTkLabel(
+            master=self, width=180, anchor='w', text="Le prix de vente", font=("Lato", 14, "bold"))
+        self.prix_v.grid(row=16, column=5)
+        self.prix_v_entry = customtkinter.CTkEntry(
+            self, placeholder_text="")
+        self.prix_v_entry.grid(row=16, column=6)
+        self.Total5 = customtkinter.CTkLabel(
+            master=self, width=180, text="Total (bonf/réfc)/DA", font=("Lato", 14, "bold"))
+        self.Total5.grid(row=16, column=7, columnspan=2)
+        self.Total5_entry = customtkinter.CTkEntry(
+            self, placeholder_text="", state='disabled')
+        self.Total5_entry.grid(
+            row=16, column=9)
+
+        def convert_type(values):
+            try:
+                return [float(v) for v in values]
+            except:
+                messagebox.showwarning(
+                    'Erreur', 'Assurez-vous de remplir les cases avec des chiffres')
+
+        def create_pdf():
+            cols = ['', 'Valeur', 'Observation',
+                    'Bonification/Réfaction (DA)/q']
+            if self.decision1_entry2.get() == 'Refuse':
+                rows = [
+                    ["Poid spécifique", self.poids_spec_entry1.get(
+                    ), self.poids_spec_entry2.get(), self.poids_spec_entry3.get()],
+                    ["Humidité %", self.humid_entry1.get(
+                    ), self.humid_entry2.get(), self.humid_entry3.get()],
+                    ["Grains nuisibles %", self.grains_nu_entry1.get(),
+                     self.grains_nu_entry2.get(), self.grains_nu_entry3.get()],
+                    ["Ergot %", self.ergot_entry1.get(), self.ergot_entry2.get(),
+                     self.ergot_entry3.get()],
+                    ["Décision 1", self.decision1_entry2.get(), "", ""],
+                ]
+
+            else:
+                rows = [
+                    ["Poid spécifique", self.poids_spec_entry1.get(
+                    ), self.poids_spec_entry2.get(), self.poids_spec_entry3.get()],
+                    ["Humidité %", self.humid_entry1.get(
+                    ), self.humid_entry2.get(), ""],
+                    ["Grains nuisibles %", self.grains_nu_entry1.get(),
+                     self.grains_nu_entry2.get(), self.grains_nu_entry3.get()],
+                    ["Ergot %", self.ergot_entry1.get(), self.ergot_entry2.get(), ""],
+                    ["Décision 1", self.decision1_entry2.get(), "", ""],
+                    ["Débris végétaux", self.debris_v_entry1.get(
+                    ), self.debris_v_entry2.get(), self.debris_v_entry3.get()],
+                    ["Matière inerte", self.matiere_inr_entry1.get(
+                    ), self.matiere_inr_entry2.get(), self.matiere_inr_entry3.get()],
+                    ["Grains sans valeur", self.grains_sv_entry1.get(
+                    ), self.grains_sv_entry2.get(), self.grains_sv_entry3.get()],
+                    ["Grains cariés", self.grains_car_entry1.get(
+                    ), self.grains_car_entry2.get(), self.grains_car_entry3.get()],
+                    ["Total ", self.total1_entry1.get(), self.total1_entry2.get(),
+                     self.total1_entry3.get()],
+                    ["Indice notin", self.indice_not_entry1.get(
+                    ), self.indice_not_entry2.get(), self.indice_not_entry3.get()],
+                    ["Blé tendre dans Blé dur", self.pres_ble_entry1.get(
+                    ), self.pres_ble_entry2.get(), self.pres_ble_entry3.get()],
+                    ["Total 2", self.total2_entry1.get(), self.total2_entry2.get(),
+                     self.total2_entry3.get()],
+                    ["Grains cassés", self.grains_ca_entry1.get(
+                    ), self.grains_ca_entry2.get(), self.grains_ca_entry3.get()],
+                    ["Grains maigres", self.grains_m_entry1.get(
+                    ), self.grains_m_entry2.get(), self.grains_m_entry3.get()],
+                    ["Grains échaudés", self.grains_ech_entry1.get(
+                    ), self.grains_ech_entry2.get(), self.grains_ech_entry3.get()],
+                    ["Grains etranders utilisable pour le bétail", self.grains_etr_entry1.get(
+                    ), self.grains_etr_entry2.get(), self.grains_etr_entry3.get()],
+                    ["Grains de blé dur roux", self.grains_ble_entry1.get(
+                    ), self.grains_ble_entry2.get(), self.grains_ble_entry3.get()],
+                    ["Grains mouchètes", self.grains_mou_entry1.get(
+                    ), self.grains_mou_entry2.get(), self.grains_mou_entry3.get()],
+                    ["Grains boutés", self.grains_bq_entry1.get(
+                    ), self.grains_bq_entry2.get(), self.grains_bq_entry3.get()],
+                    ["Grains punaises", self.grains_pu_entry1.get(
+                    ), self.grains_pu_entry2.get(), self.grains_pu_entry3.get()],
+                    ["Grains piques", self.grains_pq_entry1.get(
+                    ), self.grains_pq_entry2.get(), self.grains_pq_entry3.get()],
+                    ["Total 3", self.total3_entry1.get(), self.total3_entry2.get(),
+                     self.total3_entry3.get()],
+                    ["Décision 2", self.decision2_entry2.get(), "", ""],
+                    ["Quantité", self.qte_entry.get(), "", ""],
+                    ["Le prix finale (DA)", self.prix_f_entry.get(), "", ""],
+                    ["Le prix de vente", self.prix_v_entry.get(), "", ""],
+                    ["Total", self.total4_entry3.get(), "", ""],
+                    ["Total (bon/ref) DA", self.Total5_entry.get(), "", ""],
+                ]
+
+            df = pd.DataFrame(rows, columns=cols)
+            pdfPath = filedialog.asksaveasfilename(
+                defaultextension="*.pdf", filetypes=(("PDF Files", "*.pdf"),))
+            if pdfPath:
+                fig, ax = plt.subplots(figsize=(14, 8))
+                # ax.axis('tight')
+                ax.axis('off')
+                the_table = ax.table(
+                    cellText=df.values, colLabels=df.columns, loc='center')
+
+                pp = PdfPages(pdfPath)
+                pp.savefig(fig)
+                pp.close()
+
+        def get_decision1():
+            inputs = [self.poids_spec_entry1.get(), self.humid_entry1.get(
+            ), self.grains_nu_entry1.get(), self.ergot_entry1.get()]
+            p_spec, humid, grains_nu, ergot = convert_type(inputs)
+            decision = moulin.decision(p_spec, humid, grains_nu, ergot)
+
+            bon_p_spec, ob_p_spec = moulin.poi_specifique(p_spec)
+            ob_humid = moulin.hemuditi(humid)
+            bon_grains_nui, ob_grains_nui = moulin.grain_nuisibles(grains_nu)
+            print(bon_grains_nui, ob_grains_nui)
+            ob_ergot = moulin.ergo_t(ergot)
+
+            texts = [decision, bon_p_spec, ob_p_spec, ob_humid,
+                     bon_grains_nui, ob_grains_nui, ob_ergot]
+            nodes = [self.decision1_entry2, self.poids_spec_entry3, self.poids_spec_entry2,
+                     self.humid_entry2, self.grains_nu_entry3, self.grains_nu_entry2, self.ergot_entry2]
+
+            set_texts(nodes, texts)
+
+            # TODO add condition to continue
+            nodes = [self.debris_v_entry1, self.matiere_inr_entry1, self.grains_sv_entry1, self.grains_ca_entry1, self.indice_not_entry1, self.pres_ble_entry1, self.grains_car_entry1,
+                     self.grains_m_entry1, self.grains_ech_entry1, self.grains_etr_entry1, self.grains_ble_entry1, self.grains_bq_entry1, self.grains_pu_entry1, self.grains_pq_entry1,self.grains_mou_entry1]
+            if decision == 'accept':
+                for node in nodes:
+                    node.configure(state='normal')
+            else:
+                create_pdf()
+
+        self.decision1_btn = customtkinter.CTkButton(
+            master=self, text="Vérifier", command=get_decision1, height=38)
+        self.decision1_btn.grid(row=5, column=1)
+
+        def get_decision2():
+            inputs = [self.debris_v_entry1.get(), self.matiere_inr_entry1.get(), self.grains_sv_entry1.get(), self.grains_car_entry1.get(), self.indice_not_entry1.get(), self.pres_ble_entry1.get(), self.grains_ca_entry1.get(
+            ), self.grains_m_entry1.get(), self.grains_ech_entry1.get(), self.grains_etr_entry1.get(), self.grains_ble_entry1.get(), self.grains_bq_entry1.get(), self.grains_pu_entry1.get(), self.grains_pq_entry1.get(), self.grains_mou_entry1.get()]
+            debris_v, matiere_inr, grains_sv, grains_car, indice_not, pres_ble, grains_ca, grains_m, grains_ech, grains_etr, grains_ble, grains_bq, grains_pu, grains_pq, grains_mou = convert_type(
+                inputs)
+            total1 = moulin.calcule_totale_1er_category(
+                debris_v, matiere_inr, grains_sv, grains_car)
+            bon_total1, ob_total1 = moulin.totale_1er_category(total1)
+
+            bon_grains_cas, ob_grains_cas = moulin.grains_casse(grains_ca)
+            bon_boute, ob_boute = moulin.grain_boute(grains_bq)
+
+            total2 = moulin.calcule_totale_2eme_category(
+                grains_m, grains_etr, grains_ech, grains_ble, grains_mou, grains_ca, grains_bq, grains_pu, grains_pq)
+            bon_total2, ob_total2 = moulin.totale_2eme_category(
+                total2, bon_boute, bon_grains_cas)
+
+            bon_pres_ble, ob_pres_ble = moulin.ble_tendre_(pres_ble)
+
+            total_metadine = moulin.calcul_totale_metadine(
+                indice_not, pres_ble)
+            bon_total_metadine, ob_total_metadine = moulin.totale_metadine(
+                total_metadine)
+
+            decision2 = moulin.decision_prix_debbattre(pres_ble)
+
+            texts = [total1, bon_total1, ob_total1, bon_grains_cas, ob_grains_cas, bon_boute, ob_boute, total2,
+                     bon_total2, ob_total2, bon_pres_ble, ob_pres_ble, total_metadine, bon_total_metadine, ob_total_metadine, decision2]
+            nodes = [self.total1_entry1, self.total1_entry3, self.total1_entry2, self.grains_ca_entry3, self.grains_ca_entry2,
+                     self.grains_bq_entry3, self.grains_bq_entry2, self.total3_entry1, self.total3_entry3, self.total3_entry2, self.pres_ble_entry3, self.pres_ble_entry2, self.total2_entry1, self.total2_entry3, self.total2_entry2, self.decision2_entry2]
+
+            set_texts(nodes, texts)
+
+            # TODO add condition to continue
+
+        self.decision2_btn = customtkinter.CTkButton(
+            master=self, text="Vérifier", command=get_decision2, height=38)
+        self.decision2_btn.grid(row=13, column=6)
+
+        def sanity_check():
+            try:
+                ps = float(self.poids_spec_entry1.get())
+                tn = float(self.teneur_eau_entry1.get())
+                mi = float(self.matiere_inr_entry1.get())
+                dv = float(self.debris_v_entry1.get())
+                gn = float(self.grains_nui_entry1.get())
+                er = float(self.ergot_entry1.get())
+                gs = float(self.grains_sv_entry1.get())
+                gc = float(self.grains_ca_entry1.get())
+                gm = float(self.grains_m_entry1.get())
+                gmo = float(self.grains_mo_entry1.get())
+                gp = float(self.grains_pu_entry1.get())
+                gpi = float(self.grains_pq_entry1.get())
+                gb = float(self.grains_bq_entry1.get())
+                pb = float(self.pres_ble_entry1.get())
+                ac = float(self.autre_cer_entry1.get())
+                gmd = float(self.grains_md1_entry1.get())
+                qte = float(self.qte_entry.get())
+                pv = float(self.prix_v_entry.get())
+                return ps, tn, mi, dv, gn, er, gs, gc, gm, gmo, gp, gpi, gb, pb, ac, gmd
+            except:
+                # raise ValueError("Assurez-vous d'entrer des chiffres")
+                messagebox.showwarning(
+                    'Erreur', 'Assurez-vous de remplir les cases avec des numéros')
+
+        def reset():
+            entries = [self.children[k]
+                       for k in self.children if 'ctkentry' in k]
+            for node in entries:
+                if node.cget('state') == 'disabled':
+                    node.configure(state='normal')
+                    node.delete(0, tkinter.END)
+                    node.configure(state='disabled')
+                else:
+                    node.delete(0, tkinter.END)
+
+        def scan():
+            c = self.poids_spec_entry2.cget('state')
+            print(f'c {c}')
+
+        def set_texts(nodes, values):
+            for node, value in zip(nodes, values):
+                if node.cget('state') == 'disabled':
+                    node.configure(state='normal')
+                    node.delete(0, tkinter.END)
+                    node.insert(0, value)
+                    node.configure(state='disabled')
+                else:
+                    node.delete(0, tkinter.END)
+                    node.insert(0, value)
+
+        # def get_observations():
+        #     ps, tn, mi, dv, gn, er, gs, gc, gm, gmo, gp, gpi, gb, pb, ac, gmd = sanity_check()
+
+        #     print(ps, tn, mi, dv, gn, er, gs, gc,
+        #           gm, gmo, gp, gpi, gb, pb, ac, gmd)
+
+        #     res = observation(p_specifique=ps, teneur_en_eau=tn, matiers_inertes=mi, debris_vegetaux=dv, nuisible=gn, ergot=er, sans_valeur=gs,
+        #                       casse=gc, maigres=gm, mouchetes=gmo, punaises=gp, pique=gpi, boute=gb, autres_cereales=ac, ble_tendre=pb, g_mitadines=gmd)
+        #     print(f'res {res}')
+        #     texts = list(res.values())
+        #     nodes = [self.poids_spec_entry2, self.teneur_eau_entry2, self.grains_nui_entry2, self.ergot_entry2, self.total1_entry2,
+        #              self.grains_ca_entry2, self.grains_bq_entry2, self.total3_entry2, self.pres_ble_entry2, self.total2_entry2]
+        #     set_texts(nodes, texts)
+
+        #     res2 = bonification(poid_specifique=ps, matiers_inertes=mi, debris_vegetaux=dv, grains_nuisible=gn, ergot=er, grains_sons_valours=gs, grains_casse=gc,
+        #                         grains_maigres=gm, grains_mouchetes=gmo, grain_boute=gb, grain_punaise=gp, grains_pique=gpi, ble_tendre_dans_ble_dur=pb, grains_mitadines=gmd)
+        #     print(f'res2 {res2}')
+        #     texts = list(res2.values())
+        #     nodes = [self.total1_entry1, self.total3_entry1, self.total2_entry1, self.total4_entry3, self.poids_spec_entry3,
+        #              self.total1_entry3, self.grains_ca_entry3, self.total3_entry3, self.pres_ble_entry3, self.total2_entry3, self.grains_bq_entry3]
+        #     set_texts(nodes, texts)
+        #     qte = float(self.qte_entry.get())
+        #     pv = float(self.prix_v_entry.get())
+        #     texts = [final_price(qte, pv), total_bonification(
+        #         qte, float(self.total4_entry3.get()))]
+        #     nodes = [self.prix_f_entry, self.Total5_entry]
+        #     set_texts(nodes, texts)
+        def get_results():
+            inputs = [self.qte_entry.get(), self.prix_v_entry.get(), self.grains_nu_entry1.get(), self.poids_spec_entry3.get(), self.total1_entry3.get(
+            ), self.grains_ca_entry3.get(), self.total3_entry3.get(), self.grains_bq_entry3.get(), self.pres_ble_entry3.get(), self.total2_entry3.get()]
+            qte, prix_v, grains_nu, bon_poids_spec, bon_total1_cat, bon_grains_ca, bon_total2_cat, bon_grains_bq, bon_pres_ble, bon_total_meta = convert_type(
+                inputs)
+            total4 = moulin.total_(bon_poids_spec, grains_nu, bon_total1_cat, bon_grains_ca,
+                                   bon_total2_cat, bon_grains_bq, bon_pres_ble, bon_total_meta)
+            total_bon = moulin.total_bonification(qte, total4)
+            prix_f = moulin.prx_finale(qte, prix_v, total_bon)
+
+            texts = [prix_f, total_bon, total4]
+            nodes = [self.prix_f_entry, self.Total5_entry, self.total4_entry3]
+
+            set_texts(nodes, texts)
+
+        self.button_res = customtkinter.CTkButton(
+            master=self, text="Résultats", command=get_results, height=38)
+        self.button_res.grid(row=16, column=1)
+        self.button_impr = customtkinter.CTkButton(
+            master=self, text="Imprimer", command=create_pdf, height=38)
+        self.button_impr.grid(row=16, column=2)
+        self.button_reset = customtkinter.CTkButton(
+            master=self, text="Reset", command=reset, height=38)
+        self.button_reset.grid(row=16, column=3)
+        self.button_scan = customtkinter.CTkButton(
+            master=self, text="Scan", command=scan, height=38)
+        self.button_scan.grid(row=16, column=4)
