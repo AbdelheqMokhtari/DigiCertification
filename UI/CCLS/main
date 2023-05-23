@@ -1,0 +1,59 @@
+import customtkinter as ctk
+from interfaces import Login, Interface1, Welcome, Interface2, Signup
+import os
+ctk.set_appearance_mode("Dark")
+
+# Selecting color theme - blue, green, dark-blue
+ctk.set_default_color_theme("green")
+
+
+class tkinterApp(ctk.CTk):
+
+    # __init__ function for class tkinterApp
+    def __init__(self):
+
+        super().__init__()
+
+        self.title("Seed TQ")
+        self.geometry(f"{1500}x{800}")
+        # self.attributes('-fullscreen', True)
+
+        # self.grid_columnconfigure(tuple(range(10)), weight=1)
+        # self.grid_rowconfigure(tuple(range(17)), weight=1)
+
+        # initializing frames to an empty array
+        self.frames = {}
+
+        # iterating through a tuple consisting
+        # of the different page layouts
+        for F in (Interface1, Login, Welcome, Interface2, Signup):
+
+            frame = F(self, self)
+
+            # initializing frame of that object from
+            # startpage, page1, page2 respectively with
+            # for loop
+            self.frames[F] = frame
+
+            # frame.grid(row=0, column=0, sticky="")
+            # frame.pack(fill='both', expand=True)
+
+        self.show_frame(Login)
+
+    # to display the current frame passed as
+    # parameter
+    def show_frame(self, cont, curr=None):
+        if curr:
+            current_frame = self.frames[curr]
+            current_frame.pack_forget()
+        frame = self.frames[cont]
+        frame.pack(fill='both', expand=True)
+        frame.tkraise()
+
+# first window frame startpage
+
+
+# Driver Code
+if __name__ == '__main__':
+    app = tkinterApp()
+    app.mainloop()
