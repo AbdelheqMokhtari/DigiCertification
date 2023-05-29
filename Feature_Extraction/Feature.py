@@ -48,10 +48,11 @@ df = pd.DataFrame(columns=columns)
 
 # Define the path to the directory containing all images
 
-path_to_images = 'Data'
+path_to_images = 'Crop images'
 
 # Define the list of classes
-classes = ['soft wheat', 'Bousselam', 'metadine', 'mouchten', 'oued_el_bared']
+classes = ['Bousselam', 'Vitron', 'Oued el bared', 'Ble tendre', 'casee', "echaudes", "maigre", "melnge", "Metadine",
+           "Mouchten", 'piqee']
 
 
 for k, class_name in enumerate(classes):
@@ -182,7 +183,7 @@ for k, class_name in enumerate(classes):
 
         # HSV space Color
         print(
-            "-----------------------------------------------------------------------------------------------------------\n"
+            "--------------------------------------------------------------------------------------------------------\n"
             "HSV Color Feature Extraction :\n")
 
         hsv_img = cv.cvtColor(img, cv.COLOR_BGR2HSV)
@@ -742,4 +743,4 @@ for k, class_name in enumerate(classes):
         Features.append(k)
         df.loc[len(df)] = Features
 
-df.to_csv('Features Final.csv', index=False)
+df.to_csv('Features V1.csv', index=False)
