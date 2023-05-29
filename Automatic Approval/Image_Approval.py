@@ -9,10 +9,10 @@ model = load_model('Model/ResNet50New20.h5')
 
 
 # Load and preprocess the new image
-img = load_img('Crop images/Triticale.jpeg', target_size=(224, 224))
-img = img_to_array(img)
-normalized_img = img / 255.0
-img = np.expand_dims(normalized_img, axis=0)
+img_keras = load_img('Crop images/Triticale.jpeg', target_size=(224, 224))
+img_keras = img_to_array(img_keras)
+normalized_img = img_keras / 255.0
+img_keras = np.expand_dims(normalized_img, axis=0)
 # img = preprocess_input(img)
 
 # load and preprocess the new image using openCV

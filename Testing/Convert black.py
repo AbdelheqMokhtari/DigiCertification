@@ -2,32 +2,42 @@ import cv2
 import numpy as np
 
 # Load the image
-image = cv2.imread('your_image.jpg')
+image = cv2.imread('image/Bousselam004.jpg')
 
-# Convert the image to grayscale
-gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+# Define the gamma value
+gamma = 0.8
 
-# Apply a threshold to obtain a binary image
-_, threshold = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
+# Apply gamma correction
+gamma_img = np.power(image / 255.0, gamma)
+gamma_img = np.uint8(gamma_img * 255)
 
-# Find contours of the grains
-contours, _ = cv2.findContours(threshold, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+# Convert to grayscale
+gray = cv2.cvtColor(gamma_img, cv2.COLOR_BGR2GRAY)
+# Define the structuring element
+kernel = np.ones((21, 21), np.uint8)
 
-# Create a blank mask image
-mask = np.zeros_like(image)
+# Perform close operation
+img_close = cv2.morphologyEx(gray, cv2.MORPH_CLOSE, kernel)
 
-# Draw the contours on the mask image
+# Apply median blur
+img_blur = cv2.medianBlur(img_close, 15)  # Here, 15 is the kernel size
+
+# Apply Otsu's method to automatically determine the threshold value
+thresh_val, thresh_img = cv2.threshold(img_blur, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+
+# Find contours in the binary image
+contours, hierarchy = cv2.findContours(thresh_img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+# Create a blank mask of the same size as the image
+mask = np.zeros_like(image[:, :, 0])
+
+# Draw contours on the mask
 cv2.drawContours(mask, contours, -1, (255, 255, 255), thickness=cv2.FILLED)
 
-# Convert the mask image to grayscale
-mask_gray = cv2.cvtColor(mask, cv2.COLOR_BGR2GRAY)
+# Apply the mask to the image
+result = cv2.bitwise_and(image, image, mask=mask)
 
-# Threshold the mask image to obtain a binary mask
-_, binary_mask = cv2.threshold(mask_gray, 1, 255, cv2.THRESH_BINARY)
-
-# Apply the binary mask to the original image
-result = cv2.bitwise_and(image, image, mask=binary_mask)
-
+cv2.imwrite('image/result.jpg', result)
 # Display the resulting image
 cv2.imshow('Result', result)
 cv2.waitKey(0)
