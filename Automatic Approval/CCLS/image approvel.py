@@ -786,7 +786,7 @@ for img in crop_images:
     df.loc[len(df)] = Features
 
 # Load the saved model from file
-loaded_model = joblib.load('Model/svm_model.pkl')
+loaded_model = joblib.load('Model/svm_model_V1.pkl')
 
 # Use the loaded model to make predictions on the features
 y_pred = loaded_model.predict(df)

@@ -9,6 +9,7 @@ import joblib
 
 scaler = StandardScaler()
 data = pd.read_csv('Features/Features V1.csv')
+data = data.dropna()
 print(data.shape)
 X = data.drop('label', axis=1)  # X contains the features
 
@@ -35,5 +36,5 @@ f1 = f1_score(y_test, y_pred, average=None)
 print(f'f1 score {f1}\n')
 
 # Save the trained model to a file
-joblib.dump(model, 'svm_model.pkl')
+joblib.dump(model, 'Model/svm_model_V1.pkl')
 
