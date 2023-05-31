@@ -38,8 +38,8 @@ validation_data = validation_datagen.flow_from_directory(
 )
 
 # Build the ResNet50 model
-num_classes = 8
-num_epochs = 20
+num_classes = 5
+num_epochs = 50
 base_model = ResNet50(weights='imagenet', include_top=False, input_shape=(224, 224, 3))
 x = base_model.output
 x = GlobalAveragePooling2D()(x)
@@ -58,7 +58,7 @@ history = model.fit(train_data, epochs=num_epochs, validation_data=validation_da
 model.evaluate(test_data)
 
 # Save the model
-model.save('Model/ResNet50New20.h5')
+model.save('Model/ResNet50NoVarieties50.h5')
 
 # Create a graph of the training accuracy with respect to epoch values using a library like Matplotlib
 
@@ -77,7 +77,7 @@ ax.legend(loc='lower right')
 plt.show()
 
 # Save the plot as a PNG image
-fig.savefig('accuracy_vs_epoch20.png', dpi=300, bbox_inches='tight')
+# fig.savefig('accuracy_vs_epoch20.png', dpi=300, bbox_inches='tight')
 
 # plt.plot(train_accuracy, label='Training Accuracy')
 # plt.plot(test_accuracy, label='Test Accuracy')

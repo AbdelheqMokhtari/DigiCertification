@@ -47,13 +47,13 @@ def decision_prix_debbattre(ble_tendre ):
     elif ble_tendre < 2.5:
         observation_list.append("Classé comme Graines mitadinès ")
     elif ble_tendre > 5:
-        observation_list.append("Achat facultatif")
+        observation_list.append("prix a débattre")
 
     keys = [ "ble tendre"]
     my_dict = dict(zip(keys, observation_list))
 
-    if my_dict["ble tendre"] == "Achat facultatif":
-         dcs = "Achat facultatif"
+    if my_dict["ble tendre"] == "prix a débattre":
+         dcs = "prix a débattre"
 
     else: dcs = "refaction normale"
     return dcs
@@ -168,7 +168,7 @@ def poi_specifique(p_specifique):
     elif 85.501 <= p_specifique <= 85.75:
         bon_p_specifique = +3.35
     elif p_specifique > 85.75:
-        bon_p_specifique = 0
+        bon_p_specifique = +3.35
     else:
         bon_p_specifique = 0.00
     return bon_p_specifique,ob_p_specifique
@@ -186,12 +186,11 @@ def set_grain_nuisibles():
     g_nuisibles = float(input("Grains nuisibles  %:"))
     return g_nuisibles
 def grain_nuisibles(nuisibles):
-    global ob_g_nuisible
     if 0.25 >= nuisibles > 0.05:
         ob_g_nuisible ="refaction"
     elif nuisibles <= 0.05:
-        ob_g_nuisible ="Sans Bonification ni Réfaction"
-    elif nuisibles > 0.25:
+        ob_g_nuisible ="accepter"
+    else:
         ob_g_nuisible ="Refuse"
 
     if 0.051 <= nuisibles <= 0.1:
@@ -234,7 +233,7 @@ def calcule_totale_1er_category(debris_vegetaux ,matiers_ineretes ,sans_valeur,g
     return total1
 def totale_1er_category(total_premier_category):
     if total_premier_category <= 1:
-        ob_1er_category = "bonification "
+        ob_1er_category = "sans bonification ni réfaction"
     else:
         ob_1er_category = "réfaction"
     if 0.999 >= total_premier_category >= 0.75:
@@ -322,9 +321,9 @@ def set_grains_maigres():
 def set_grains_echaudes():
     g_echaudes = float(input("Grains échaudés  %:"))
     return g_echaudes
-def set_grains_etrangers():
-    g_etrangers = float(input("Grains etrangers utilisable pour le bétail  %:"))
-    return g_etrangers
+def set_grains_etranders():
+    g_etranders = float(input("Grains etranders utilisable pour le bétail  %:"))
+    return g_etranders
 def set_grains_roux():
     g_roux = float(input("Grains de blé dur roux  %:"))
     return g_roux
@@ -355,10 +354,10 @@ def set_grain_punaises():
 def set_grains_piques():
     g_piques = float(input("Grains piqués  %:"))
     return g_piques
-def calcule_totale_2eme_category(g_maigres ,g_etrangers , g_echaudes  , g_roux , g_mouchetes , g_casse , g_boute , g_punaises , g_piques):
-    total_dexieum_category = g_maigres +g_etrangers+  g_echaudes + g_roux + g_mouchetes + g_casse + g_boute + g_punaises + g_piques
+def calcule_totale_2eme_category(g_maigres , g_echaudes , g_etranders , g_roux , g_mouchetes , g_casse , g_boute , g_punaises , g_piques):
+    total_dexieum_category = g_maigres + g_echaudes + g_etranders + g_roux + g_mouchetes + g_casse + g_boute + g_punaises + g_piques
     return total_dexieum_category
-def totale_2eme_category(total_dexieum_category ,bon_boute,bon_casse):
+def totale_2eme_category(total_dexieum_category):
     if total_dexieum_category <= 10:
         ob_t_2eme_category ="sans bonification ni réfaction"
     else:
@@ -416,8 +415,7 @@ def totale_2eme_category(total_dexieum_category ,bon_boute,bon_casse):
         print(bon_dexieum_category)
     else:
         bon_dexieum_category = 0
-    bon_dexieum_category = bon_boute + bon_dexieum_category +bon_casse
-    return bon_dexieum_category, ob_t_2eme_category
+    return bon_dexieum_category , ob_t_2eme_category
 
     
 def set_indice_notin():
@@ -433,7 +431,7 @@ def ble_tendre_(ble_tendre):
     elif ble_tendre < 2.5:
         ob_ble_tendre ="Classé comme Graines mitadinès "
     elif ble_tendre > 5:
-        ob_ble_tendre ="Achat facultatif "
+        ob_ble_tendre ="Prix a dépattre "
     if 2.51 <= ble_tendre <= 2.75:
         bon_ble_tendre = -0.025
         print(bon_ble_tendre)
@@ -471,13 +469,9 @@ def ble_tendre_(ble_tendre):
     else:
         bon_ble_tendre = 0.00
     return bon_ble_tendre , ob_ble_tendre
-
 def calcul_totale_metadine(indice_notin , ble_tendre):
-    if ble_tendre < 2.5 :
-        total_metadines = indice_notin + ble_tendre
-    else: total_metadines = indice_notin
+    total_metadines = indice_notin + ble_tendre
     return total_metadines
-
 def totale_metadine(total_metadines):
     global ob_t_metadine
     if 12 >= total_metadines >= 11.1:
@@ -550,7 +544,7 @@ def totale_metadine(total_metadines):
         bon_metadines_category = -0.15
     else:
         bon_metadines_category = 0.00
-    return bon_metadines_category, ob_t_metadine
+    return bon_metadines_category , ob_t_metadine
 
 
 
@@ -564,18 +558,15 @@ def set_price():
     return price
 
 
+def final_price(quantity, sell_price):
+    prix_achat_definitif = quantity * sell_price
+    return prix_achat_definitif
 
-
-def prix_dbtr(dcs):
-    global prix
-    if dcs == "Achat facultatif":
-        prix = float(input("saisie prix d'un quintal achat facultatif"))
-    else: prix = float(input("Le prix de vente/q:"))
+def prix_dbtr(dcs,quantity , sell_price,total_bonification):
+    if dcs == "prix a débattre":
+        prix = float(input("saisie prix a debattre "))
+    else: prix =( quantity * sell_price)+total_bonification
     return prix
-def prx_finale(quantity ,sell_price ,total_bonification):
-
-    prx = (quantity * sell_price) + total_bonification
-    return prx
 
 def  total_bonification(quantity, total):
     t_bonification =quantity * total
@@ -623,22 +614,19 @@ bon_casse , ob_casse = grains_casse(g_casse)
 print("bonification g casse:", bon_casse)
 print("observation casse", ob_casse)
 g_maigres = set_grains_maigres()
-g_etrangers=set_grains_etrangers()
 g_echaudes = set_grains_echaudes()
+g_etranders = set_grains_etranders()
 g_roux = set_grains_roux()
 g_mouchetes = set_grains_mouchetes()
 g_boutes = set_grain_boute()
 bon_gr_boute, ob_gr_boute = grain_boute(g_boutes)
-print("bonification boute :", bon_gr_boute)
-print("observation boute", ob_gr_boute)
+print("bonification boute :",bon_gr_boute)
+print("observation boute",ob_gr_boute)
 
 g_punaises = set_grain_punaises()
 g_piques = set_grains_piques()
-t2 = calcule_totale_2eme_category(g_piques,g_etrangers,g_punaises,g_boutes,g_mouchetes,g_roux,g_echaudes,g_maigres,g_casse)
-print(t2)
-bon_total2 , ob_total2 = totale_2eme_category(t2, bon_gr_boute, bon_casse)
-print("bonification total 2eme category", bon_total2)
-print("observation total 2eme category", ob_total2)
+t2 = calcule_totale_2eme_category(g_piques,g_punaises,g_boutes,g_mouchetes,g_roux,g_etranders,g_echaudes,g_maigres,g_casse)
+total2 = totale_2eme_category(t2)
 indice_notin = set_indice_notin()
 ble_tendre = set_ble_tendre()
 bon_bl_tendrs , ob_bl_tendre = ble_tendre_(ble_tendre)
@@ -646,21 +634,19 @@ print("bonification ble tendre :", bon_bl_tendrs)
 print("observation ble tendre:", ob_bl_tendre)
 total_metadines =calcul_totale_metadine(indice_notin,ble_tendre)
 bon_t_m , ob_t_m= totale_metadine(total_metadines)
-print("bonification totale metadines:", bon_t_m)
-print("observation totale metadine :", ob_t_m)
+print("bonification totale metadines:",bon_t_m)
+print("observation totale metadine :",ob_t_m)
 
-total_bon_value = total_(bon_p_specifique, bon_nuisible,bon_total_1,bon_casse,bon_gr_boute, bon_total2,bon_bl_tendrs ,bon_t_m)
-print("total bonification", total_bon_value)
+
 decisions2 = decision_prix_debbattre(ble_tendre)
 print("decision prix debbattre:", decisions2)
 quantity = set_quantity()
-sell_price = set_price()
+s_price = set_price()
+total_bon_value = total_(bon_p_specifique, bon_nuisible,bon_total_1,bon_casse,bon_gr_boute, t2,bon_bl_tendrs ,bon_t_m)
+print("total bonification",total_bon_value)
 
-total_bonification = total_bonification(quantity, total_bon_value)
-print("totale DA",total_bonification)
-
-prix__fiale = prx_finale(quantity, sell_price, total_bonification)
-print("prix finale", prix__fiale)
+p=prix_dbtr(decisions2, quantity, s_price , total_bon_value)
+print("prix d'achet définitif(DA)",p)
 
 
 

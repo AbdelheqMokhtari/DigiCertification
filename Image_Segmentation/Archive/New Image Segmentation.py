@@ -1,8 +1,8 @@
 import cv2
 import numpy as np
 # Load image
-img = cv2.imread('test.jpg')
-img2 = cv2.imread('test.jpg')
+img = cv2.imread('Bousselam001.jpg')
+# img2 = cv2.imread('test.jpg')
 # Perform histogram equalization
 # img_eq = cv2.equalizeHist(img_blur)
 
@@ -63,12 +63,12 @@ cv2.imwrite('Results/image.jpg', img)
 
 j = 0
 # Filter out small contours and draw bounding box around the remaining contours
-for contour in contours:
-    if cv2.contourArea(contour) > 100:  # Minimum area threshold
-        x, y, w, h = cv2.boundingRect(contour)
-        print("Area =", cv2.contourArea(contour), "x =", x, "y =", y, "w =", w, "h =", h)
-        crop_img = img2[y:(y + h), x:(x + w)]
+# for contour in contours:
+#    if cv2.contourArea(contour) > 100:  # Minimum area threshold
+#        x, y, w, h = cv2.boundingRect(contour)
+#        print("Area =", cv2.contourArea(contour), "x =", x, "y =", y, "w =", w, "h =", h)
+#        crop_img = img2[y:(y + h), x:(x + w)]
 
-        cv2.imwrite(f'Results/grain_{j}.jpeg', crop_img)
-        j += 1
+#        cv2.imwrite(f'Results/grain_{j}.jpeg', crop_img)
+#        j += 1
 

@@ -38,6 +38,7 @@ for contour in contours:
         # cv2.drawContours(image, [contour], 0, (0, 255, 0), 5)
         total_number += 1
 
+
 crop_image = []
 for contour in contours:
     if cv2.contourArea(contour) > 1000:  # Minimum area threshold

@@ -6,8 +6,7 @@ import shutil
 path_to_images = 'Crop images'
 
 # Define the list of classes
-classes = ["Bousselam", "Oued el bared", "vitron", "ble tendre", "metadine", "mouchtee", "casse", "piqee", "maigre",
-           "melnge"]
+classes = ['Ble dur', 'Avoine', 'Ble tendre', "Orge", "Triticale"]
 
 # Create the directories for train and test data
 os.makedirs('Data/train')

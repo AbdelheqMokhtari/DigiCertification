@@ -12,7 +12,7 @@ def decision(p_specifique, teneur_eau , nuisible , ergot,existance_insecte_vivan
     if teneur_eau <= 17:
         observation_list.append("accepter")
     else: observation_list.append("Refuse")
-    if nuisible <= 0.25:
+    if nuisible <= 2.5:
         observation_list.append("sans bonification ni rèfaction")
     else:
         observation_list.append("Refuse")
@@ -49,7 +49,7 @@ def decision(p_specifique, teneur_eau , nuisible , ergot,existance_insecte_vivan
         Decision = "Refuse"
     elif my_dict["presence carie"] == "Refuse":
         Decision = "Refuse"
-    else: Decision = "acceter"
+    else: Decision = "accepter"
     return Decision
 def decision_prix_debbattre(total_premier_category ,total_dexieum_category,ble_tendre , total_metadine_category):
     observation_list = []
@@ -91,6 +91,7 @@ def decision_prix_debbattre(total_premier_category ,total_dexieum_category,ble_t
          dcs = "prix a débattre"
     elif my_dict["ble tendre"] == "prix a débattre":
          dcs = "prix a débattre"
+         print("prix de ble tendre")
     elif my_dict["Total Dexieum category"] == "prix a débattre":
          dcs = "prix a débattre"
     else: dcs = "refaction normale"
@@ -126,6 +127,12 @@ def ob_ancien_recolt_(ancien_recolt):
     else:
         ob_recolt = "Refuse"
     return ob_recolt
+
+
+
+
+
+
 
 
 def set_poid_specific():
@@ -231,7 +238,7 @@ def set_grain_nuisibles():
 
     return grains_nuisible
 def grain_nuisibles(nuisible):
-    if nuisible <= 0.25:
+    if nuisible <= 2.5:
         ob_grain_nuisibles = "sans bonification ni rèfaction"
     else: ob_grain_nuisibles = "Refuser"
     return ob_grain_nuisibles
@@ -365,7 +372,7 @@ def set_grain_boute():
 def grain_boute(grain_boute):
     global ob_grain_boute
     if grain_boute <= 5:
-        ob_grain_boute = " San Bonification ni Réfaction "
+        ob_grain_boute = " bonification "
     else:
         ob_grain_boute = "refaction"
     if 5.001 <= grain_boute <= 6:
@@ -388,6 +395,8 @@ def grain_boute(grain_boute):
         bon_ref_grain_boute = -0.45
     elif 14.001 <= grain_boute <= 15:
         bon_ref_grain_boute = -0.5
+    elif grain_boute>15:
+        bon_ref_grain_boute = 0.5
     elif grain_boute<=5:
         bon_ref_grain_boute = 0
     else:
@@ -457,7 +466,7 @@ def ble_tendre(ble_tendre_dans_ble_dur):
     elif 5 < ble_tendre_dans_ble_dur <= 10:
         ob_ble_tendre = "rèfaction"
     elif ble_tendre_dans_ble_dur > 10:
-        ob_ble_tendre ="prix de ble tendre"
+        ob_ble_tendre ="prix a débattue"
 
     if 5.001 <= ble_tendre_dans_ble_dur <= 5.25:
         bon_ref_ble_tendre = -36.75
@@ -522,7 +531,7 @@ def total_mitadines_category(total_metadines):
     elif 20 < total_metadines < 70:
         ob_mitadines_category ="rèfaction"
     elif total_metadines >= 70:
-       ob_mitadines_category ="prix de ble tendre"
+       ob_mitadines_category ="prix a débattue"
     if 0 <= total_metadines <= 10:
         bon_ref_total_metadines = +0.5
     elif 10.001 <= total_metadines <= 20:
@@ -648,21 +657,15 @@ def final_price(quantity, sell_price):
     prix_achat_definitif = quantity * sell_price
     return prix_achat_definitif
 
-def prix_dbtr(dcs ):
-    global prix
+def prix_dbtr(dcs ,total_bonification):
     if dcs == "prix a débattre":
         prix = float(input("saisie prix a debattre "))
-
+    else: prix = total_bonification
     return prix
-def total__3(dcs , total_bonification):
-    if dcs == "prix a débattre":
-        prx = prix
-    else: prx = total_bonification
-    return prx
 
-
-
-
+def total_bonification(quantity, total):
+    t_bonification =quantity * total
+    return t_bonification
 
 def total_( bon_p_specifique , bon_total_premier_category ,bon_grains_casse ,bon_total_dexieum_category , bon_grain_boute , bon_ble_tendre ,bon_t_metadines):
     total_value = bon_p_specifique + bon_total_premier_category + bon_grains_casse + bon_total_dexieum_category + bon_grain_boute + bon_ble_tendre + bon_t_metadines
@@ -729,10 +732,11 @@ bon_total_dexieumcategory,ob_total_dexieumcategory= dexieum_category(total_dexie
 print("bonification totale 2eme category:", bon_total_dexieumcategory )
 print("observation totale 2eme category: ", ob_total_dexieumcategory )
 
+autres_cereales = set_autres_cereales()
 ble_tendres = set_ble_tendre()
 bon_ble_tendres_dans_ble_dur, ob_bon_ble_tendres_dans_ble_dur = ble_tendre(ble_tendres)
 print("bonification ble tendre ", bon_ble_tendres_dans_ble_dur)
-print("observation ble tendre", ob_bon_ble_tendres_dans_ble_dur)
+print("observation ble tendre", ob_bon_ble_tendres_dans_ble_dur )
 
 
 g_mitadines = set_Grains_mitadines()
@@ -744,16 +748,13 @@ print("observation totale metadine",ob_t_mitadines)
 decisions2 = decision_prix_debbattre(total_premier_category,total_dexieumcategory,ble_tendres,t_metadine)
 print("decision prix ", decisions2)
 quantity = set_quantity()
-print("quantity :",quantity)
 
 total_bon_value = total_( bon_specific , bon_t1 ,bon_g_casse ,bon_total_dexieumcategory , bon_boute , bon_ble_tendres_dans_ble_dur ,bon_t_mitadines)
 print("totale bonification refaction :",total_bon_value)
 
-
-p=prix_dbtr(decisions2 )
+p=prix_dbtr(decisions2 , total_bon_value)
 print("prix  :",p)
-total3 = total__3( decisions2, total_bon_value)
-print("total ",total3)
+
 
 
 

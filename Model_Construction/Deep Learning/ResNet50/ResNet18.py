@@ -115,7 +115,7 @@ validation_data = validation_datagen.flow_from_directory(
 )
 # Set the input shape and number of classes
 input_shape = (224, 224, 3)
-num_classes = 8  # Replace with the actual number of classes in your dataset
+num_classes = 5  # Replace with the actual number of classes in your dataset
 
 # Build the ResNet-18 model
 model = build_resnet18(input_shape, num_classes)
@@ -131,5 +131,5 @@ history = model.fit(train_data, epochs=30, validation_data=validation_data, verb
 model.evaluate(test_data)
 
 # Save the model
-model.save('Model/ResNet18epoch30.h5')
+model.save('Model/ResNet18epoch30NoVarieties.h5')
 

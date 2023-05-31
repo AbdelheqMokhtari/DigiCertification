@@ -62,3 +62,4 @@ print(cr)
 print(accuracy)
 print(f1_scores)
 
+print(test_data)
