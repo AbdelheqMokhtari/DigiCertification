@@ -61,5 +61,4 @@ f1_scores = f1_score(y_true, y_pred, average=None)
 print(cr)
 print(accuracy)
 print(f1_scores)
-
 print(test_data)

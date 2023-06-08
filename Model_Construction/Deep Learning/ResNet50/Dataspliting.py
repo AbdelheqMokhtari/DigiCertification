@@ -6,7 +6,7 @@ import shutil
 path_to_images = 'Crop images'
 
 # Define the list of classes
-classes = ['Avoine', 'Ble tendre', 'Bousselam', 'GTA', 'Orge', "Oued el bared", "Triticale", "Vitron"]
+classes = ['Avoine', 'Ble dur', 'Ble tendre', 'Orge', 'Triticale']
 
 # Create the directories for train and test data
 os.makedirs('Data/train')
@@ -19,7 +19,7 @@ for class_name in classes:
     class_path = os.path.join(path_to_images, class_name)
     images = os.listdir(class_path)
     # Split the images into train and test data
-    train_images, test_images = train_test_split(images, test_size=0.3, random_state=42)
+    train_images, test_images = train_test_split(images, test_size=0.2, random_state=42)
     validation_images, test_images = train_test_split(test_images, test_size=0.5, random_state=42)
     # Move the train images to the train directory
     train_dir = os.path.join('Data/train', class_name)

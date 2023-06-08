@@ -39,7 +39,7 @@ validation_data = validation_datagen.flow_from_directory(
 
 # Build the ResNet50 model
 num_classes = 5
-num_epochs = 50
+num_epochs = 2
 base_model = ResNet50(weights='imagenet', include_top=False, input_shape=(224, 224, 3))
 x = base_model.output
 x = GlobalAveragePooling2D()(x)
@@ -58,7 +58,7 @@ history = model.fit(train_data, epochs=num_epochs, validation_data=validation_da
 model.evaluate(test_data)
 
 # Save the model
-model.save('Model/ResNet50NoVarieties50.h5')
+model.save('Model/New.h5')
 
 # Create a graph of the training accuracy with respect to epoch values using a library like Matplotlib
 
