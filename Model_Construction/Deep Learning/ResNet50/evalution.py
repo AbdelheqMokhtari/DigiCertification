@@ -48,7 +48,7 @@ sns.heatmap(cm_df, annot=True, fmt='d', cmap='Blues')
 plt.xlabel('output class')
 plt.ylabel('target class')
 plt.title('Confusion Matrix')
-plt.savefig('Confusion Matrix/confusion_matrix.png')
+plt.savefig('Confusion Matrix/CNCC/ResNet50_epochs50_false_unfreeze10_confusion_matrix.png')
 plt.close()
 
 # Generate the classification report
@@ -56,7 +56,7 @@ report = classification_report(y_true, y_pred_labels, target_names=class_names, 
 report_df = pd.DataFrame(report).transpose()
 
 # Save the classification report as a PNG image or as a CSV table
-report_df.to_csv('Classification rapport/CNCC/classification_report.csv', index=True)
+report_df.to_csv('Classification rapport/CNCC/ResNet50_epochs50_false_unfreeze10_classification_report.csv', index=True)
 
 # Convert the classification report to a dictionary
 report_dict = classification_report(y_true, y_pred_labels, target_names=class_names, output_dict=True)
@@ -69,6 +69,8 @@ for i in range(num_classes):
     mask = np.ones(num_classes, dtype=bool)
     mask[i] = False
     TN.append(np.sum(confusion_mat[mask][:, mask]))
+for i, item in enumerate(TN):
+    TN[i] = int(item)
 
 # Calculate the true positives (TP) for each class
 TP = np.diag(confusion_mat)
@@ -88,10 +90,10 @@ num_classes = confusion_mat.shape[0]
 FP = np.sum(confusion_mat, axis=0) - np.diag(confusion_mat)
 
 FP = FP.tolist()
-report_dict['TP'] = TP
-report_dict['TN'] = TN
-report_dict['FP'] = FP
-report_dict['FN'] = FN
+print(TP)
+print(TN)
+print(FP)
+print(FN)
 # specificity = TN / (TN + FP)
 specificity = [TN / (TN + FP) for TN, FP in zip(TN, FP)]
 # sensitivity = TP / (TP + FN)
@@ -103,9 +105,14 @@ print(sensitivity)
 # add specificity and sensitivity to a report dict
 report_dict['specificity'] = specificity
 report_dict['sensitivity'] = sensitivity
+report_dict['TP'] = TP
+report_dict['TN'] = TN
+report_dict['FP'] = FP
+report_dict['FN'] = FN
+
 
 # Specify the output file path for the JSON file
-output_file = 'Classification rapport/CNCC/classification_report.json'
+output_file = 'Classification rapport/CNCC/ResNet50_epochs50_false_unfreeze10_classification_report.json'
 
 # Save the classification report as a JSON file
 with open(output_file, 'w') as file:
