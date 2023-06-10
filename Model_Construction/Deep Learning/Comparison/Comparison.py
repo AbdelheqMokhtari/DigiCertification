@@ -49,14 +49,19 @@ def plot_multiple_training_histories(histories):
 # history2 = load_json('history/CNCC/Resnet50_epochs50_history.json')
 # plot_multiple_training_histories([history1, history2])
 
-# Specify the path to the JSON file
-json_file = 'classification_report.json'
-
+accuracies = []
+models = []
 classification_rapport = load_json("classification rapport/CNCC/ResNet50/classification_report.json")
-
-
 # Access the accuracy value
 accuracy = classification_rapport['accuracy']
+accuracies.append(accuracy)
+models.append("ResNet50")
 
-print('Accuracy:', accuracy)
 
+plt.figure(figsize=(8, 6))
+plt.bar(models, accuracies)
+plt.xlabel('Models')
+plt.ylabel('Accuracy')
+plt.title('Model Accuracies')
+plt.ylim(0, 1)  # Set the y-axis limits if desired
+plt.show()
