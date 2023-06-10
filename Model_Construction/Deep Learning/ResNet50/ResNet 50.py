@@ -1,17 +1,37 @@
 from keras.applications.resnet import ResNet50
-from keras.layers import GlobalAveragePooling2D, Dense
-from keras.models import Model
+from keras.layers import GlobalAveragePooling2D, Dense, Flatten
+from keras.models import Model, Sequential
 from keras.optimizers import Adam
 from keras.preprocessing.image import ImageDataGenerator
 import numpy as np
 import tensorflow as tf
 import matplotlib.pyplot as plt
+import json
+import h5py
 
 physical_devices = tf.config.list_physical_devices('GPU')
 tf.config.experimental.set_memory_growth(physical_devices[0], True)
 
-train_datagen = ImageDataGenerator(rescale=1./255,
-                                   rotation_range=45)
+# List of class names
+class_names = ['Avoine', 'Ble dur', 'ble tendre', 'orge', 'triticale']
+
+
+def save_history_json(history, file_path):
+    history_dict = history.history
+    with open(file_path, 'w') as file:
+        json.dump(history_dict, file)
+
+
+# Define the callback to save the best weights
+checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(
+    'callbacks/best_weights.h5',
+    monitor='val_loss',  # Metric to monitor for saving the best weights
+    save_best_only=True,
+    save_weights_only=True,
+    mode='min'  # or 'max' depending on the metric being monitored
+)
+
+train_datagen = ImageDataGenerator(rescale=1./255)
 
 test_datagen = ImageDataGenerator(rescale=1./255)
 
@@ -39,26 +59,52 @@ validation_data = validation_datagen.flow_from_directory(
 
 # Build the ResNet50 model
 num_classes = 5
-num_epochs = 2
+num_epochs = 50
 base_model = ResNet50(weights='imagenet', include_top=False, input_shape=(224, 224, 3))
-x = base_model.output
-x = GlobalAveragePooling2D()(x)
-predictions = Dense(num_classes, activation='softmax')(x)
-model = Model(inputs=base_model.input, outputs=predictions)
+# x = base_model.output
+# x = GlobalAveragePooling2D()(x)
+# predictions = Dense(num_classes, activation='softmax')(x)
+
+# Create a new model by adding custom classification layers
+model = Sequential()
+model.add(base_model)
+model.add(Flatten())
+model.add(Dense(512, activation='relu'))
+model.add(Dense(256, activation='relu'))
+model.add(Dense(128, activation='relu'))
+model.add(Dense(num_classes, activation='softmax'))
+
+# model = Model(inputs=base_model.input, outputs=predictions)
 # Compile the model
-model.compile(optimizer=Adam(lr=0.0001), loss='categorical_crossentropy', metrics=['accuracy'])
+model.compile(optimizer=Adam(learning_rate=0.0001), loss='categorical_crossentropy', metrics=['accuracy'])
 
 # Say not to train first layer (ResNet) model as it is already trained
-model.layers[0].trainable = True
+# model.layers[0].trainable = True
+
+# Freeze initial layers
+for layer in base_model.layers:
+    layer.trainable = False
+
+# Unfreeze the last few layers for fine-tuning
+num_layers_to_unfreeze = 10
+for layer in model.layers[-num_layers_to_unfreeze:]:
+    layer.trainable = True
 
 # Train the model
-history = model.fit(train_data, epochs=num_epochs, validation_data=validation_data, verbose=1)
+history = model.fit(train_data, epochs=num_epochs, validation_data=validation_data, verbose=1,
+                    callbacks=[checkpoint_callback])
+
+save_history_json(history, 'history/CNCC/Resnet50_epochs50_history_false_unfreeze10.json')
 
 # Evaluate the model
 model.evaluate(test_data)
 
 # Save the model
-model.save('Model/New.h5')
+model.save('Model/CNCC/ResNet50_epochs50_false_unfreeze10.h5')
+
+# Save class names as attributes of the HDF5 file
+with h5py.File('Model/CNCC/ResNet50_epochs50_false_unfreeze10.h5', 'a') as file:
+    file.attrs['class_names'] = class_names
 
 # Create a graph of the training accuracy with respect to epoch values using a library like Matplotlib
 
