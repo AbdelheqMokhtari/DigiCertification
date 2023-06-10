@@ -1,3 +1,5 @@
+import json
+import h5py
 import tensorflow as tf
 from keras.applications import DenseNet121
 from keras.layers import GlobalAveragePooling2D, Dense
@@ -8,12 +10,31 @@ from keras.preprocessing.image import ImageDataGenerator
 physical_devices = tf.config.list_physical_devices('GPU')
 tf.config.experimental.set_memory_growth(physical_devices[0], True)
 
-train_datagen = ImageDataGenerator(rescale=1./255,
+# List of class names
+class_names = ['Avoine', 'Ble dur', 'ble tendre', 'orge', 'triticale']
+
+
+def save_history_json(history, file_path):
+    history_dict = history.history
+    with open(file_path, 'w') as file:
+        json.dump(history_dict, file)
+
+
+# Define the callback to save the best weights
+checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(
+    'callbacks/best_weights.h5',
+    monitor='val_loss',  # Metric to monitor for saving the best weights
+    save_best_only=True,
+    save_weights_only=True,
+    mode='min'  # or 'max' depending on the metric being monitored
+)
+
+train_datagen = ImageDataGenerator(rescale=1. / 255,
                                    rotation_range=45)
 
-test_datagen = ImageDataGenerator(rescale=1./255)
+test_datagen = ImageDataGenerator(rescale=1. / 255)
 
-validation_datagen = ImageDataGenerator(rescale=1./255)
+validation_datagen = ImageDataGenerator(rescale=1. / 255)
 
 train_data = train_datagen.flow_from_directory(
     'Data/train',
@@ -35,13 +56,17 @@ validation_data = validation_datagen.flow_from_directory(
     class_mode='categorical'
 )
 
-num_classes = 8
+num_classes = 5
 
 base_model = DenseNet121(weights='imagenet', include_top=False, input_shape=(224, 224, 3))
 
 x = base_model.output
 x = GlobalAveragePooling2D()(x)
+x = Dense(512, activation='relu')(x)
 x = Dense(256, activation='relu')(x)
+x = Dense(128, activation='relu')(x)
+x = Dense(64, activation='relu')(x)
+x = Dense(32, activation='relu')(x)
 predictions = Dense(num_classes, activation='softmax')(x)
 
 model = Model(inputs=base_model.input, outputs=predictions)
@@ -50,20 +75,33 @@ model = Model(inputs=base_model.input, outputs=predictions)
 for layer in base_model.layers:
     layer.trainable = False
 
-model.compile(optimizer=Adam(lr=0.001), loss='categorical_crossentropy', metrics=['accuracy'])
+model.compile(optimizer=Adam(learning_rate=0.001), loss='categorical_crossentropy', metrics=['accuracy'])
 
-model.fit(
+# Unfreeze the last few layers for fine-tuning
+num_layers_to_unfreeze = 10
+for layer in model.layers[-num_layers_to_unfreeze:]:
+    layer.trainable = True
+
+history = model.fit(
     train_data,
     steps_per_epoch=train_data.n // train_data.batch_size,
-    epochs=20,
+    epochs=50,
     validation_data=validation_data,
-    validation_steps=validation_data.n // validation_data.batch_size
+    validation_steps=validation_data.n // validation_data.batch_size,
+    callbacks=[checkpoint_callback]
 )
+
+save_history_json(history, 'history/CNCC/DenseNet121/DenseNet121_epochs50_unfreeze10_history.json')
 
 # Evaluate the model
 model.evaluate(test_data)
 
 # Save the model
-model.save('Model/DenseNet121epoch30.h5')
+model.save('Model/CNCC/DenseNet121/DenseNet121_epochs50_unfreeze15_model.h5')
+
+# Save class names as attributes of the HDF5 file
+with h5py.File('Model/CNCC/DenseNet121/DenseNet121_epochs50_unfreeze15_model.h5', 'a') as file:
+    file.attrs['class_names'] = class_names
+
 
 
