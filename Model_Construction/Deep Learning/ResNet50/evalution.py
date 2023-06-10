@@ -37,18 +37,18 @@ y_pred_prob = model.predict(test_data)
 y_pred_labels = np.argmax(y_pred_prob, axis=1)
 
 # Generate the confusion matrix
-cm = confusion_matrix(y_true, y_pred_labels)
+confusion_mat = confusion_matrix(y_true, y_pred_labels)
 
 # Create a DataFrame from the confusion matrix
-cm_df = pd.DataFrame(cm, index=class_names, columns=class_names)
+cm_df = pd.DataFrame(confusion_mat, index=class_names, columns=class_names)
 
 # Plot the confusion matrix as a heatmap
 plt.figure(figsize=(10, 7))
 sns.heatmap(cm_df, annot=True, fmt='d', cmap='Blues')
-plt.xlabel('Predicted')
-plt.ylabel('True')
+plt.xlabel('output class')
+plt.ylabel('target class')
 plt.title('Confusion Matrix')
-plt.savefig('Confusion Matrix/confusion_matrix3.png')
+plt.savefig('Confusion Matrix/confusion_matrix.png')
 plt.close()
 
 # Generate the classification report
@@ -61,10 +61,48 @@ report_df.to_csv('Classification rapport/CNCC/classification_report.csv', index=
 # Convert the classification report to a dictionary
 report_dict = classification_report(y_true, y_pred_labels, target_names=class_names, output_dict=True)
 
-TN = confusion_mat.sum(axis=0) - np.diag(confusion_mat)
-FP = confusion_mat.sum(axis=1) - np.diag(confusion_mat)
-FN = np.diag(confusion_mat) - confusion_mat.sum(axis=1)
+# Calculate the true negatives (TN) for each class
+num_classes = len(confusion_mat)
+TN = []
+
+for i in range(num_classes):
+    mask = np.ones(num_classes, dtype=bool)
+    mask[i] = False
+    TN.append(np.sum(confusion_mat[mask][:, mask]))
+
+# Calculate the true positives (TP) for each class
 TP = np.diag(confusion_mat)
+
+# Convert the NumPy array to a Python array
+TP = TP.tolist()
+
+# Calculate the false negatives (FN) for each class
+num_classes = confusion_mat.shape[0]
+FN = np.sum(confusion_mat, axis=1) - np.diag(confusion_mat)
+
+FN = FN.tolist()
+
+
+# Calculate the false positives (FP) for each class
+num_classes = confusion_mat.shape[0]
+FP = np.sum(confusion_mat, axis=0) - np.diag(confusion_mat)
+
+FP = FP.tolist()
+report_dict['TP'] = TP
+report_dict['TN'] = TN
+report_dict['FP'] = FP
+report_dict['FN'] = FN
+# specificity = TN / (TN + FP)
+specificity = [TN / (TN + FP) for TN, FP in zip(TN, FP)]
+# sensitivity = TP / (TP + FN)
+sensitivity = [TP / (TP + FN) for TP, FN in zip(TP, FN)]
+
+print(specificity)
+print(sensitivity)
+
+# add specificity and sensitivity to a report dict
+report_dict['specificity'] = specificity
+report_dict['sensitivity'] = sensitivity
 
 # Specify the output file path for the JSON file
 output_file = 'Classification rapport/CNCC/classification_report.json'
