@@ -1,6 +1,3 @@
-from sklearn.model_selection import train_test_split
-import os
-import shutil
 import cv2 as cv
 import numpy as np
 import pandas as pd
@@ -8,30 +5,30 @@ import os
 from scipy.stats import skew, kurtosis, entropy
 import pywt
 from skimage.feature import graycomatrix, graycoprops
-columns = ["MeanB", "MeanG", "MeanR", "std_Blue", "std_Green", "std_Red", "skew_Blue", "skew_Green", "skew_Red",
-           "kurtosis_Blue", "kurtosis_Green", "kurtosis_Red", "entropy_Blue", "entropy_Green", "entropy_Red",
-           "Wavelet_Blue", "Wavelet_Green", "Wavelet_Red", "MeanHue", "MeanSaturation", "MeanValue", "std_Hue",
-           "std_Saturation", "std_Value", "skew_Hue", "skew_Saturation", "skew_Value", "kurtosis_Hue",
-           "kurtosis_Saturation", "kurtosis_Value", "entropy_Hue", "entropy_Saturation", "entropy_Value",
-           "Wavelet_Hue", "Wavelet_Saturation", "Wavelet_Value", "MeanL", "MeanA", "MeanB", "std_L", "std_A", "std_B",
-           "skew_L", "skew_A", "skew_B", "kurtosis_L", "kurtosis_A", "kurtosis_B", "entropy_L", "entropy_A",
-           "entropy_B", "Wavelet_L", "Wavelet_A", "Wavelet_B", "MeanYB", "MeanCB", "MeanCR", "std_YB", "std_CB",
-           "std_CR", "skew_YB", "skew_CB", "skew_CR", "kurtosis_YB", "kurtosis_CB", "kurtosis_CR", "entropy_YB",
-           "entropy_CB", "entropy_CR", "Wavelet_YB", "Wavelet_CB", "Wavelet_CR", "MeanX", "MeanY", "MeanZ", "std_X",
-           "std_Y", "std_Z", "skew_X", "skew_Y", "skew_Z", "kurtosis_X", "kurtosis_Y", "kurtosis_Z", "entropy_X",
-           "entropy_Y", "entropy_Z", "Wavelet_X", "Wavelet_Y", "Wavelet_Z", "GLCM_ASM", "GLCM_Contrast",
-           "GLCM_Correlation", "GLCM_Energy", "GLCM_Homogeneity", "GLCM_Max_Prob",
-           "GLRM_Contrast_1_0", "GLRM_Contrast_1_45", "GLRM_Contrast_1_90", "GLRM_Contrast_1_135", "GLRM_Contrast_2_0",
-           "GLRM_Contrast_2_45", "GLRM_Contrast_2_90", "GLRM_Contrast_2_135", "GLRM_Contrast_3_0", "GLRM_Contrast_3_45",
-           "GLRM_Contrast_3_90", "GLRM_Contrast_3_135", "GLRM_Contrast_4_0", "GLRM_Contrast_4_45", "GLRM_Contrast_4_90",
-           "GLRM_Contrast_4_135", "GLRM_Correlation_1_0", "GLRM_Correlation_1_45", "GLRM_Correlation_1_90",
-           "GLRM_Correlation_1_135", "GLRM_Correlation_2_0",  "GLRM_Correlation_2_45", "GLRM_Correlation_2_90",
-           "GLRM_Correlation_2_135", "GLRM_Correlation_3_0", "GLRM_Correlation_3_45", "GLRM_Correlation_3_90",
-           "GLRM_Correlation_3_135", "GLRM_Correlation_4_0", "GLRM_Correlation_4_45", "GLRM_Correlation_4_90",
-           "GLRM_Correlation_4_135", "GLRM_Energy_1_0", "GLRM_Energy_1_45", "GLRM_Energy_1_90", "GLRM_Energy_1_135",
-           "GLRM_Energy_2_0",  "GLRM_Energy_2_45", "GLRM_Energy_2_90", "GLRM_Energy_2_135", "GLRM_Energy_3_0",
-           "GLRM_Energy_3_45", "GLRM_Energy_3_90", "GLRM_Energy_3_135", "GLRM_Energy_4_0", "GLRM_Energy_4_45",
-           "GLRM_Energy_4_90", "GLRM_Energy_4_135", "GLRM_Homogenity_1_0", "GLRM_Homogenity_1_45",
+columns = ["Height", "Width", "area", "perimeter", "circularity", "aspect_ratio", "solidity", "MeanB", "MeanG", "MeanR",
+           "std_Blue", "std_Green", "std_Red", "skew_Blue", "skew_Green", "skew_Red", "kurtosis_Blue", "kurtosis_Green",
+           "kurtosis_Red", "entropy_Blue", "entropy_Green", "entropy_Red", "Wavelet_Blue", "Wavelet_Green",
+           "Wavelet_Red", "MeanHue", "MeanSaturation", "MeanValue", "std_Hue", "std_Saturation", "std_Value",
+           "skew_Hue", "skew_Saturation", "skew_Value", "kurtosis_Hue", "kurtosis_Saturation", "kurtosis_Value",
+           "entropy_Hue", "entropy_Saturation", "entropy_Value", "Wavelet_Hue", "Wavelet_Saturation", "Wavelet_Value",
+           "MeanL", "MeanA", "MeanB", "std_L", "std_A", "std_B", "skew_L", "skew_A", "skew_B", "kurtosis_L",
+           "kurtosis_A", "kurtosis_B", "entropy_L", "entropy_A", "entropy_B", "Wavelet_L", "Wavelet_A", "Wavelet_B",
+           "MeanYB", "MeanCB", "MeanCR", "std_YB", "std_CB", "std_CR", "skew_YB", "skew_CB", "skew_CR", "kurtosis_YB",
+           "kurtosis_CB", "kurtosis_CR", "entropy_YB", "entropy_CB", "entropy_CR", "Wavelet_YB", "Wavelet_CB",
+           "Wavelet_CR", "MeanX", "MeanY", "MeanZ", "std_X", "std_Y", "std_Z", "skew_X", "skew_Y", "skew_Z",
+           "kurtosis_X", "kurtosis_Y", "kurtosis_Z", "entropy_X", "entropy_Y", "entropy_Z", "Wavelet_X", "Wavelet_Y",
+           "Wavelet_Z", "GLCM_ASM", "GLCM_Contrast", "GLCM_Correlation", "GLCM_Energy", "GLCM_Homogeneity",
+           "GLCM_Max_Prob", "GLRM_Contrast_1_0", "GLRM_Contrast_1_45", "GLRM_Contrast_1_90", "GLRM_Contrast_1_135",
+           "GLRM_Contrast_2_0", "GLRM_Contrast_2_45", "GLRM_Contrast_2_90", "GLRM_Contrast_2_135", "GLRM_Contrast_3_0",
+           "GLRM_Contrast_3_45", "GLRM_Contrast_3_90", "GLRM_Contrast_3_135", "GLRM_Contrast_4_0", "GLRM_Contrast_4_45",
+           "GLRM_Contrast_4_90", "GLRM_Contrast_4_135", "GLRM_Correlation_1_0", "GLRM_Correlation_1_45",
+           "GLRM_Correlation_1_90", "GLRM_Correlation_1_135", "GLRM_Correlation_2_0",  "GLRM_Correlation_2_45",
+           "GLRM_Correlation_2_90", "GLRM_Correlation_2_135", "GLRM_Correlation_3_0", "GLRM_Correlation_3_45",
+           "GLRM_Correlation_3_90", "GLRM_Correlation_3_135", "GLRM_Correlation_4_0", "GLRM_Correlation_4_45",
+           "GLRM_Correlation_4_90", "GLRM_Correlation_4_135", "GLRM_Energy_1_0", "GLRM_Energy_1_45", "GLRM_Energy_1_90",
+           "GLRM_Energy_1_135", "GLRM_Energy_2_0",  "GLRM_Energy_2_45", "GLRM_Energy_2_90", "GLRM_Energy_2_135",
+           "GLRM_Energy_3_0", "GLRM_Energy_3_45", "GLRM_Energy_3_90", "GLRM_Energy_3_135", "GLRM_Energy_4_0",
+           "GLRM_Energy_4_45", "GLRM_Energy_4_90", "GLRM_Energy_4_135", "GLRM_Homogenity_1_0", "GLRM_Homogenity_1_45",
            "GLRM_Homogenity_1_90", "GLRM_Homogenity_1_135", "GLRM_Homogenity_2_0",  "GLRM_Homogenity_2_45",
            "GLRM_Homogenity_2_90", "GLRM_Homogenity_2_135", "GLRM_Homogenity_3_0", "GLRM_Homogenity_3_45",
            "GLRM_Homogenity_3_90", "GLRM_Homogenity_3_135", "GLRM_Homogenity_4_0", "GLRM_Homogenity_4_45",
@@ -64,10 +61,59 @@ for k, class_name in enumerate(classes):
         print("The image selected :", filename)
         filepath = os.path.join(image_dir, filename)
         img = cv.imread(filepath)
-        gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
 
         # initialise an empty list to store all Feature of the image
         Features = []
+
+        # convert image to grayscale
+        gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
+
+        # Threshold the image to binary
+        _, thresh = cv.threshold(gray, 0, 255, cv.THRESH_BINARY_INV + cv.THRESH_OTSU)
+
+        # Find the contours of the wheat plant
+        contours, _ = cv.findContours(thresh, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
+
+        # Find the contour with the largest area (which should be the wheat plant)
+        max_contour = min(contours, key=cv.contourArea)
+
+        # Get the bounding box of the contour
+        x, y, w, h = cv.boundingRect(max_contour)
+
+        # Draw the bounding box on the image
+        cv.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
+
+        height = h
+        width = w
+        area = cv.contourArea(max_contour)
+        perimeter = cv.arcLength(max_contour, True)
+        circularity = (4 * np.pi * area) / (perimeter * perimeter)
+        aspect_ratio = float(w) / h
+        solidity = area / cv.contourArea(cv.convexHull(max_contour))
+
+        Features.append(height)
+        print(f"Kernel Height: {height}")
+
+        Features.append(width)
+        print(f"Kernel Width: {width}")
+
+        Features.append(area)
+        print(f"Kernel Area: {area}")
+
+        Features.append(perimeter)
+        print(f"Kernel Perimeter: {perimeter}")
+
+        Features.append(circularity)
+        print(f"Kernel Circularity: {circularity}")
+
+        Features.append(aspect_ratio)
+        print(f"Kernel Aspect_ratio: {aspect_ratio}")
+
+        Features.append(solidity)
+        print(f"Kernel Solidity: {solidity}")
+
+        print(
+            "*******************************************************************************************************\n")
 
         # RGB Space Color
         print("\nRGB Color Feature Extraction :\n")
@@ -82,14 +128,14 @@ for k, class_name in enumerate(classes):
         MeanG = mean[1]
         MeanR = mean[2]
 
-        Features.append(MeanR)
-        print('Mean R: {:.2f}'.format(MeanR))
+        Features.append(MeanB)
+        print('Mean R: {:.2f}'.format(MeanB))
 
         Features.append(MeanG)
         print('Mean G: {:.2f}'.format(MeanG))
 
-        Features.append(MeanB)
-        print('Mean B: {:.2f}'.format(MeanB))
+        Features.append(MeanR)
+        print('Mean B: {:.2f}'.format(MeanR))
 
         # Calculate the standard deviation of each color component (RGB)
         std_dev = np.std(img_array, axis=(0, 1))
@@ -97,42 +143,42 @@ for k, class_name in enumerate(classes):
         std_Green = std_dev[1]
         std_Red = std_dev[2]
 
-        Features.append(std_Red)
-        print('\nStandard Deviation R: {:.2f}'.format(std_Red))
+        Features.append(std_Blue)
+        print('Standard Deviation B: {:.2f}'.format(std_Blue))
 
         Features.append(std_Green)
         print('Standard Deviation G: {:.2f}'.format(std_Green))
 
-        Features.append(std_Blue)
-        print('Standard Deviation B: {:.2f}'.format(std_Blue))
+        Features.append(std_Red)
+        print('\nStandard Deviation R: {:.2f}'.format(std_Red))
 
         # Calculate the skewness of each color component (RGB)
         skew_Blue = skew(b.flatten())
         skew_Green = skew(g.flatten())
         skew_Red = skew(r.flatten())
 
-        Features.append(skew_Red)
-        print('\nSkewness R: {:.2f}'.format(skew_Red))
+        Features.append(skew_Blue)
+        print('Skewness B: {:.2f}'.format(skew_Blue))
 
         Features.append(skew_Green)
         print('Skewness G: {:.2f}'.format(skew_Green))
 
-        Features.append(skew_Blue)
-        print('Skewness B: {:.2f}'.format(skew_Blue))
+        Features.append(skew_Red)
+        print('\nSkewness R: {:.2f}'.format(skew_Red))
 
         # Calculate the kurtosis of each color component (RGB)
         kurtosis_Blue = kurtosis(b.flatten())
         kurtosis_Green = kurtosis(g.flatten())
         kurtosis_Red = kurtosis(r.flatten())
 
+        Features.append(kurtosis_Blue)
+        print('kurtosis B: {:.2f}'.format(kurtosis_Blue))
+
         Features.append(kurtosis_Red)
         print('\nkurtosis R: {:.2f}'.format(kurtosis_Red))
 
         Features.append(kurtosis_Green)
         print('kurtosis G: {:.2f}'.format(kurtosis_Green))
-
-        Features.append(kurtosis_Blue)
-        print('kurtosis B: {:.2f}'.format(kurtosis_Blue))
 
         # Compute the probability distribution of each color channel
         hist_b = cv.calcHist([b], [0], None, [256], [0, 256]) / (img.shape[0] * img.shape[1])
@@ -148,14 +194,14 @@ for k, class_name in enumerate(classes):
         entropy_Green = float(entropy_G[0])
         entropy_Red = float(entropy_R[0])
 
-        Features.append(entropy_Red)
-        print('\nentropy R: {:.2f}'.format(entropy_Red))
+        Features.append(entropy_Blue)
+        print('entropy B: {:.2f}'.format(entropy_Blue))
 
         Features.append(entropy_Green)
         print('entropy G: {:.2f}'.format(entropy_Green))
 
-        Features.append(entropy_Blue)
-        print('entropy B: {:.2f}'.format(entropy_Blue))
+        Features.append(entropy_Red)
+        print('\nentropy R: {:.2f}'.format(entropy_Red))
 
         # Perform one-level DWT using db4 wavelet for the three component
         coefficient_b = pywt.dwt2(b, 'db4')
@@ -299,7 +345,7 @@ for k, class_name in enumerate(classes):
 
         # LAB Space Color
         print(
-            "-----------------------------------------------------------------------------------------------------------\n"
+            "-------------------------------------------------------------------------------------------------------\n"
             "LAB Color Feature Extraction :\n")
 
         LAB_img = cv.cvtColor(img, cv.COLOR_BGR2Lab)
@@ -396,26 +442,26 @@ for k, class_name in enumerate(classes):
 
         # Get the approximation coefficients (LL) and Take the mean of the LL coefficients for the three component
         LL, (LH, HL, HH) = coefficient_l
-        Wavelet_Lab = np.mean(LL)
+        Wavelet_L = np.mean(LL)
 
         LL, (LH, HL, HH) = coefficient_a
-        Wavelet_Saturation = np.mean(LL)
+        Wavelet_A = np.mean(LL)
 
         LL, (LH, HL, HH) = coefficient_b
-        Wavelet_Value = np.mean(LL)
+        Wavelet_B = np.mean(LL)
 
-        Features.append(Wavelet_Hue)
-        print('\nWavelet_Blue R: {:.2f}'.format(Wavelet_Hue))
+        Features.append(Wavelet_L)
+        print('\nWavelet_Blue R: {:.2f}'.format(Wavelet_L))
 
-        Features.append(Wavelet_Saturation)
-        print('\nWavelet_Blue R: {:.2f}'.format(Wavelet_Saturation))
+        Features.append(Wavelet_A)
+        print('\nWavelet_Blue R: {:.2f}'.format(Wavelet_A))
 
-        Features.append(Wavelet_Value)
-        print('\nWavelet_Blue R: {:.2f}'.format(Wavelet_Value))
+        Features.append(Wavelet_B)
+        print('\nWavelet_Blue R: {:.2f}'.format(Wavelet_B))
 
         # YCC space Color
         print(
-            "-----------------------------------------------------------------------------------------------------------\n"
+            "------------------------------------------------------------------------------------------------------\n"
             "YCC Color Feature Extraction :\n")
 
         YCC_img = cv.cvtColor(img, cv.COLOR_BGR2YCR_CB)
@@ -531,7 +577,7 @@ for k, class_name in enumerate(classes):
 
         # XYZ Space Color
         print(
-            "-----------------------------------------------------------------------------------------------------------\n"
+            "-------------------------------------------------------------------------------------------------------\n"
             "XYZ Color Feature Extraction :\n")
 
         XYZ_img = cv.cvtColor(img, cv.COLOR_BGR2XYZ)
