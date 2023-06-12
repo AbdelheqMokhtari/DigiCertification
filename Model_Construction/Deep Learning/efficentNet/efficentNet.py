@@ -100,6 +100,6 @@ model.evaluate(test_data)
 model.save('Model/CNCC/efficentNet/efficentNet_epochs50_unfreeze5_model.h5')
 
 # Save class names as attributes of the HDF5 file
-with h5py.File('Model/CNCC/efficentNet/efficentNet_epochs50_freeze_model.h5') as file:
+with h5py.File('Model/CNCC/efficentNet/efficentNet_epochs50_freeze_model.h5', 'a') as file:
     file.attrs['class_names'] = class_names
 
