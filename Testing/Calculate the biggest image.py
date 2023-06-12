@@ -5,7 +5,7 @@ import os
 path_to_images = 'Crop images'
 
 # Define the list of classes
-classes = ["Avoine", "Ble dur", "Ble tendre", "Orge", "Triticale"]
+classes = ["Bousselam", "GTA", "Oued el bared", "Vitron"]
 max_height = 0
 max_width = 0
 
