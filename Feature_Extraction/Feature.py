@@ -5,30 +5,51 @@ import os
 from scipy.stats import skew, kurtosis, entropy
 import pywt
 from skimage.feature import graycomatrix, graycoprops
-columns = ["Height", "Width", "area", "perimeter", "circularity", "aspect_ratio", "solidity", "MeanB", "MeanG", "MeanR",
-           "std_Blue", "std_Green", "std_Red", "skew_Blue", "skew_Green", "skew_Red", "kurtosis_Blue", "kurtosis_Green",
-           "kurtosis_Red", "entropy_Blue", "entropy_Green", "entropy_Red", "Wavelet_Blue", "Wavelet_Green",
-           "Wavelet_Red", "MeanHue", "MeanSaturation", "MeanValue", "std_Hue", "std_Saturation", "std_Value",
-           "skew_Hue", "skew_Saturation", "skew_Value", "kurtosis_Hue", "kurtosis_Saturation", "kurtosis_Value",
-           "entropy_Hue", "entropy_Saturation", "entropy_Value", "Wavelet_Hue", "Wavelet_Saturation", "Wavelet_Value",
-           "MeanL", "MeanA", "MeanB", "std_L", "std_A", "std_B", "skew_L", "skew_A", "skew_B", "kurtosis_L",
-           "kurtosis_A", "kurtosis_B", "entropy_L", "entropy_A", "entropy_B", "Wavelet_L", "Wavelet_A", "Wavelet_B",
-           "MeanYB", "MeanCB", "MeanCR", "std_YB", "std_CB", "std_CR", "skew_YB", "skew_CB", "skew_CR", "kurtosis_YB",
-           "kurtosis_CB", "kurtosis_CR", "entropy_YB", "entropy_CB", "entropy_CR", "Wavelet_YB", "Wavelet_CB",
-           "Wavelet_CR", "MeanX", "MeanY", "MeanZ", "std_X", "std_Y", "std_Z", "skew_X", "skew_Y", "skew_Z",
-           "kurtosis_X", "kurtosis_Y", "kurtosis_Z", "entropy_X", "entropy_Y", "entropy_Z", "Wavelet_X", "Wavelet_Y",
-           "Wavelet_Z", "GLCM_ASM", "GLCM_Contrast", "GLCM_Correlation", "GLCM_Energy", "GLCM_Homogeneity",
-           "GLCM_Max_Prob", "GLRM_Contrast_1_0", "GLRM_Contrast_1_45", "GLRM_Contrast_1_90", "GLRM_Contrast_1_135",
-           "GLRM_Contrast_2_0", "GLRM_Contrast_2_45", "GLRM_Contrast_2_90", "GLRM_Contrast_2_135", "GLRM_Contrast_3_0",
-           "GLRM_Contrast_3_45", "GLRM_Contrast_3_90", "GLRM_Contrast_3_135", "GLRM_Contrast_4_0", "GLRM_Contrast_4_45",
-           "GLRM_Contrast_4_90", "GLRM_Contrast_4_135", "GLRM_Correlation_1_0", "GLRM_Correlation_1_45",
-           "GLRM_Correlation_1_90", "GLRM_Correlation_1_135", "GLRM_Correlation_2_0",  "GLRM_Correlation_2_45",
-           "GLRM_Correlation_2_90", "GLRM_Correlation_2_135", "GLRM_Correlation_3_0", "GLRM_Correlation_3_45",
-           "GLRM_Correlation_3_90", "GLRM_Correlation_3_135", "GLRM_Correlation_4_0", "GLRM_Correlation_4_45",
-           "GLRM_Correlation_4_90", "GLRM_Correlation_4_135", "GLRM_Energy_1_0", "GLRM_Energy_1_45", "GLRM_Energy_1_90",
-           "GLRM_Energy_1_135", "GLRM_Energy_2_0",  "GLRM_Energy_2_45", "GLRM_Energy_2_90", "GLRM_Energy_2_135",
-           "GLRM_Energy_3_0", "GLRM_Energy_3_45", "GLRM_Energy_3_90", "GLRM_Energy_3_135", "GLRM_Energy_4_0",
-           "GLRM_Energy_4_45", "GLRM_Energy_4_90", "GLRM_Energy_4_135", "GLRM_Homogenity_1_0", "GLRM_Homogenity_1_45",
+
+
+def normalize(features):
+    result = features.copy()
+    for feature_name in features.columns:
+        max_value = features[feature_name].max()
+        min_value = features[feature_name].min()
+        result[feature_name] = (features[feature_name] - min_value) / (max_value - min_value)
+    return result
+
+
+# def normalize(features, features_to_normalize):
+#    result = features.copy()
+#    for feature_name in features_to_normalize:
+#        max_value = features[feature_name].max()
+#        min_value = features[feature_name].min()
+#        result[feature_name] = (features[feature_name] - min_value) / (max_value - min_value)
+#    return result
+
+
+columns = ["Height", "Width", "area", "perimeter", "circularity", "aspect_ratio", "solidity", 'SF1', 'SF2', 'SF3',
+           'SF4', "Rectangularity", "MeanB", "MeanG", "MeanR", "std_Blue", "std_Green", "std_Red", "skew_Blue",
+           "skew_Green", "skew_Red", "kurtosis_Blue", "kurtosis_Green", "kurtosis_Red", "entropy_Blue",
+           "entropy_Green", "entropy_Red", "Wavelet_Blue", "Wavelet_Green", "Wavelet_Red", "MeanHue", "MeanSaturation",
+           "MeanValue", "std_Hue", "std_Saturation", "std_Value", "skew_Hue", "skew_Saturation", "skew_Value",
+           "kurtosis_Hue", "kurtosis_Saturation", "kurtosis_Value", "entropy_Hue", "entropy_Saturation",
+           "entropy_Value", "Wavelet_Hue", "Wavelet_Saturation", "Wavelet_Value", "MeanL", "MeanA", "MeanB", "std_L",
+           "std_A", "std_B", "skew_L", "skew_A", "skew_B", "kurtosis_L", "kurtosis_A", "kurtosis_B", "entropy_L",
+           "entropy_A", "entropy_B", "Wavelet_L", "Wavelet_A", "Wavelet_B", "MeanYB", "MeanCB", "MeanCR", "std_YB",
+           "std_CB", "std_CR", "skew_YB", "skew_CB", "skew_CR", "kurtosis_YB", "kurtosis_CB", "kurtosis_CR",
+           "entropy_YB", "entropy_CB", "entropy_CR", "Wavelet_YB", "Wavelet_CB", "Wavelet_CR", "MeanX", "MeanY",
+           "MeanZ", "std_X", "std_Y", "std_Z", "skew_X", "skew_Y", "skew_Z", "kurtosis_X", "kurtosis_Y", "kurtosis_Z",
+           "entropy_X", "entropy_Y", "entropy_Z", "Wavelet_X", "Wavelet_Y", "Wavelet_Z", "GLCM_ASM", "GLCM_Contrast",
+           "GLCM_Correlation", "GLCM_Energy", "GLCM_Homogeneity", "GLCM_Max_Prob", "GLRM_Contrast_1_0",
+           "GLRM_Contrast_1_45", "GLRM_Contrast_1_90", "GLRM_Contrast_1_135", "GLRM_Contrast_2_0", "GLRM_Contrast_2_45",
+           "GLRM_Contrast_2_90", "GLRM_Contrast_2_135", "GLRM_Contrast_3_0", "GLRM_Contrast_3_45", "GLRM_Contrast_3_90",
+           "GLRM_Contrast_3_135", "GLRM_Contrast_4_0", "GLRM_Contrast_4_45", "GLRM_Contrast_4_90",
+           "GLRM_Contrast_4_135", "GLRM_Correlation_1_0", "GLRM_Correlation_1_45", "GLRM_Correlation_1_90",
+           "GLRM_Correlation_1_135", "GLRM_Correlation_2_0",  "GLRM_Correlation_2_45", "GLRM_Correlation_2_90",
+           "GLRM_Correlation_2_135", "GLRM_Correlation_3_0", "GLRM_Correlation_3_45", "GLRM_Correlation_3_90",
+           "GLRM_Correlation_3_135", "GLRM_Correlation_4_0", "GLRM_Correlation_4_45", "GLRM_Correlation_4_90",
+           "GLRM_Correlation_4_135", "GLRM_Energy_1_0", "GLRM_Energy_1_45", "GLRM_Energy_1_90", "GLRM_Energy_1_135",
+           "GLRM_Energy_2_0",  "GLRM_Energy_2_45", "GLRM_Energy_2_90", "GLRM_Energy_2_135", "GLRM_Energy_3_0",
+           "GLRM_Energy_3_45", "GLRM_Energy_3_90", "GLRM_Energy_3_135", "GLRM_Energy_4_0", "GLRM_Energy_4_45",
+           "GLRM_Energy_4_90", "GLRM_Energy_4_135", "GLRM_Homogenity_1_0", "GLRM_Homogenity_1_45",
            "GLRM_Homogenity_1_90", "GLRM_Homogenity_1_135", "GLRM_Homogenity_2_0",  "GLRM_Homogenity_2_45",
            "GLRM_Homogenity_2_90", "GLRM_Homogenity_2_135", "GLRM_Homogenity_3_0", "GLRM_Homogenity_3_45",
            "GLRM_Homogenity_3_90", "GLRM_Homogenity_3_135", "GLRM_Homogenity_4_0", "GLRM_Homogenity_4_45",
@@ -48,9 +69,8 @@ df = pd.DataFrame(columns=columns)
 path_to_images = 'Crop images'
 
 # Define the list of classes
-classes = ['Bousselam', 'Vitron', 'Oued el bared', 'Ble tendre', 'casee', "echaudes", "maigre", "melnge", "Metadine",
-           "Mouchten", 'piqee']
-
+# classes = ['ble dur', 'Ble tendre', 'casee', 'echaudes', 'maigre', 'metadine', 'Mouchten', 'piqee']
+classes = ["Avoine", "ble dur", "Ble tendre", "Orge", "Triticale"]
 
 for k, class_name in enumerate(classes):
     # Find all images belonging to the current class
@@ -69,19 +89,17 @@ for k, class_name in enumerate(classes):
         gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
 
         # Threshold the image to binary
-        _, thresh = cv.threshold(gray, 0, 255, cv.THRESH_BINARY_INV + cv.THRESH_OTSU)
+        _, thresh = cv.threshold(gray, 0, 255, cv.THRESH_BINARY + cv.THRESH_OTSU)
 
         # Find the contours of the wheat plant
         contours, _ = cv.findContours(thresh, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
 
         # Find the contour with the largest area (which should be the wheat plant)
-        max_contour = min(contours, key=cv.contourArea)
-
+        max_contour = max(contours, key=cv.contourArea)
         # Get the bounding box of the contour
         x, y, w, h = cv.boundingRect(max_contour)
 
-        # Draw the bounding box on the image
-        cv.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
+        cv.imwrite("img.png", img)
 
         height = h
         width = w
@@ -90,6 +108,32 @@ for k, class_name in enumerate(classes):
         circularity = (4 * np.pi * area) / (perimeter * perimeter)
         aspect_ratio = float(w) / h
         solidity = area / cv.contourArea(cv.convexHull(max_contour))
+
+        # Calculate the minimum bounding rectangle (MBR) of the object
+        _, _, width, height = cv.boundingRect(max_contour)
+        mbr_area = width * height
+
+        # Calculate Rectangularity
+        Re = area / mbr_area
+
+        # Calculate Shape Factor 1 (SF1)
+        sf1 = area / (perimeter ** 2)
+
+        # Calculate Shape Factor 2 (SF2)
+        sf2 = (perimeter ** 2) / area
+
+        # Calculate Shape Factor 3 (SF3)
+        sf3 = perimeter / np.sqrt(area)
+
+        # Calculate Feret's diameter
+        (x, y), (width, height), angle = cv.minAreaRect(max_contour)
+        if width > height:
+            feret_diameter = width
+        else:
+            feret_diameter = height
+
+        # Calculate Shape Factor 4 (SF4)
+        sf4 = area / (feret_diameter ** 2)
 
         Features.append(height)
         print(f"Kernel Height: {height}")
@@ -112,6 +156,20 @@ for k, class_name in enumerate(classes):
         Features.append(solidity)
         print(f"Kernel Solidity: {solidity}")
 
+        Features.append(Re)
+        print(f"Kernel Rectangularity : {Re}")
+
+        Features.append(sf1)
+        print(f"Shape factor 1: {sf1}")
+
+        Features.append(sf2)
+        print(f"Shape factor 2: {sf2}")
+
+        Features.append(sf3)
+        print(f"Shape factor 3: {sf3}")
+
+        Features.append(sf4)
+        print(f"Shape factor 4: {sf4}")
         print(
             "*******************************************************************************************************\n")
 
@@ -789,4 +847,11 @@ for k, class_name in enumerate(classes):
         Features.append(k)
         df.loc[len(df)] = Features
 
-df.to_csv('Features V1.csv', index=False)
+
+df.to_csv('Features CNCC V1.csv', index=False)
+
+# Normalize the specified features
+normalized_df = normalize(df)
+
+# Save the normalized data to a new CSV file
+normalized_df.to_csv('Features CNCC V1 Normalized.csv', index=False)
