@@ -46,7 +46,7 @@ model = Model(inputs=base_model.input, outputs=predictions)
 # Compile the model
 model.compile(optimizer=Adam(lr=0.0001), loss='categorical_crossentropy', metrics=['accuracy'])
 
-# Train the model
+# Train.txt the model
 model.fit(train_data, epochs=num_epochs, validation_data=val_data)
 
 # Evaluate the model

@@ -26,7 +26,7 @@ def save_history_json(history, file_path):
 
 # Define the callback to save the best weights
 checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(
-    'callbacks/best_weights.h5',
+    'callbacks/best_weights_ResNet50.h5',
     monitor='val_loss',  # Metric to monitor for saving the best weights
     save_best_only=True,
     save_weights_only=True,
@@ -62,10 +62,8 @@ validation_data = validation_datagen.flow_from_directory(
 
 # Build the ResNet50 model
 num_classes = 4
-num_epochs = 75
+num_epochs = 100
 base_model = ResNet50(weights='imagenet', include_top=False, input_shape=(224, 224, 3))
-x = base_model.output
-x = GlobalAveragePooling2D()(x)
 x = base_model.output
 x = GlobalAveragePooling2D()(x)
 x = Dense(512, activation='relu')(x)
@@ -88,7 +86,7 @@ model = Model(inputs=base_model.input, outputs=predictions)
 
 # model = Model(inputs=base_model.input, outputs=predictions)
 # Compile the model
-model.compile(optimizer=Adam(learning_rate=0.0005), loss='categorical_crossentropy', metrics=['accuracy'])
+model.compile(optimizer=Adam(learning_rate=0.0001), loss='categorical_crossentropy', metrics=['accuracy'])
 
 # Say not to train first layer (ResNet) model as it is already trained
 # model.layers[0].trainable = True
@@ -98,7 +96,7 @@ for layer in base_model.layers:
     layer.trainable = False
 
 # Unfreeze the last few layers for fine-tuning
-num_layers_to_unfreeze = 10
+num_layers_to_unfreeze = 5
 for layer in model.layers[-num_layers_to_unfreeze:]:
     layer.trainable = True
 
@@ -107,18 +105,18 @@ history = model.fit(train_data, epochs=num_epochs, validation_data=validation_da
                     callbacks=[checkpoint_callback])
 
 # Load the best weights after training
-model.load_weights('callbacks/best_weights.h5')
+model.load_weights('callbacks/best_weights_ResNet50.h5')
 
-save_history_json(history, 'history/varities/ResNet50/ResNet50_epochs75_unfreeze10_history_best_weight.json')
+save_history_json(history, 'history/CCLS/ResNet50/ResNet50_epochs100_unfreeze5_history_best_weight.json')
 
 # Evaluate the model
 model.evaluate(test_data)
 
 # Save the model
-model.save('Model/varities/ResNet50/ResNet50_epochs75_unfreeze10_model_best_weight.h5')
+model.save('Model/CCLS/ResNet50/ResNet50_epochs100_unfreeze5_best_weight_model.h5')
 
 # Save class names as attributes of the HDF5 file
-with h5py.File('Model/varities/ResNet50/ResNet50_epochs75_unfreeze10_model_best_weight.h5', 'a') as file:
+with h5py.File('Model/CCLS/ResNet50/ResNet50_epochs100_unfreeze5_best_weight_model.h5', 'a') as file:
     file.attrs['class_names'] = class_names
 
 
