@@ -10,9 +10,10 @@ from skimage.feature import graycomatrix, graycoprops
 def normalize(features):
     result = features.copy()
     for feature_name in features.columns:
-        max_value = features[feature_name].max()
-        min_value = features[feature_name].min()
-        result[feature_name] = (features[feature_name] - min_value) / (max_value - min_value)
+        if feature_name != 'label':
+            max_value = features[feature_name].max()
+            min_value = features[feature_name].min()
+            result[feature_name] = (features[feature_name] - min_value) / (max_value - min_value)
     return result
 
 
@@ -70,7 +71,8 @@ path_to_images = 'Crop images'
 
 # Define the list of classes
 # classes = ['ble dur', 'Ble tendre', 'casee', 'echaudes', 'maigre', 'metadine', 'Mouchten', 'piqee']
-classes = ["Avoine", "ble dur", "Ble tendre", "Orge", "Triticale"]
+# classes = ["Avoine", "ble dur", "Ble tendre", "Orge", "Triticale"]
+classes = ["Bousselam", "GTA", "Oued el bared", "Vitron"]
 
 for k, class_name in enumerate(classes):
     # Find all images belonging to the current class
@@ -848,10 +850,10 @@ for k, class_name in enumerate(classes):
         df.loc[len(df)] = Features
 
 
-df.to_csv('Features CNCC V1.csv', index=False)
+df.to_csv('Features varities V1.csv', index=False)
 
 # Normalize the specified features
 normalized_df = normalize(df)
 
 # Save the normalized data to a new CSV file
-normalized_df.to_csv('Features CNCC V1 Normalized.csv', index=False)
+normalized_df.to_csv('Features varities V1 Normalized.csv', index=False)

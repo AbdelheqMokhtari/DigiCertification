@@ -1,9 +1,19 @@
+import json
+import h5py
 from keras.layers import Input, Conv2D, BatchNormalization, Activation, MaxPooling2D, Add, AveragePooling2D, Flatten, \
     Dense
 from keras.models import Model
 from keras.optimizers import Adam
 from keras.preprocessing.image import ImageDataGenerator
 import tensorflow as tf
+
+checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(
+    'callbacks/best_weights.h5',
+    monitor='val_loss',  # Metric to monitor for saving the best weights
+    save_best_only=True,
+    save_weights_only=True,
+    mode='min'
+)
 
 
 # Define the ResNet building blocks
@@ -84,6 +94,17 @@ def build_resnet18(input_shape, num_classes):
     return model
 
 
+# List of class names
+# class_names = ['Avoine', 'Ble dur', 'ble tendre', 'orge', 'triticale']
+class_names = ['Bousselam', 'GTA', 'Oued el bared', 'Vitron']
+
+
+def save_history_json(history, file_path):
+    history_dict = history.history
+    with open(file_path, 'w') as file:
+        json.dump(history_dict, file)
+
+
 physical_devices = tf.config.list_physical_devices('GPU')
 tf.config.experimental.set_memory_growth(physical_devices[0], True)
 
@@ -115,7 +136,7 @@ validation_data = validation_datagen.flow_from_directory(
 )
 # Set the input shape and number of classes
 input_shape = (224, 224, 3)
-num_classes = 5  # Replace with the actual number of classes in your dataset
+num_classes = 4  # Replace with the actual number of classes in your dataset
 
 # Build the ResNet-18 model
 model = build_resnet18(input_shape, num_classes)
@@ -124,12 +145,18 @@ model = build_resnet18(input_shape, num_classes)
 model.compile(optimizer=Adam(lr=0.0001), loss='categorical_crossentropy', metrics=['accuracy'])
 
 
-# Train the model
-history = model.fit(train_data, epochs=30, validation_data=validation_data, verbose=1)
+# Train.txt the model
+history = model.fit(train_data, epochs=50, validation_data=validation_data, verbose=1, callbacks=[checkpoint_callback])
+# save training history
+save_history_json(history, 'history/varities/ResNet18/Resnet18_epochs50_history.json')
 
 # Evaluate the model
 model.evaluate(test_data)
 
 # Save the model
-model.save('Model/ResNet18epoch30NoVarieties.h5')
+model.save('Model/varities/ResNet18/ResNet18_epoch50_model.h5')
+
+# Save class names as attributes of the HDF5 file
+with h5py.File('Model/varities/ResNet18/ResNet18_epoch50_model.h5', 'a') as file:
+    file.attrs['class_names'] = class_names
 

@@ -51,7 +51,7 @@ for folderName in folder:
                 height, width = crop_img.shape[:2]
 
                 # Set the desired output size
-                output_size = 330
+                output_size = 280
 
                 # Calculate the amount of padding needed on each side
                 h_pad = max(0, (output_size - height) // 2)

@@ -32,7 +32,9 @@ checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(
 )
 
 train_datagen = ImageDataGenerator(rescale=1. / 255,
-                                   rotation_range=45)
+                                   rotation_range=45,
+                                   horizontal_flip=True,
+                                   vertical_flip=True)
 
 test_datagen = ImageDataGenerator(rescale=1. / 255)
 

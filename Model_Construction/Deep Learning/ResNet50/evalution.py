@@ -1,5 +1,4 @@
 import json
-
 import h5py
 import pandas as pd
 from keras.preprocessing.image import ImageDataGenerator

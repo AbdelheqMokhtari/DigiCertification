@@ -8,13 +8,13 @@ import json
 from sklearn.model_selection import train_test_split
 
 # class_names = ["Bousselam", "GTA", "Oued el bared", "Vitron"]
-class_names = ["Avoine", "Ble dur", "Ble tendre", "Orge", "Triticale"]
-# class_names = ["ble dur", "Ble tendre", "casee", "echaudes", "maigre", "Metadine", "Mouchten", "piqee"]
+# class_names = ["Avoine", "Ble dur", "Ble tendre", "Orge", "Triticale"]
+class_names = ["ble dur", "Ble tendre", "casee", "echaudes", "maigre", "Metadine", "Mouchten", "piqee"]
 # Load the SVM model
-svm_model = joblib.load('CNCC/SVM/Features CNCC V1 Normalized.pkl')
+svm_model = joblib.load('CCLS/SVM/Features CCLS V1 Normalized.pkl')
 
 # Load the test dataset
-test_data = pd.read_csv('CNCC/Data/Features CNCC V1 Normalized.csv')
+test_data = pd.read_csv('CCLS/Data/Features CCLS V1 Normalized.csv')
 
 # Extract the features and labels from the test dataset
 X = test_data.drop('label', axis=1)
@@ -48,7 +48,7 @@ sns.heatmap(cm_df, annot=True, fmt='d', cmap='Greens')
 plt.xlabel('Predicted labels')
 plt.ylabel('True labels')
 plt.title('Confusion Matrix')
-plt.savefig('CNCC/SVM/confusion_matrix_CNCC_V1_Normalized.png')
+plt.savefig('CCLS/SVM/confusion_matrix_CCLS_V1_Normalized.png')
 plt.show()
 
 # Calculate the true negatives (TN) for each class
@@ -111,5 +111,5 @@ class_metrics['accuracy_class'] = accuracy
 
 
 # Save the classification report as a JSON file
-with open('CNCC/SVM/Classification_report_CNCC_V1_Normalized.json', 'w') as json_file:
+with open('CCLS/SVM/Classification_report_CCLS_V1_Normalized.json', 'w') as json_file:
     json.dump(class_metrics, json_file)

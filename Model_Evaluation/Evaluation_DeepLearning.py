@@ -11,7 +11,7 @@ from sklearn.metrics import confusion_matrix, classification_report
 test_datagen = ImageDataGenerator(rescale=1./255)
 
 test_data = test_datagen.flow_from_directory(
-    'varities/Data/test',
+    'CCLS/Data/test',
     target_size=(224, 224),
     batch_size=32,
     class_mode='categorical',
@@ -21,10 +21,10 @@ test_data = test_datagen.flow_from_directory(
 y_true = test_data.classes
 
 # Load your saved model
-model = keras.models.load_model('varities/ResNet50/ResNet50_epochs100_unfreeze5_best_weight_model.h5')
+model = keras.models.load_model('CCLS/ResNet50/ResNet50_epochs100_freeze_best_weight_model.h5')
 
 # Retrieve the class names from the HDF5 file attributes
-with h5py.File('varities/ResNet50/ResNet50_epochs100_unfreeze5_best_weight_model.h5', 'r') as file:
+with h5py.File('CCLS/ResNet50/ResNet50_epochs100_freeze_best_weight_model.h5', 'r') as file:
     class_names = file.attrs['class_names']
 
 # class_names = ['Avoine', 'Ble dur', 'ble tendre', 'orge', 'triticale']
@@ -48,7 +48,7 @@ sns.heatmap(cm_df, annot=True, fmt='d', cmap='Greens')
 plt.xlabel('output class')
 plt.ylabel('target class')
 plt.title('Confusion Matrix')
-plt.savefig('varities/ResNet50/ResNet50_epochs100_unfreeze5_best_weight_confusion_matrix.png')
+plt.savefig('CCLS/ResNet50/ResNet50_epochs100_freeze_best_weight_confusion_matrix.png')
 plt.close()
 
 # Generate the classification report
@@ -57,7 +57,7 @@ report_df = pd.DataFrame(report).transpose()
 
 # Save the classification report as a PNG image or as a CSV table
 report_df.to_csv(
-    'varities/ResNet50/ResNet50_epochs100_unfreeze5_best_weight_classification_report.csv',
+    'CCLS/ResNet50/ResNet50_epochs100_freeze_best_weight_classification_report.csv',
     index=True
 )
 
@@ -123,7 +123,7 @@ report_dict['accuracy_class'] = accuracy
 
 # Specify the output file path for the JSON file
 output_file = \
-    'varities/ResNet50/ResNet50_epochs100_unfreeze5_best_weight_classification_report.json'
+    'CCLS/ResNet50/ResNet50_epochs100_freeze_best_weight_classification_report.json'
 
 # Save the classification report as a JSON file
 with open(output_file, 'w') as file:

@@ -19,7 +19,7 @@ X = scaler.fit_transform(X)
 # Step 3: Split the data into training and testing sets
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-# Step 4: Train the LS-SVM classifier
+# Step 4: Train.txt the LS-SVM classifier
 model = SVR(kernel='linear', C=10)
 model.fit(X_train, y_train)
 

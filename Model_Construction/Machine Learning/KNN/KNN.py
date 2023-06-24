@@ -24,7 +24,7 @@ X_test = scaler.transform(X_test)
 k = 6  # Set the value of K
 knn = KNeighborsClassifier(n_neighbors=k)
 
-# Train the classifier
+# Train.txt the classifier
 knn.fit(X_train, y_train)
 print(y_train)
 

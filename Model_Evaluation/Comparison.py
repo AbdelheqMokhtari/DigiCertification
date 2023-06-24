@@ -1,5 +1,4 @@
 import json
-
 import matplotlib.pyplot as plt
 
 
@@ -57,7 +56,7 @@ def plot_multiple_training_histories(histories):
 
     plt.xlabel('Epoch')
     plt.ylabel('Accuracy')
-    plt.title('Training Accuracy')
+    plt.title('Validation Accuracy')
     plt.legend()
     plt.savefig('CNCC/CNCC_Validation_Accuracy.png')
     plt.show()
@@ -72,13 +71,13 @@ def plot_multiple_training_histories(histories):
 
     plt.xlabel('Epoch')
     plt.ylabel('Accuracy')
-    plt.title('Training Accuracy')
+    plt.title('Validation Error')
     plt.legend()
     plt.savefig('CNCC/CNCC_Validation_Loss.png')
     plt.show()
 
 
-history_DenseNet121 = load_json('CNCC/DenseNet121/DenseNet121_epochs50_unfreeze10_history.json')
+history1 = load_json('CNCC/DenseNet121/DenseNet121_epochs50_unfreeze10_history.json')
 history2 = load_json('CNCC/DenseNet169/DenseNet169_epochs50_unfreeze20_history.json')
 history3 = load_json('CNCC/DenseNet201/DenseNet201_epochs50_unfreeze15_history.json')
 history4 = load_json('CNCC/InceptionResNetV2/InceptionResNetV2_epochs50_unfreeze10_history.json')
@@ -86,7 +85,7 @@ history5 = load_json('CNCC/ResNet50/Resnet50_epochs50_history_false_unfreeze10.j
 history6 = load_json('CNCC/VGG16/VGG16_epochs50_unfreeze20_history.json')
 history7 = load_json('CNCC/VGG19/VGG19_epochs50_freeze_history.json')
 
-plot_multiple_training_histories([history_DenseNet121, history2, history3, history4, history5, history6, history7])
+plot_multiple_training_histories([history1, history2, history3, history4, history5, history6, history7])
 
 accuracies = []
 models = []
@@ -133,9 +132,15 @@ accuracy_VGG19 = classification_rapport_VGG19['accuracy']
 accuracies.append(accuracy_VGG19)
 models.append("VGG19")
 
+# SVM
+classification_rapport_SVM = load_json("CNCC/SVM/Classification_report_CNCC_V1_Normalized.json")
+accuracy_SVM = classification_rapport_SVM['accuracy']
+accuracies.append(accuracy_SVM)
+models.append("SVM")
+
 # List of colors for each bar
-colors_bar = ['blue', 'green', 'red', 'cyan', 'magenta', 'yellow', 'black']
-plt.figure(figsize=(16, 6))
+colors_bar = ['blue', 'green', 'red', 'cyan', 'magenta', 'yellow', 'black', 'purple']
+plt.figure(figsize=(18, 6))
 plt.bar(models, accuracies, color=colors_bar)
 plt.xlabel('Models')
 plt.ylabel('Accuracy')
